@@ -40,9 +40,9 @@ Comment `button_layout=CHM|0`
 
 Problem solved.
 
-![window screenshot](https://knighthana.github.io/posts/WSL_X_envir_window_screenshot.png "window screenshot")
+![window screenshot](../img/WSL_X_envir_window_screenshot.png "window screenshot")
 
-![fullscreen screenshot](https://knighthana.github.io/posts/WSL_X_envir_fullscreen_screenshot.png "fullscreen screenshot")
+![fullscreen screenshot](../img/WSL_X_envir_fullscreen_screenshot.png "fullscreen screenshot")
 
 Icons from [McMojave-circle](https://www.opendesktop.org/p/1305429/) [McMojave-circle GitHub Page](https://github.com/vinceliuice/McMojave-circle)
 
