@@ -1,3 +1,5 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 ### Problem:WSL file folder permission problem ###
 
 最近在使用WSL(WSL，那么一个WSL就是AWSL，那么就是...XD)来做开发。
