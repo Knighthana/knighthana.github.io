@@ -19,14 +19,14 @@ Finally I found a solution on [Xfce Wiki](https://wiki.xfce.org).
 > 也可以为特定主题定义固定的按钮布局。但需要提醒应该避免强制特定的按钮布局或者标题对齐及其他降低用户选择的设定（除非主题真的需要那样，比如下面会提到的 b5 主题） 
 
 ```
-# button\_layout :
+# button_layout :
 #    O = Option menu
 #    T = Stick
 #    H = hide
 #    S = shade
 #    M = maximize
 #    C = close
-#    \| = title
+#    | = title
 button\_layout=OTS|HMC
 ```
 
@@ -36,7 +36,7 @@ Solution:
 
 Edit "~/.themes/themename/xfwm4/themerc"
 
-Comment `button\_layout=CHM\|0`
+Comment `button_layout=CHM|0`
 
 Problem solved.
 
