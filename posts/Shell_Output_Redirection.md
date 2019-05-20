@@ -1,3 +1,5 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
 ### Shell Buffer Redirection ###
 
 Under WSL, if I want to run xfce4, the terminal will give a lot of information.
@@ -12,4 +14,5 @@ Try `command > /dev/null 2>&1` to redirect stdout and stderr. It said that "ц│иц
 
 Knighthana @ XDU
 
-2019/5/19
+2019/05/19
+

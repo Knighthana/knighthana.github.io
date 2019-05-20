@@ -1,4 +1,4 @@
-2018_3_24_Saturday
+2018/3/24/Saturday
 
 First Day! My Blog
 ===================
@@ -23,3 +23,4 @@ First Day! My Blog
   
   Knighthana
   2018-3-24 at XDU SAST KPB
+
