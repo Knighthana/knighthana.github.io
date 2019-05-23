@@ -1,4 +1,5 @@
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+/* Attention : This css file is not the original normalize.css -- It has been modified. */
 
 /* Document
    ========================================================================== */
@@ -66,6 +67,13 @@ hr {
 }
 
 /**
+ * 1. Added by knighthana
+ */
+
+ p {
+	 ;
+ }
+/**
  * 1. Correct the inheritance and scaling of font size in all browsers.
  * 2. Correct the odd `em` font sizing in all browsers.
  */
@@ -84,6 +92,27 @@ pre {
 
 a {
   background-color: transparent;
+  text-decoration: none; 
+}
+
+a:link {
+	color: #4a90d9; 
+	text-decoration: none; 
+}
+
+a:hover {
+	color: #000000; 
+	text-decoration: none; 
+}
+
+a:active {
+	color: #4a90d9; 
+	text-decoration: none; 
+}
+
+a:visited {
+	color: #4a90d9; 
+	text-decoration: none; 
 }
 
 /**
@@ -116,6 +145,11 @@ kbd,
 samp {
   font-family: monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
+}
+
+code {
+	background-color: #cccccc; 
+	line-height: 2px; 
 }
 
 /**
