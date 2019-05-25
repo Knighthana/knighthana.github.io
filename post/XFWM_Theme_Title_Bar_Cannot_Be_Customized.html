@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/normalize.css">
+	<title>xfwm主题设置的标题栏按钮-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>XFWM Theme Title Bar Cannot Be Customized</h1>
+<div style="margin-left:1em; text-indent:1em ; ">
+	<p>
+		Yesterday I said tommorrow ... ( Sorry, I am sleepy
+	</p>
+	<p>
+		Yesterday I tried to solve the problem on my WSL X environment.
+	</p>
+	<p>
+		I have downloaded the OS-X like xfwm theme from [Github:B00merang-Project](http://github.com/B00merang-Project/OS-X-Yosemite.git).
+	</p>
+	<p>
+		But the theme has a fixed title bar setting. The title bar looks like CHM|0, but I am used to operate on CMH|\*.
+	</p>
+	<p>
+		Finally I found a solution on <a href="https://wiki.xfce.org" >Xfce Wiki</a>. Look at the website page <a href="https://wiki.xfce.org/start?id=zh-cn/howto/xfwm4_theme" >how to</a>.
+	</p>
+<cite>
+	<p>
+		*按钮布局*
+	</p>
+	<p>
+		也可以为特定主题定义固定的按钮布局。但需要提醒应该避免强制特定的按钮布局或者标题对齐及其他降低用户选择的设定（除非主题真的需要那样，比如下面会提到的 b5 主题）
+	<p>
+</div>
+<div style="margin-left:3em;">
+<code>
+	# button_layout : <br></br>
+	#    O = Option menu <br></br>
+	#    T = Stick <br></br>
+	#    H = hide <br></br>
+	#    S = shade <br></br>
+	#    M = maximize <br></br>
+	#    C = close <br></br>
+	#    | = title <br></br>
+	button_layout=OTS|HMC <br></br>
+</code>
+</cite>
+</div>
+
+<div style="margin-left:1em; text-indent:1em;">
+<cite>
+	<p>
+		现实的例子是，B5 主题只使用了关闭按钮。也就是 themerc 文件中写的是button_layout=C|
+	</p>
+</cite>
+	<p>
+		Solution:
+	</p><p>
+		Edit "~/.themes/themename/xfwm4/themerc"
+	</p><p>
+		Comment `button_layout=CHM|0`
+	</p><p>
+		Problem solved.
+	</p>
+	<img alt="window screenshot" src="../img/WSL_X_envir_window_screenshot.png" height=50% width=50% />
+	<img alt="fullscreen screenshot" src="../img/WSL_X_envir_fullscreen_screenshot.png" height=50% width=50% />
+	<p>
+		Icons from <a href="https://www.opendesktop.org/p/1305429/" >McMojave-circle</a> and <a href="https://github.com/vinceliuice/McMojave-circle" >McMojave-circle GitHub Page</a>
+	</p>
+	<p>
+		Knighthana @ XDU
+	</p><p>
+		2019/05/20
+	</p>
+</div>
+	<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
