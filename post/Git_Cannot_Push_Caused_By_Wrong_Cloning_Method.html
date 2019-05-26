@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Git Cannot Push Caused By Wrong Cloning Method</title>
+<link rel="stylesheet" type="text/css" href="../css/default.css">
+</head>
+<body>
+<h1>Git Cannot Push Caused By Wrong Cloning Method</h1>
+<div style="margin-left:1em;text-indent:1em;">
+	<p>Today I cloned my repo. from github.com, and simply used <code>git clone git://username/reponame.git</code>( BTW: "git://" means "http://" ) .</p>
+	<p>When I ended my job and tried to push my works to github it said that I can't push.</p>
+	<p>Warning text :</p>
+</div>
+<div style="margin-left:3em;text-indent:0;">
+	<cite>fatal:remote error:</cite><br></br>
+	<cite>You can't push to git://github.com/username/reponame.git</cite><br></br>
+	<cite>Use https://github.com/username/reponame.git</cite>
+</div>
+<div style="margin-left:1em;text-indent:1em;">
+	<p>I don't know what happened at first. My direct sense told me that it maybe related to the remote repo settings.</p>
+	<p>I search it on the Internet, find that article <a href="https://www.jb51.net/article/98952.htm">解决 fatal:remote error:You can't push to git://github.com/username/*.git 问题的办法</a>.</p>
+	<p>It's apparently that I used a wrong method to clone for I have future push plan. So, if I want to clone my own repo from online git repo, I'd better use <code>git clone git@github.com:username/userrepository.git</code> but not <code>git clone git://</code></p>
+</div>
+<h3 style="margin-left:1em">How to fix that?</h3>
+<div style="margin-left:3em; text-indent=0;">
+	<code>git remote rm origin</code><br></br>
+	<code>git remote add origin git@github.com:username/reponame.git</code>
+</div>
+<div style="margin-left:1em;text-indent:1em;">
+	<p>So it has been solved. My work can be continued in new environment.</p>
+	<p>By the way, there was still some waves before I finally succeed in pushing my local repo to remote repo.</p>
+</div>
+<h3 style="margin-left:1em">More fun problems</h3>
+<div style="margin-left:1em;text-indent:1em;">
+	When I tried to use <code>ssh -t git@github.com</code>, there was a warning information said :
+</div>
+<div style="margin-left:3em; text-indent=0;">
+	<p>
+	<cite>	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<br></br>
+		@&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WARNING: UNPROTECTED PRIVATE KEY FILE!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@<br></br>
+		@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@<br></br>
+		Permissions 0644 for '/home/username/.ssh/id_rsa' are too open. 
+	</cite>
+	</p>
+</div>
+<div style="margin-left:1em;text-indent:1em;">
+	<p>I delightly found that there is such a restriction about id_rsa file which I never noticed.</p>
+	<p>I copied my id_rsa and id_rsa.pub from another computer with a U size Flash Disk whose fileformat is FAT32 ( maybe NTFS but not *nix FS for sure ), and the file was copied through my Windows 10 OS's desktop.</p>
+	<p>The rsa file was copied in my WSL environment at last, but the operation permission set was 777.</p>
+	<p>I thought that the files' operation permission should defaultly be 644 ( refer to another Gulog "WSL operation permission" ).</p>
+	<p>Until now, the system gave me a lesson that if an id_rsa file was set any read or write permission for other users, it won't be trusted.</p>
+	<p>I changed it's operation permission to 600, and the problem was solved.</p>
+	<p>And ... don't try to ssh username@github.com. I must be drunk, or I wouldn't have typed that command.</p>
+</div>
+<div style="margin-left:1em; text-indent:0; ">
+	<p>Knighthana @ XDU</p>
+	<p>2019/05/20</p>
+<HR></HR>
+	<a href="./index.html">回到主页</a>
+</div>
+<br></br>
+</body>
+</html>
+
