@@ -13,6 +13,9 @@
   Struct is a great invention. But I didn't use it until now.
   Struct helps me to divide the inner struct of the data, and focus on what the data means. I don't need to find out where is the start symbol, where is the end symbol, where to replace the text by using the struct.
   Just malloc a place for the struct, and let the annoying things get away.
-  
+## error: expected ':', ',', ';', '}' or '__attribute__' before '=' token ##
+  Struct can't be assignment when initing. 
+## New conception ##
+  Make all data on one structure. Use less pointer.
 Knighthana @ XDU
 2019/05/26
