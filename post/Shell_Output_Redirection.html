@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="../css/default.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Ubuntu Linux Shell输出重定向-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>Shell Buffer Redirection</h1>
+<div style="margin-left:1em; text-indent:1em; ">
+	<p>Under WSL, if I want to run xfce4, the terminal will give a lot of information.</p>
+	<p>The information is very useful when developing, or errors accured, but not neccessary when I using it as the other days.</p>
+	<p>I knew that the output can be redirect to files, but I didn't know what should I do if I don't want to keep it, so I went to find ways for redirecting the stdout and stderr to null.</p>
+
+	<p>Try <code>command &gt; /dev/null</code> to redirect stdout. But it won't help on stderr.</p>
+	<p>Try <code>command &gt; /dev/null 2&gt;&amp;1</code> to redirect stdout and stderr. It said that</p>
+	<blockquote><cite>"注意：0 是标准输入（STDIN），1 是标准输出（STDOUT），2 是标准错误输出（STDERR）。"</cite></blockquote> 
+	<p>on <a href="https://www.runoob.com/linux/linux-shell-io-redirections.html" >[Runnob]</a>.</p>
+
+<p>Knighthana @ XDU</p>
+
+<p>2019/05/19</p>
+</div>
+<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
