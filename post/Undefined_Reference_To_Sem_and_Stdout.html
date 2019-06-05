@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/default.css">
+	<title>gcc:“未定义的sem_*函数引用”报错和关于stdout缓冲区的一些新的认知-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>Undefined Reference to Sem and Stdout</h1>
+<div style="margin-left:1em; text-indent:1em; ">
+	<h2>Undefined Reference to Sem_*</h2>
+	<p>Using Linux system process signal C programing Language API sem_init sem_post sem_wait is not defaultly supported by gcc.
+ If gcc it directly, there will be a "undefined reference to sem_*" error.</p>
+	<p>To solve the question, add an argument "-pthread".</p>
+<HR></HR>
+	<h2>Stdout Flush Issue</h2>
+	<p>I've met a problem that latter code cause segmentation fault before former code stdout showing on screen, in a phrase, error before output.</p>
+	<p>The C usually use only one flush buffer, and the buffer only be sent to terminal when there is a "\n", "\r", "EOF", "fflush(stdout)" or ending of the program. So if the printf code don't have a "\n" or something inside, it will wait and never output.</p>
+	<p>Knighthana @ XDU</p>
+	<p>2019/06/05</p>
+</div>
+<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
