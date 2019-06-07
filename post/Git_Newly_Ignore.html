@@ -1,0 +1,38 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/default.css">
+	<title>如何新增已被跟踪的gitignore-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>Git Newly Ignore</h1>
+<div style="margin-left:1em; text-indent:1em; ">
+	<h2>I want to ignore the .ignore file from my repo, so what should I do?</h2>
+ <p>Firstly I only changed the .gitignore file, but `git status` said that their is new modified not tracked.</p>
+ <p>So I search the Web, Find a Blog</p>
+
+ <p><a href="https://www.cnblogs.com/youyoui/p/8337147.html">Git 忽略提交 .gitignore</a></p>
+
+
+<blockquote> .gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。</blockquote>
+
+ <blockquote>解决方法就是先把本地缓存删除（改变成未track状态），然后再提交:</blockquote>
+
+ <blockquote><code>git rm -r --cached .</code></blockquote>
+ <blockquote><code>git add .</code></blockquote>
+ <blockquote><code>git commit -m 'update .gitignore'</code></blockquote>
+
+<p> 原文出处：<a href="http://uusama.com/542.html" >http://uusama.com/542.html</a></p>
+
+ <p>However I now realized a question, if I ignored the .gitignore file, there will be a lot of junk files in the directory. So the .gitignore file should be tracked.</p>
+
+ <p>Knighthana@Home</p>
+ <p>2019/06/07</p>
+</div>
+<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
