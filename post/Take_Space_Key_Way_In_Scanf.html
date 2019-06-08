@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/default.css">
+	<title>在scanf中读取空格-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>Take Space Key In Scanf</h1>
+<HR></HR>
+<div style="margin-left:1em; text-indent:1em; ">
+	<h2>How to colorful a C text in linux shell?</h2>
+</div>
+<div style="margin-left:3em" >
+	<code>printf("\033[0;32;40m%s\033[0m$",pwd(user));</code>used in my code.<br></br>
+	<code>\033[0;32;40m</code> means ordinary text, green text, black background.<br></br>
+	<code>\033[0m</code> means change back to default settings.<br></br>
+</div>
+<div style="margin-left:1em; text-indent:1em; ">
+	<h2>How to take a space key while using scanf?</h2>
+</div>
+<div style="margin-left:3em" >
+	<code>
+	scanf("%[^\n]",buf);<br></br>
+	</code>
+	<p>means that get input until a '\n', and save it into buf.</p>
+	<code>
+	scanf("%[^\n]%*c",buf);
+	</code>
+	<p>means that get input until a '\n', and save it into buf, then drop next character('\n').(I will use in my function).</p>
+	<code>scanf("%*[^\n]%*c");</code>
+	<p>means thet get input until a '\n', and drop it, then get a character('\n'), drop it too.</p>
+	<code>scanf("%*[^a]%*c%c",&amp;ch);</code>
+	<p>means that get input until a  'a', and drop it, then get a character( 'a'), drop it too. After that, get a character and save it into ch.</p>
+	<p>
+	input: bcdeaf<br></br>
+	output: f
+	</p>
+	<p>Refer: <a href="https://blog.csdn.net/chuhe163/article/details/81048751">scanf读取含空格的字符串</a></p>
+</div>
+<div style="margin-left:1em; text-indent:1em; ">
+	<p>Knighthana@XDU</p>
+	<p>2019/6/6</p>
+</div>
+<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
