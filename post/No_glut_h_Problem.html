@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/default.css">
+	<title> 编译的时候出现"没有glut.h"的问题-咕文-Knighthana的咕站</title>
+</head>
+<body>
+	<h1>编译的时候出现"没有glut.h"的问题</h1>
+<div style="margin-left:1em; text-indent:1em; ">
+<HR></HR>
+	<p>使用原生态linux+gcc套件的时候会有许多用IDE的时候遇不到的问题，比如需要为gcc手动指定link目标（否则gcc不知道该往哪里链接就会抛锚）；</p>
+	<p>知道这一点的我小心翼翼地指定了：</p>
+	<p><code>gcc test.c -lGL -lGLU -lglut</code></p>
+	<p>可喜可贺地遇到了报错：&quot;glut.h: No such file or directory&quot;</p>
+	<p>于是我改成了</p>
+	<p><code>#include &lt;gl/glut.h&gt;</code></p>
+	<p>报错稍有变化：&quot;gl/glut.h: No such file or directory&quot;
+	<p>于是只好Google&quot;linux glut.h no such file&quot;
+	<p>结果第一条：&quot;You must also be aware that C++ and Ubuntu are both case-sensitive. The correct include line in your program is: <code>#include &lt;GL/glut.h&gt;</code>.&quot;</p>
+	<p>:blackrockshooterface:</p>
+	<p>改成</p>
+	<p><code>#include &lt;GL/glut.h&gt;</code></p>
+	<p><code>gcc test.c -lGL -lGLU -lglut</code></p>
+	<p>编译通过</p>
+
+	<p>Knighthana@XDU</p>
+	<p>2019/10/17</p>
+</div>
+<HR></HR>
+	<a href="../index.html" style="margin-left:1em ; text-indent:0 ; " >回到主页</a>
+	<br></br>
+</body>
+</html>
+
