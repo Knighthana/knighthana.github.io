@@ -1,3 +1,4 @@
+
 # C语言中的short和unsigned short类型——补码
 
  今天上课时复习到了补码，老师提问了一个问题：已知现在大多数计算机中short类型为16位，以补码方式存储，那么将一个short类型变量赋值为-32768，再将这个变量的值赋值给一个unsigned short类型变量，那么这个unsigned short类型变量的值应是多少？

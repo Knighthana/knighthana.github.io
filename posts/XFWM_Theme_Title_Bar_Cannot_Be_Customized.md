@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-### XFWM Theme Title Bar Cannot Be Customized ###
+# XFWM Theme Title Bar Cannot Be Customized
 
 Yesterday I said tommorrow ... ( Sorry, I am sleepy
 

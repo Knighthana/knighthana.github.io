@@ -1,4 +1,5 @@
-#function strcmp cannot accept NULL
+
+# function strcmp cannot accept NULL
 
  In project fakeshell, I found that if strcmp(NULL, [something]), there will be a segmentation fault.
  It's a problem should be noticed.

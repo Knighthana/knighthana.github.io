@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-### Shell Buffer Redirection ###
+# Shell Buffer Redirection
 
 Under WSL, if I want to run xfce4, the terminal will give a lot of information.
 

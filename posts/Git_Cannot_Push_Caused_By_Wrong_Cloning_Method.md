@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-### Git Cannot Push Caused By Wrong Cloning Method ###
+# Git Cannot Push Caused By Wrong Cloning Method
 
 Today I cloned my repo. from github.com, and simply used `git clone git://username/reponame.git` ( BTW: "git://" means "http://" ) .
 

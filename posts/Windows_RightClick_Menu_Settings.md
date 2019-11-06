@@ -1,6 +1,6 @@
 <meta http-equiv="Content-Type" content="text/markdown; charset=utf-8">
 
-### Windows RightMouse-Menu Settings ###
+# Windows RightMouse-Menu Settings
 
   一般来说Windows的右键菜单简洁一些比较好，因为这个菜单里面的某些功能还是很常用的，假如被一些不太常用的功能拖慢了响应速度，就非常非常过分地影响使用体验；
 
@@ -10,7 +10,7 @@
   
   最简单的方式是把键值删掉，但是有些功能呢，又不是很想彻底删掉，这时候就可以考虑Windows扩展的右键菜单功能了；
   
-  #### 方案1： ####
+  ## 方案1：
   
   比如说吧，安装了git-scm之后，右键菜单里面就会出现一些奇奇怪怪的内容，如何把他们藏起来呢？
   ![git_bash_rightclick_settings_regedit](../img/git_bash_rightclick_settings_regedit.png "git-bash rightclick menu key")
@@ -22,7 +22,7 @@
   
   在这个菜单本来应该出现的地方 Shift + RightClick 就可以了
   
-  #### 方案2： ####
+  ## 方案2：
   
   有些软件比较“热情”，它们的右键菜单用这个方法无法隐藏(其实是和键的属性有关)，比如OneDrive
   
