@@ -14,6 +14,7 @@
   
   比如说吧，安装了git-scm之后，右键菜单里面就会出现一些奇奇怪怪的内容，如何把他们藏起来呢？
   ![git_bash_rightclick_settings_regedit](../img/git_bash_rightclick_settings_regedit.png "git-bash rightclick menu key")
+  
   方法很简单，在键值里加入一个字符串类型的变量，命名为"Extended"就好了；
   ![rightclick menu solution1](.../img/git_bash_rightclick_settings_regedit_solution1.png "rightclick menu solution")
   
