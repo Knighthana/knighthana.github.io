@@ -1,4 +1,6 @@
-#Git Newly Ignore
+
+# Git Newly Ignore
+
  I want to ignore the .ignore file from my repo, so what should I do?
  Firstly I only changed the .gitignore file, but `git status` said that their is new modified not tracked.
  So I search the Web, Find a Blog

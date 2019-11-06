@@ -1,4 +1,5 @@
-# No Glut.h Problem #
+
+# No Glut.h Problem
 
  使用原生态linux+gcc套件的时候会有许多用IDE的时候遇不到的问题，比如需要为gcc手动指定link目标（否则gcc不知道该往哪里链接就会抛锚）；
  知道这一点的我小心翼翼地指定了：

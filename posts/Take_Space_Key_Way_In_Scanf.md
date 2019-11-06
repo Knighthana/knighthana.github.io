@@ -1,12 +1,14 @@
-#Take Space Key In Scanf
------
 
-##How to colorful a C text in linux shell?
+# Take Space Key In Scanf
+
+-------
+
+## How to colorful a C text in linux shell?
  `printf("\033[0;32;40m%s\033[0m$",pwd(user));`used in my code.
  `\033[0;32;40m` means ordinary text, green text, black background.
  `\033[0m` means change back to default settings.
 
-##How to take a space key while using scanf?
+## How to take a space key while using scanf?
 
   
   `scanf("%[^\n]",buf);`

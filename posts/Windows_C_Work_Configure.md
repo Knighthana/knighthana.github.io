@@ -1,8 +1,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-### Windows C Work Configure ###
+# Windows C Work Configure
 
-#### Install only C compiler on Windows: ####
+## Install only C compiler on Windows:
+
 1. Get Visual Studio Installer @ [Download][https://visualstudio.microsoft.com/zh-hans/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16]
 2. Select functions to install:
     "MSVC"
@@ -11,14 +12,17 @@
 3. Wait until installation is finished;
 4. Input "developer powershell for vs 2019" in windows start menu, and open it.
 
-### Install Git ###
+## Install Git
+
 1. Since I have installed WSL, I don't need an extra UNIX-like environment, so I only need the git function;
 2. Search and download git-scm for windows;
 3. Install only git functions;
 4. Copy my existing ssh file to (Windows)~/.ssh/id_rsa and exec `ssh-add /c/users/myusername/.ssh/id_rsa`;
 5. Exec`ssh -T git@github.com` to check if ssh functions work well.
 6. (optional) Go to regedit.exe and check"计算机\HKEY_CLASSES_ROOT\Directory\Background\shell", add a string value "Extended" in key "git-gui" and "git-shell";
-### Deploy Visual Studio Code ###
+
+## Deploy Visual Studio Code
+
 1. Install Visual Studio Code;
 2. Install some useful plug-ins
     "Language pack" by Microsoft

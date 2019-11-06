@@ -1,5 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-###Linux下来自中文Windows操作系统的zip文件文件名出现乱码情况的解决方案
+
+# Linux下来自中文Windows操作系统的zip文件文件名出现乱码情况的解决方案
 
 如何把在Windows下打包的，文件名被编码为GBK的文件转化为使用Linux下惯用的UTF-8编码的文件名的文件呢？
 目前使用的可行的方法
@@ -46,5 +47,6 @@ file.close()
 
 	下面的几个方法目前（2018-1-12）还没试过，将来有机会可以试试。
 	不过目前系统中有很多从手机上拷贝过来的音乐文件的文件名和歌曲信息仍然是乱码，而这些文件没法用这个方法，而且conmv的话，由于文件名已经是UTF8的乱码了，所以暂时没有解决方案。如果Python方案可行的话，等我学会Python以后咕且试试。
+
 写于2018/01/12
 Knighthana@Hp-ELite in XDU
