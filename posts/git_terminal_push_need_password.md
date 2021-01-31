@@ -21,7 +21,7 @@
   
   `git remote add origin git@github.com...............`
 
-  `git push origin main`
+  `git push --set-upstream origin main`
 
   所以说 clone 的时候这个 "git@" 开头非常重要啊，不然协议就选错了
 
