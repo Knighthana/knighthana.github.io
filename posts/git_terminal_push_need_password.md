@@ -21,6 +21,8 @@
   
   `git remote add origin git@github.com...............`
 
+  `git push origin main`
+
   所以说 clone 的时候这个 "git@" 开头非常重要啊，不然协议就选错了
 
   Knighthana @ Home
@@ -29,4 +31,6 @@
 
 -------------------
   参考文章：[Github：每次git push推送的时候都需要输入git的用户名和密码](https://blog.csdn.net/whbing1471/article/details/52066688)
+
+  另外，之前打成了 `push origin master` 疯狂提示没有这个分支，仔细一看，原来是master分支现在叫main分支，第一次感觉到这个鬼变化，呵呵
 
