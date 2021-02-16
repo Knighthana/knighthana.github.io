@@ -34,7 +34,7 @@
 
   参考文章：[Github：每次git push推送的时候都需要输入git的用户名和密码](https://blog.csdn.net/whbing1471/article/details/52066688)
 
-  参考文章：[错误地使用了git的克隆方法导致的推送出错]
+  参考文章：[错误地使用了git的克隆方法导致的推送出错](https://github.com/Knighthana/knighthana.github.io/blob/master/posts/Git_Cannot_Push_Caused_By_Wrong_Cloning_Method.md)
 
   另外，之前打成了 `push origin master` 疯狂提示没有这个分支，仔细一看，原来是master分支现在叫main分支，第一次感觉到这个鬼变化，呵呵
 
