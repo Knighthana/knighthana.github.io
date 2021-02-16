@@ -110,6 +110,8 @@ a:visited {
 	text-decoration: none; 
 }
 
+/* 在 CSS 定义中，:hover 必须位于 :link 和 :visited 之后（如果存在的话），这样样式才能生效。 */
+
 a:hover {
 	color: #000000; 
 	text-decoration: none; 
