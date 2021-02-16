@@ -1,3 +1,4 @@
+<meta name="created" content="2021-01-31">
 
 # 使用终端版本的git向GitHub Push本地库时需要输入账号密码的情况
 
@@ -25,12 +26,15 @@
 
   所以说 clone 的时候这个 "git@" 开头非常重要啊，不然协议就选错了
 
-  Knighthana @ Home
+  Knighthana
 
-  2021/1/31
+  2021年1月31日
 
 -------------------
+
   参考文章：[Github：每次git push推送的时候都需要输入git的用户名和密码](https://blog.csdn.net/whbing1471/article/details/52066688)
+
+  参考文章：[错误地使用了git的克隆方法导致的推送出错]
 
   另外，之前打成了 `push origin master` 疯狂提示没有这个分支，仔细一看，原来是master分支现在叫main分支，第一次感觉到这个鬼变化，呵呵
 

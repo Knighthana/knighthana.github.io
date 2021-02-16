@@ -1,4 +1,23 @@
+<meta name="created" content="2019-05-20">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+# 错误地使用了git的克隆方法导致的推送出错
+
+在简单地用代码`git clone git://********.git`将远端库的代码克隆到本地之后，我遇到了无法push的问题；
+
+在查阅了网上的文章之后，我发现这是克隆方式错误导致的，
+
+如果想要克隆一个自己的项目，就应该使用`git clone git@git://*******.git`这样的代码，这样才能保证正常使用终端推送代码；
+
+以及ssh的默认安全设置要求`id_rsa`文件必须是仅用户本人可读写，即600权限，如果后两位不为0，那么就不能正常使用ssh的功能
+
+最后，测试公钥私钥是否配置正常需要的代码是`ssh git@github.com`而不是`ssh username@github.com`
+
+knighthana
+
+2019年5月20日 于西电
+
+------------------------------------------------
 
 # Git Cannot Push Caused By Wrong Cloning Method
 
