@@ -1,5 +1,6 @@
+<meta name="created" content="2019-06-07">
 
-# Turn Off Bell Under WSL
+# 关掉WSL里面的铃声
 
  看起来各Linux发行版默认是关掉shell的bell的，但是这其中不包括WSL。
  于是换了一个环境的我不得不面对shell又开始（又？）发出恼人的声音的问题（vim：其实我也...）。
@@ -18,6 +19,7 @@
 > 命令，这下 vi 的出错发声就彻底被禁止了。
 
  根据我试验的结果，`set vb t_vb=` 这一个命令就足够了，上面那个注释掉也没关系。
+
 ## [禁用WSL的shell提示音][https://www.jianshu.com/p/f62971cbe80b]
 
 > zsh
@@ -30,5 +32,6 @@
 
  至此问题解决，提示音ZNMDJ（
 
- Knighthana@Home
- 2019/06/07
+ Knighthana
+
+ 2019年06月07日 不在西电

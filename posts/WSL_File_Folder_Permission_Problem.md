@@ -1,6 +1,7 @@
+<meta name="created" content="2019-05-19">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-# Problem:WSL file folder permission problem
+# WSL中文件权限的问题
 
 最近在使用WSL(WSL，那么一个WSL就是AWSL，那么就是...XD)来做开发。
 
@@ -12,7 +13,19 @@
 
 遗留了一个问题：为何这些代码放在"~/.profile"里的时候没有起作用，目前猜想这应当和WSL的登陆机制有关。
 
----
+Knighthana
+
+2019年5月19日 于西电
+
+------------------------------------
+
+2021年2月16日增补：
+
+Windows Subsystem Linux如何在NTFS格式磁盘上实现Linux独有磁盘格式如ext4的权限功能？简单来说是元数据
+
+详细情况参阅[WSL 的文件权限](https://docs.microsoft.com/zh-cn/windows/wsl/file-permissions)
+
+------------------------------------
 
 Recently I use WSL ( Windows Subsystem for Linux ) for my Linux development.
 

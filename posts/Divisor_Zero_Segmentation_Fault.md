@@ -1,7 +1,6 @@
+<meta name="created" content="2019-06-12">
 
 # 除数为零的段错误(C语言)
-
-# Divisor Zero Segmentation Fault
 
  在C中使用了一个 `i /= p*p` 的语句，结果没有检查这时的p是不是0，然后就段错误了；
  
@@ -9,6 +8,8 @@
 
  以后遇到段错误问题也可以考虑是不是除法的时候哪里有个除数是0。
 
- Knighthana@XDU
+ Knighthana
 
- 2019/06/12
+ 2019年6月12日 于西电
+
+

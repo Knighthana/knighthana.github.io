@@ -1,6 +1,7 @@
+<meta name="created" content="2019-11-07">
 <meta http-equiv="Content-Type" content="text/markdown; charset=utf-8">
 
-# Windows RightMouse-Menu Settings
+# Windows鼠标右键菜单的注册表设置
 
   一般来说Windows的右键菜单简洁一些比较好，因为这个菜单里面的某些功能还是很常用的，假如被一些不太常用的功能拖慢了响应速度，就非常非常过分地影响使用体验；
 
@@ -36,6 +37,6 @@
   1. [Windows下的右键菜单管理](https://huyinjie.xyz/2017/12/07/Windows%E4%B8%8B%E7%9A%84%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E7%AE%A1%E7%90%86/)
   2. [Windows系统如何（临时）删除右键菜单里的项目](https://www.xstui.com/read/509)
 
-  Knighthana@XDU
-  2019/11/7
+  Knighthana
+  2019年11月7日 于西电
   

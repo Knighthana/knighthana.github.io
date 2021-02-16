@@ -1,3 +1,4 @@
+<meta name="created" content="2019-06-11">
 
 # 如何修改git的默认编辑器
 
@@ -20,6 +21,6 @@
  editor = vim
  ```
 
- Knighthana@XDU
+ Knighthana
 
- 2019/06/11
+ 2019年06月11日 于 西电
