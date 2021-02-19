@@ -100,7 +100,7 @@ man-pages-zh中关于控制终端代码的调出命令为`man -L zh-CN console_c
 
 ---------------------------------------------------
 
-测试代码我稍后应该会上传到我的github仓库[KToolProject](https://github.com/Knighthana/KToolProject)中
+[测试代码]((https://github.com/Knighthana/Gulog_Experiment_Codes/tree/main/SGR_test))我稍后应该会上传到我的github仓库中
 
 
 ## 未完的想法
