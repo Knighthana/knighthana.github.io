@@ -64,4 +64,3 @@ And ... don't try to ssh username@github.com. I must be drunk, or I wouldn't hav
 Knighthana @ XDU
 
 2019/05/20
-
