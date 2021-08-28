@@ -11,10 +11,15 @@
 溯源其中提到的[libsndfile fails to build on Ubuntu 20.04 with WSL](https://github.com/rdp/ffmpeg-windows-build-helpers/issues/452)网页，其中给出的解决方案是
 
 `$ sudo dpkg -r --force-depends "libgc1c2" # remove old libgc`
+
 `$ git clone git://github.com/ivmai/bdwgc.git`
+
 `$ cd bdwgc`
+
 `$  ./autogen.sh`
+
 `$ ./configure --prefix=/usr && make -j # its default is the wrong directory? huh?`
+
 `$ sudo make install`
 
 （个人认为此顺序不妥，鉴于网络的实际情况，以及开发环境不一定配置完毕，应该先执行`git clone`等命令，直到确认`./autogen.sh`执行无误之后，再行`sudo dpkg -r --force--depends`等卸载命令，最后再执行`./configure`和`sudo make install`）
@@ -38,8 +43,11 @@
 因此最终的解决方案是，在`/usr/lib/x86_64-linux-gnu/`进行了如下操作：
 
 `sudo mv libgc.so.1 libgc.so.1.bak`
+
 `sudo mv libgc.so.1.3.2 libgc.so.1.3.2.bak`
+
 `sudo ln -sf /usr/lib/libgc.so.1.5.0 libgc.so.1`
+
 `sudo ln -sf /usr/lib/libgc.so.1.5.0 libgc.so.1.3.2`
 
 如此，一番指鹿为马的操作就完成了
