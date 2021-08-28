@@ -2,6 +2,10 @@
 
 启动w3m时遇到问题“w3m Wrong __data_start/_end pair”问题
 
+大多数（包括中文社区和英文社区）给出的分析是“这个问题是WSL1导致的，升级到WSL2就解决啦”
+
+我信你个鬼，WSL2的坑爹是远近闻名的
+
 查询之后，一个网页给出了解决方案:[WSL Ubuntu guile命令报错Wrong __data_start/_end pair及guile-gi等相关编译错误的解决方法](https://blog.csdn.net/yihuajack/article/details/117166950)
 
 溯源其中提到的[libsndfile fails to build on Ubuntu 20.04 with WSL](https://github.com/rdp/ffmpeg-windows-build-helpers/issues/452)网页，其中给出的解决方案是
@@ -45,4 +49,15 @@
 （所以才要记下来防止翻车
 
 Knighthana
-2021/8/29 4:05
+2021/8/29 4:05 (UTC+8)
+
+------------------------
+
+更新：
+
+刚刚在网上冲浪，发现了一篇文章，提供了修改包管理器数据库的几个方案：
+
+[史上最硬核的 Linux 依赖问题解决方案 | 技术](https://zhuanlan.zhihu.com/p/137948822)
+
+Knighthana
+2021/8/29 4:15 (UTC+8)
