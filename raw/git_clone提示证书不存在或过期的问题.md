@@ -25,6 +25,8 @@
 
 回到home，`sudo apt update`，得到结果，需要更新273个包。
 
+`apt list --upgradable | grep git`，git赫然在列。
+
 于是`sudo apt upgrade git`。
 
 更新完毕之后，顺利`git clone`。
