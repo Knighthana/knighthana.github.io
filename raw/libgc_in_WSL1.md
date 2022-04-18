@@ -1,3 +1,5 @@
+<meta name="created" content="2021-08-29">
+
 # 关于WSL1中libgc的某些故障导致Wrong __data_start/_end pair问题的描述和后续解决方案
 
 启动w3m时遇到问题“w3m Wrong __data_start/_end pair”问题

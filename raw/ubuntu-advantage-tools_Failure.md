@@ -1,3 +1,5 @@
+<meta name="created" content="2021-07-24">
+
 # ERROR: File not found '/run/cloud-init/instance-data.json'. Provide a path to instance data json file using --instance-data
 
 ## 症状:

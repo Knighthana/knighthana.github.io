@@ -1,3 +1,5 @@
+<meta name="created" content="2021-11-26">
+
 # 四个人三种卷子的概率问题
 
 有甲乙丙丁四人，ABC三种卷子

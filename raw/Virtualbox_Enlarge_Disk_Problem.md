@@ -1,3 +1,4 @@
+<meta name="created" content="2021-08-11">
 
 # VirtualBox扩容磁盘之后在虚拟机中未发现磁盘空间扩大的情况
 

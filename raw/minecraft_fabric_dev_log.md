@@ -1,3 +1,5 @@
+<meta name="created" content="2021-09-23">
+
 # 进行Minecraft Fabric MOD开发的经验记录
 
 *在没有任何Java基础的前提下进行Minecraft Fabric MOD开发，一边学MOD开发，一边学Java*
