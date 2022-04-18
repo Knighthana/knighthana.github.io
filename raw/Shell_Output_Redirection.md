@@ -1,3 +1,4 @@
+<meta name="created" content="2019-05-19">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 # Shell Buffer Redirection

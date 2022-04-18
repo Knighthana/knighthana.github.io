@@ -1,3 +1,4 @@
+<meta name="created" content="2019-07-24">
 
 # registry wow6432node
 
@@ -10,4 +11,5 @@
  这方法巧妙吗...不过暂时想不到更好的了。
 
  Knighthana@Home
+ 
  2019/07/24

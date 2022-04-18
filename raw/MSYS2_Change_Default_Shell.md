@@ -1,3 +1,5 @@
+<meta name="created" content="2021-03-24">
+
 # 为MSYS2更改默认Shell
 
  在msys2的目录下有一个msys_shell.cmd文件
