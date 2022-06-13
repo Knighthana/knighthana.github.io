@@ -14,7 +14,8 @@
 
 于是，在开写这篇文章之后又折腾了两三天。最后估计花了得有四五天时间，算作96个小时，终于搞出了一个比较满意的结果（但不能算完全满意）。
 
-    
+![customsyscall-output](../img/customsyscall-output.png)
+
 记录一下踩过的坑。
 
 ## 使用无图形的系统还是有图形化界面的系统
@@ -31,7 +32,7 @@
 
 这造成了第一个悲剧：我下载了一份4.15.3的源码埋头开始了工作。
 
-Ubuntu 18.04.6 LTS 最新的内核版本为 5.4.0-113，显而易见，旧系统可以兼容新内核，但新系统基本不能兼容老内核，这是第一个雷。
+Ubuntu 18.04.6 LTS 最新的内核版本为 5.4.0-113，众所周知，旧系统可以兼容新内核，但新系统基本不能兼容老内核，这是第一个雷。
 
 这个雷导致的后果是，4.15.3的内核无法启动 Ubuntu 18.04LTS 的图形界面，这使得原来指向虚拟终端的文件指针无法使用，在这种情况下必须改成指向实际终端的文件指针。
 
@@ -48,6 +49,8 @@ P.S. 此外文件指针导致的失败暴露了另一些方面考虑不周的问
 第二个悲剧：为虚拟机分配的30GiB磁盘空间不足以容纳Ubuntu 18.04.6 LTS系统自身和编译内核过程中产生的文件。编到一半，Low Disk Space了，编到最后，No enough space on disk。
 
 按照目前的统计，64GiB硬盘空余30GiB，因此至少得预留35GiB才能保证不出问题，稳妥起见，40-60GiB是比较合适的，当然这仅仅适用于在18.04LTS上编译5.18.2的情况。
+
+*然而现在发现，磁盘空间不足的问题也是在.config中没有要求不编译大多数用不上的模块导致的，编译前使用`make localconfig`可以有效地减少磁盘空间占用*
 
 ## 性能问题
 
@@ -121,7 +124,9 @@ GNU Libidn 库，IETF(互联网工程任务组)IDN(国际化域名)规范的扩�
 
 我打赌这96个小时里至少有60小时浪费在签名导致的无法install从而重新编译一遍上面
 
-坑爹啊！我只是做个实验，为甚么要考虑内核模块加密和签名啊，这是操作系统课程又不是系统恶意攻击防范安全课程。
+*坑爹啊！我只是做个实验，为甚么要考虑内核模块加密和签名啊，这是操作系统课程又不是系统恶意攻击防范安全课程。*
+
+*其实后来发现更多的时间被浪费在了编译一些用不上的内核模块方面(*
 
 请仔细阅读： [Bug#823107: marked as done (linux: make deb-pkg fails: No rule to make target 'debian/certs/benh@debian.org.cert.pem')](https://lists.debian.org/debian-kernel/2016/04/msg00579.html)
 
@@ -338,6 +343,10 @@ fp_close(fp, NULL);
 
 这样，最终完成了实验的目标。
 
+### 一条命令解决
+
+![customsyscall-shellcommand](../img/customsyscall-shellcommand.png)
+
 ## 善后
 
 自己编译安装的自定义版本内核不能通过预装的自动化包管理工具进行管理。
@@ -377,6 +386,16 @@ char *ttyname(int fd);
 这是一个更加优雅的方案，但是涉及到定义新结构体，在内核空间重新对字符串处理并传给filp函数，以及改变代码之后漫长的编译过程，因此是 to be done 任务。
 
 先保存一个能成功运行的版本。
+
+### 改变内核的版本号码 (STATUS: FIN)
+
+[compiling - Linux kernel version suffix + CONFIG_LOCALVERSION - Unix & Linux Stack Exchange](https://unix.stackexchange.com/questions/194129/linux-kernel-version-suffix-config-localversion)
+
+在`.config`的`CONFIG_LOCALVERSION`处加上自定义字符串，使编译后产生的内核有独特的版本号码字符串，以与其他内核区分。
+
+效果如图
+
+![custom-kernel-name](../img/customsyscall-kernel-neofetch.png)
 
 Knighthana
 
