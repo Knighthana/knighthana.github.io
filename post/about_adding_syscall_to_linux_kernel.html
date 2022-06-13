@@ -35,9 +35,11 @@
 
         <p>我寻思着与其看那上古的 Ubuntu 10.04 代码，然后不知所云地搞出一个知其然而不知其所以然的玩意，不如用近几年的 Ubuntu 和新一点的内核开刀。</p>
 
-        <p>值得一提的是Robert Love在他的著作Linux Kernel Development提到not implement a system call，并且给出了非常详实的理由，所以最好不要通过乱改系统的系统调用表实现自己要实现的功能，否则在kernel.org更新内核之后，自定义的内核和用户空间程序都会变成不兼容的废物，不过这是课程实验无需上纲上线（</p>
+        <p>值得一提的是Robert Love在他的著作<span style="font-style:italic">Linux Kernel Development</span>提到<cite>not implement a system call</cite>，并且给出了非常详实的理由，所以最好不要通过乱改系统的系统调用表实现自己要实现的功能，否则在<a href="https://kernel.org/">kernel.org</a>更新内核之后，自定义的内核和用户空间程序都会变成不兼容的废物，不过这是课程实验无需上纲上线（</p>
 
         <p>于是，在开写这篇文章之后又折腾了两三天。最后估计花了得有四五天时间，算作96个小时，终于搞出了一个比较满意的结果（但不能算完全满意）。</p>
+
+        <p><img src="../img/customsyscall-output.png" alt="customsyscall-output" /></p>
 
         <p>记录一下踩过的坑。</p>
 
@@ -51,11 +53,11 @@
 
     <h2>内核版本问题</h2>
 
-        <p>首先是版本的问题。我日常开发用的是Ubuntu 20.04.4 LTS on WSL，`uname -r`或者`neofetch`一下可以得知内核版本为"4.4.0-18362-Microsoft"，于是我理所当然地以为Ubuntu的官方发行版内核版本也在4.x左右，甚至特意挑选了18.04 LTS这个较老的版本（其实本来想用16.04 LTS，但是镜像站的16.04已经404了）。</p>
+        <p>首先是版本的问题。我日常开发用的是Ubuntu 20.04.4 LTS on WSL，<code>uname -r</code>或者<code>neofetch</code>一下可以得知内核版本为"4.4.0-18362-Microsoft"，于是我理所当然地以为Ubuntu的官方发行版内核版本也在4.x左右，甚至特意挑选了18.04 LTS这个较老的版本（其实本来想用16.04 LTS，但是镜像站的16.04已经404了）。</p>
 
         <p>这造成了第一个悲剧：我下载了一份4.15.3的源码埋头开始了工作。</p>
 
-        <p>Ubuntu 18.04.6 LTS 最新的内核版本为 5.4.0-113，显而易见，旧系统可以兼容新内核，但新系统基本不能兼容老内核，这是第一个雷。</p>
+        <p>Ubuntu 18.04.6 LTS 最新的内核版本为 5.4.0-113，众所周知，旧系统可以兼容新内核，但新系统基本不能兼容老内核，这是第一个雷。</p>
 
         <p>这个雷导致的后果是，4.15.3的内核无法启动 Ubuntu 18.04LTS 的图形界面，这使得原来指向虚拟终端的文件指针无法使用，在这种情况下必须改成指向实际终端的文件指针。</p>
 
@@ -72,6 +74,8 @@
         <p>第二个悲剧：为虚拟机分配的30GiB磁盘空间不足以容纳Ubuntu 18.04.6 LTS系统自身和编译内核过程中产生的文件。编到一半，Low Disk Space了，编到最后，No enough space on disk。</p>
 
         <p>按照目前的统计，64GiB硬盘空余30GiB，因此至少得预留35GiB才能保证不出问题，稳妥起见，40-60GiB是比较合适的，当然这仅仅适用于在18.04LTS上编译5.18.2的情况。</p>
+
+        <p style="font-style:italic;color:rgb(245, 245, 245);">然而现在发现，磁盘空间不足的问题也是在.config中没有要求不编译大多数用不上的模块导致的，编译前使用<code>make localconfig</code>可以有效地减少磁盘空间占用</p>
 
     <h2>性能问题</h2>
 
@@ -147,6 +151,8 @@
 
         <p style="font-style:italic; color:lightgray">坑爹啊！我只是做个实验，为甚么要考虑内核模块加密和签名啊，这是操作系统课程又不是系统恶意攻击防范安全课程。</p>
 
+        <p style="font-style:italic; color:rgb(245, 245, 245)">其实后来发现更多的时间被浪费在了编译一些用不上的内核模块方面(</p>
+
         <p>请仔细阅读：<a href="https://lists.debian.org/debian-kernel/2016/04/msg00579.html">Bug#823107: marked as done (linux: make deb-pkg fails: No rule to make target 'debian/certs/benh@debian.org.cert.pem')</a></p>
 
         <p>标红：</p>
@@ -166,22 +172,22 @@
 
         <p style="font-weight:bold;">在 开 始 编 译 之 前 ， 需 要</p>
 
-        <p>在`.config`中置n或置空所有有关`CONFIG_MODULE_SIG_ALL` `CONFIG_MODULE_SIG_KEY` `CONFIG_SYSTEM_TRUSTED_KEYS`的选项</p>
+        <p>在<code>.config</code>中置n或置空所有有关<code>CONFIG_MODULE_SIG_ALL</code> <code>CONFIG_MODULE_SIG_KEY</code> <code>CONFIG_SYSTEM_TRUSTED_KEYS</code>的选项</p>
 
-        <p>另外根据我的判断和实践，与`KEY`有关的涉及到`BLACKLIST`和`REVOCATION`的选项也全部置n或置空</p>
+        <p>另外根据我的判断和实践，与"KEY"有关的涉及到"BLACKLIST"和"REVOCATION"的选项也全部置n或置空</p>
 
         <p style="font-weight:bold;color:red;background-color:rgb(228, 228, 228);">前提: 系统仅仅作为实验用途。</p>
 
-        <p>但是，`CONFIG_MODULE_SIG_KEY="certs/signing_key.pem"`这一行需要<span style="font-weight:bold;">原样保留</span>，不能置空，这指定了自动签名需要用到的文件，如果置空，则会报错。</p>
+        <p style="font-weight:bold">但是，<code>CONFIG_MODULE_SIG_KEY="certs/signing_key.pem"</code>这一行需要<span style="font-weight:bold;">原样保留</span>，不能置空，这指定了自动签名需要用到的文件，如果置空，则会报错。</p>
     <h2>步骤</h2>
         
         <h3>权限问题</h3>
 
-            <p>当我尝试在Windows的目录系统中用7-zip解压Linux-5.18.2.tar.xz的时候，提示错误“没有建立链接xxxxx的权限”，我还以为这个打包的内核文件里面有什么特别的权限问题需要处理，以至于我在网上找教程的时候，看到教程中从第一个`make clean`就开始`sudo`竟没有半点怀疑。</p>
+            <p>当我尝试在Windows的目录系统中用7-zip解压Linux-5.18.2.tar.xz的时候，提示错误“没有建立链接xxxxx的权限”，我还以为这个打包的内核文件里面有什么特别的权限问题需要处理，以至于我在网上找教程的时候，看到教程中从第一个<code>make clean</code>就开始<code>sudo</code>竟没有半点怀疑。</p>
 
-            <p>事实上，编译内核的前几步不需要`sudo`也不应该`sudo`————平常随便编译个什么程序需要`sudo`吗？</p>
+            <p>事实上，编译内核的前几步不需要<code>sudo</code>也不应该<code>sudo</code>————平常随便编译个什么程序需要<code>sudo</code>吗？</p>
 
-            <p>只有在涉及到`install`的时候，因为需要将编译好的文件放到系统目录里面，才需要`sudo`。</p>
+            <p>只有在涉及到<code>install</code>的时候，因为需要将编译好的文件放到系统目录里面，才需要<code>sudo</code>。</p>
 
             <p style="font-size:light;font-style:italic;color:lightgray;">不然呢，在自己家目录下面的工作目录里面创建一大堆只有root才能访问的文件很好玩吗？</p>
 
@@ -197,7 +203,7 @@
 
             <p>命令大概有这几种:</p>
 
-            <p><code>make mrproper</code> 彻底清理整个目录，在需要将所有结果推倒重来的时候使用，清除掉里面所有可能的不需要的东西，包括`.config`文件在内，所有文件恢复如初(自己更改的代码文件除外)，以准备一次完全重新开始的make</p>
+            <p><code>make mrproper</code> 彻底清理整个目录，在需要将所有结果推倒重来的时候使用，清除掉里面所有可能的不需要的东西，包括<code>.config</code>文件在内，所有文件恢复如初(自己更改的代码文件除外)，以准备一次完全重新开始的make</p>
 
             <p><code>make clean</code> 保留<code>.config</code>，清理中间结果，比如目标文件之类的东西，至少在执行完<code>make mrproper</code>之后是没必要执行一遍<code>make clean</code>的</p>
 
@@ -215,7 +221,7 @@
 
             <p style="font-weight:bold;">注意:</p>
 
-                <p>配置`.config`的时候会询问是否打开`-Werror`选项，虽然我平常自己编译程序的时候会常开这个选项，但是这里可以明确说，编译5.18.2内核的时候不要开这个选项折磨自己，因为该版本内核中jffs2_build_xattr_subsystem od_set_powersave_bias stmmac_request_irq_multi_msi vhost_scsi_flush这几个函数在某处调用的时候存在warning</p>
+                <p>配置<code>.config</code>的时候会询问是否打开<code>-Werror</code>选项，虽然我平常自己编译程序的时候会常开这个选项，但是这里可以明确说，编译5.18.2内核的时候不要开这个选项折磨自己，因为该版本内核中jffs2_build_xattr_subsystem od_set_powersave_bias stmmac_request_irq_multi_msi vhost_scsi_flush这几个函数在某处调用的时候存在warning</p>
 
             <h4>syscall_64.tbl</h4>
                 <p>在系统调用表中添加系统调用</p>
@@ -260,7 +266,7 @@
                     include the prototypes if CONFIG_ARCH_HAS_SYSCALL_WRAPPER is enabled.<br/>
                 </blockquote>
 
-                <p>于是在这里的最后一行，用于判断其他情况的`ifdef`之前写入自己的函数声明</p>
+                <p>于是在这里的最后一行，用于判断其他情况的<code>ifdef</code>之前写入自己的函数声明</p>
 
                 <p><code>asmlinkage long sys_customcall(int tty, int mode, long stuid);</code></p>
             
@@ -287,15 +293,15 @@
 
                 <p>主要的问题在于我对于内核中的函数并不熟悉，所以不知道用那些函数进行输出，（其实也不知道用哪些函数输入，但是函数需要的数据可以用参数传入所以暂不考虑输入的问题）</p>
 
-                <p>首先可以用脚趾排除掉`printf`的可能性，`printf`的参数列表没有包括输出的目的地，默认为stdout，对于一个正在某个tty上登入的用户，其`stdout`是确认的，但是对内核来说并不知道stdout在哪</p>
+                <p>首先可以用脚趾排除掉<code>printf</code>的可能性，<code>printf</code>的参数列表没有包括输出的目的地，默认为stdout，对于一个正在某个tty上登入的用户，其<code>stdout</code>是确认的，但是对内核来说并不知道stdout在哪</p>
 
-                <p>进一步来说，`printf`是一个定义在"stdio.h"中的标准输出函数，而"sys.c"的include文件列表中并没有"stdio.h"</p>
+                <p>进一步来说，<code>printf</code>是一个定义在"stdio.h"中的标准输出函数，而"sys.c"的include文件列表中并没有"stdio.h"</p>
 
-                <p>能够指定输出目标的是`fprintf`和`sprintf`然而查找了一下，`fprintf`和`sprintf`也是"stdio.h"中的函数</p>
+                <p>能够指定输出目标的是<code>fprintf</code>和<code>sprintf</code>然而查找了一下，<code>fprintf</code>和<code>sprintf</code>也是"stdio.h"中的函数</p>
 
                 <p>其中，“fprintf”用文件描述符定义输出的目标，很可惜文件描述符也是一个用户空间的东西，在内核层面是无法理解的内容</p>
 
-                <p>我又试着顺着`printf`向里找它的实现过程，`printf`能够一直追溯到`vsprintf`，然而在往上是宏定义，对于我来说线索到此中断</p>
+                <p>我又试着顺着<code>printf</code>向里找它的实现过程，<code>printf</code>能够一直追溯到<code>vsprintf</code>，然而在往上是宏定义，对于我来说线索到此中断</p>
 
                 <p>在第二还是第三天偶然发现了一个叫做“printk”的函数，这个函数可以以与printf类似的方式向内核输出字符串，它和printf不同之处在于第一个参数，printf的首个参数是一个指向char的指针，而printk的首个参数则是一种很奇特的形式，它由一个数字和一个指向char的指针绑定而成。</p>
 
@@ -375,6 +381,10 @@
 
                 <p>这样，最终完成了实验的目标。</p>
 
+        <h3>一条命令解决</h3>
+                
+            <p><img src="../img/customsyscall-shellcommand.png" alt="customsyscall-shellcommand" /></p>
+
     <h2>善后</h2>
 
         <p>自己编译安装的自定义版本内核不能通过预装的自动化包管理工具进行管理。</p>
@@ -399,13 +409,23 @@
 
         <h3>使用ttyname函数从用户空间获取输出目标 (STATUS: FIN)</h3>
         
-        <p>用户空间函数<code>char *ttyname(int fd);</code>定义于<code>&lt;unistd.h&gt;</code>提供了获得当前tty名称的功能</p>
+            <p>用户空间函数<code>char *ttyname(int fd);</code>定义于<code>&lt;unistd.h&gt;</code>提供了获得当前tty名称的功能</p>
 
-        <p>假如在用户空间调用该函数，并将获得的字符串压入传参结构体，通过系统调用函数传给内核空间的服务例程，就可以在任意tty下获取输出。</p>
+            <p>假如在用户空间调用该函数，并将获得的字符串压入传参结构体，通过系统调用函数传给内核空间的服务例程，就可以在任意tty下获取输出。</p>
 
-        <p>这是一个更加优雅的方案，但是涉及到定义新结构体，在内核空间重新对字符串处理并传给filp函数，以及改变代码之后漫长的编译过程，因此是 to be done 任务。</p>
+            <p>这是一个更加优雅的方案，但是涉及到定义新结构体，在内核空间重新对字符串处理并传给filp函数，以及改变代码之后漫长的编译过程，因此是 to be done 任务。</p>
 
-        <p>先保存一个能成功运行的版本。</p>
+            <p>先保存一个能成功运行的版本。</p>
+
+        <h3>改变内核的版本号码 (STATUS: FIN)</h3>
+
+            <p><a href="https://unix.stackexchange.com/questions/194129/linux-kernel-version-suffix-config-localversion">compiling - Linux kernel version suffix + CONFIG_LOCALVERSION - Unix & Linux Stack Exchange</a></p>
+
+            <p>在".config"的<code>CONFIG_LOCALVERSION</code>处加上自定义字符串，使编译后产生的内核有独特的版本号码字符串，以与其他内核区分。</p>
+
+            <p>效果如图:</p>
+
+            <p><img src="../img/customsyscall-kernel-neofetch.png" alt="custom-kernel-name" /></p>
 
     <p style="font-family:Brush Script MT, Brush Script Std, cursive;font-size:xx-large;">Knighthana</p>
     
