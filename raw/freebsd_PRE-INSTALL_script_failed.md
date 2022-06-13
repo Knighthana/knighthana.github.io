@@ -1,5 +1,5 @@
-<meta name="created" content="2021-07-01">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="created" content="2021-07-01"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 # 在FreeBSD中通过pkg安装软件时遇到pre-install script failed问题
 

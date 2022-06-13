@@ -1,4 +1,4 @@
-<meta name="created" content="2018-03-24">
+<meta name="created" content="2018-03-24"/>
 
 # 博客的第一天
 
