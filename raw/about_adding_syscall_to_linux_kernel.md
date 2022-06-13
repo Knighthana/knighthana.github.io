@@ -1,4 +1,4 @@
-<meta name="created" content="2022-06-10">
+<meta name="created" content="2022-06-10"/>
 
 # 自己搞一个Linux系统调用的一点记录
 
@@ -79,13 +79,13 @@ lex产生词法分析器的开放源代码版本
     
 #### build-essential
 
-这个在linux下做开发都要用到
+这个在linux下做开发都要用到，不必多说
 
 #### libncurses5-dev
 
 > The ncurses (new curses) library is a free software emulation of curses in System V Release 4.0 (SVr4), and more. It uses terminfo format, supports pads and color and multiple highlights and forms characters and function-key mapping, and has all the other SVr4-curses enhancements over BSD curses. SVr4 curses became the basis of X/Open Curses. (https://invisible-island.net/ncurses/announce.html)
     
-至少在`make menuconfig`过程中和那个图形化配置菜单有关
+一个终端下的图形库，至少在`make menuconfig`过程中和那个图形化配置菜单有关
     
 #### openssl和libssl-dev
 
@@ -171,13 +171,15 @@ GNU Libidn 库，IETF(互联网工程任务组)IDN(国际化域名)规范的扩�
 
 命令大概有这几种
 
-`make mrproper` 彻底清理整个目录，在需要将所有结果推倒重来的时候使用，清除掉里面所有可能的不需要的东西，包括`.config`文件在内，所有文件恢复如初
+`make mrproper` 彻底清理整个目录，在需要将所有结果推倒重来的时候使用，清除掉里面所有可能的不需要的东西，包括`.config`文件在内，所有文件恢复如初(自己更改的代码文件除外)，以准备一次完全重新开始的make
 
 `make clean` 保留`.config`，清理中间结果，比如目标文件之类的东西，至少在执行完`make mrproper`之后是没必要执行一遍`make clean`的
 
 `make config`或者`make menuconfig` 都是用于创建设定编译选项的`.config`这个文件的命令，后者需要额外的库，并且需要终端至少有一定的宽度否则会报错，但我仍然建议使用后者，就当是为了键盘的Enter键的健康着想吧，或者会用`yes`也行，if you like
 
-`make`
+不过对于`.config`文件，我目前的建议是`make localconfig`，按照目前加载的内核配置进行编译，这样可以减少需要编译的模块，大大节省耗时。
+
+`make` 这个就不解释了
 
 `make modules` 编译模块
 
@@ -235,7 +237,7 @@ entry point是系统调用的入口点，稍后在"syscalls.h"中进行声明的
 
 这是服务例程的定义实现部分
 
-SYSCALL_DEFINE是一个用于定义系统调用的宏函数，有几个写法，SYSCALL_DEFINE1，SYSCALL_DEFINE2，SYSCALL_DEFINE3，后面的数字代表之前声明中参数的个数，而这个宏函数自身的参数则是以下几项
+SYSCALL_DEFINE是一个用于定义系统调用的宏函数，有几个写法，SYSCALL_DEFINE1，SYSCALL_DEFINE2，SYSCALL_DEFINE3，后面的数字代表之前声明中参数的个数，可以是0 1 2 3，而这个宏函数自身的参数则是以下几项
 
 1st. 系统调用名
 2nd. 参数1的类型
@@ -262,7 +264,7 @@ SYSCALL_DEFINE是一个用于定义系统调用的宏函数，有几个写法，
 
 我又试着顺着`printf`向里找它的实现过程，`printf`能够一直追溯到`vsprintf`，然而在往上是宏定义，对于我来说线索到此中断
 
-最后在第二还是第三天偶然发现了一个叫做“printk”的函数，这个函数可以以与printf类似的方式向内核输出字符串，它和printf不同之处在于第一个参数，printf的首个参数是一个指向char的指针，而printk的首个参数则是一种很奇特的形式，它由一个数字和一个指向char的指针绑定而成。
+在第二还是第三天偶然发现了一个叫做“printk”的函数，这个函数可以以与printf类似的方式向内核输出字符串，它和printf不同之处在于第一个参数，printf的首个参数是一个指向char的指针，而printk的首个参数则是一种很奇特的形式，它由一个数字和一个指向char的指针绑定而成。
 
 [printk man page on Mageia](http://www.polarhome.com/service/man/?qf=printk&tf=2&of=Mageia&sf=)
 
@@ -288,7 +290,7 @@ SYSCALL_DEFINE是一个用于定义系统调用的宏函数，有几个写法，
 
 什么是file descriptor？什么是file entry？什么是struct file？哪个在用户空间，哪个在内核空间？当我在内核中编写一条系统调用的时候，拿到的到底是file descriptor还是file entry？`int fd`是什么？`FILE *fp`是什么？
 
-如果把这些全忘了，怎么能写好程序呢?
+把这些全忘了的虫豸，怎么能写好程序呢?
 
 所以我得复习一下这些内容，除了翻书之外，网上的一些博客也可以参考一下，有关这个问题例如：
 
@@ -352,7 +354,7 @@ fp_close(fp, NULL);
 
 而同一新版本的内核，只在`/boot`下发现了冗余的`*.old`文件，如果新内核可以正常使用，那么也就不留着`*.old`了
 
-最后一定要记得`sudo update-grub`
+最后`sudo update-grub`
 
 目前除了手动管理之外，暂时没有发现什么更好的管理工具
 
