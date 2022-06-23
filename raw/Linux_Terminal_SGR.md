@@ -78,13 +78,11 @@ ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数
 
 ### 还没有搞清楚，但存在于手册中的功能
 
-还有一些功能是存在的，但是我无法理解这些功能，这些功能来自于manpages
+还有一些功能是存在的，但是我无法理解这些功能，这些功能的文字介绍可以通过manpages[console_codes(4) — Linux manual page](https://www.man7.org/linux/man-pages/man4/console_codes.4.html)查找到
 
-这些功能中，我只测试了一部分，其他介绍来自Linux Manual Page中文版本
+这些功能中，我只测试了一部分，其他介绍来自Linux Manual Page中文版本，控制终端代码的调出命令为`man -L zh-CN console_codes`
 
-man-pages-zh中关于控制终端代码的调出命令为`man -L zh-CN console_codes`
-
-有关中文版Linux Manual Page请参阅[man pages zh](https://github.com/man-pages-zh/manpages-zh)
+有关中文版Linux Manual Page请参阅[man pages zh](https://github.com/man-pages-zh/manpages-zh)，本文涉及到的部分是[man4 console_codes](https://github.com/man-pages-zh/manpages-zh/blob/master/src/man4/console_codes.4)
 
 #### 个人尚未测试的数字表格（引用自man-pages-zh(2021年2月17日版本)）
 
