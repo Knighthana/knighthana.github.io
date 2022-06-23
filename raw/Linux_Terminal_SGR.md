@@ -78,7 +78,7 @@ ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数
 
 ### 还没有搞清楚，但存在于手册中的功能
 
-还有一些功能是存在的，但是我无法理解这些功能，这些功能的文字介绍可以通过manpages[console_codes(4) — Linux manual page](https://www.man7.org/linux/man-pages/man4/console_codes.4.html)查找到
+还有一些功能是存在的，但是我无法理解这些功能，这些功能的文字介绍可以通过manpages的[console_codes(4) — Linux manual page](https://www.man7.org/linux/man-pages/man4/console_codes.4.html)查找到
 
 这些功能中，我只测试了一部分，其他介绍来自Linux Manual Page中文版本，控制终端代码的调出命令为`man -L zh-CN console_codes`
 
@@ -98,7 +98,7 @@ ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数
 
 ---------------------------------------------------
 
-[测试代码]((https://github.com/Knighthana/Gulog_Experiment_Codes/tree/main/SGR_test))我稍后应该会上传到我的github仓库中
+[测试代码](https://github.com/Knighthana/Gulog_Experiment_Codes/tree/main/SGR_test)我稍后应该会上传到我的github仓库中
 
 
 ## 未完的想法
