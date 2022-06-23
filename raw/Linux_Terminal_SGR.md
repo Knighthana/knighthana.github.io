@@ -98,8 +98,11 @@ ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数
 
 ---------------------------------------------------
 
-[测试代码](https://github.com/Knighthana/Gulog_Experiment_Codes/tree/main/SGR_test)我稍后应该会上传到我的github仓库中
+测试结果如图：
 
+![测试图片](../img/sgrtestresult.png)
+
+[测试代码](https://github.com/Knighthana/Gulog_Experiment_Codes/tree/main/SGR_test)我稍后应该会上传到我的github仓库中
 
 ## 未完的想法
 
