@@ -12,4 +12,3 @@ KD树是一种查询索引结构，广泛应用于数据库索引中。从概念
 [author: Coding Tech](https://www.jianshu.com/u/ec271be1f5dd)
 
 [rest: 基础-12：15分钟理解KD树](https://www.jianshu.com/p/ffe52db3e12b)
-
