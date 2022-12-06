@@ -1,3 +1,5 @@
+<meta name="created" content="2022-07-07"/>
+
 # 关于VirtualBox在虚拟机操作系统中共享文件夹的一个猜想
 
 我注意到VirtualBox的虚拟机中，共享文件夹功能在更换内核之后就无法使用了
