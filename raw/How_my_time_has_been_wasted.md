@@ -110,6 +110,8 @@ equivs具有的一个功能是根据一个control文本文件生成一个dummy d
 
 之后进入TTY模式，以root权限运行Nvidia提供的run文件，一切顺利的话，会出现进度条，之后会询问一些问题，我只遇到两个问题，一个是"32-bit compatibility libraries"，32位兼容库，如果不是明确要用这个库就不要装，“update your x configuration so that nvidia x driver will be used when you restart x”这个务必允许选择yes，以便x系统调用安装好的驱动，我没有遇到其他人说的“register the module with DKMS”，这个一般来说不选yes而要选择no，虽然显卡驱动的确是内核的一个module，而且随内核更新自动编译安装驱动听起来很美好，但我们都知道这套系统有多骨感，况且稳定的发行版一般没事很少换内核，如果某天更新之后发现系统换了内核的话，就去下载一个最新的Nvidia驱动，再手动安装一遍
 
+重启，输入`nvidia-smi`，如果一切正常，那么应当会看到一份详细的驱动和显卡情况说明
+
 ## Fedora的protected packages
 
 Fedora的一些发行类型，针对某些包设有保护，正常情况下它会保护一些至关重要的包应用，例如grub2。
@@ -144,7 +146,7 @@ Ubuntu系基本采用`$6$`，这是SHA-512散列函数，接下来第一个美�
 
 如何生成一个密码？有可能很容易想到`openssl sha512`，但是这是没必要的；
 
-直接`mkpasswd`即可，它会自动为你生成一个加随机盐的符合条件的密码，直接填入`/etc/shadow`；
+直接`mkpasswd --method=SHA-512`即可，它会自动为你生成一个加随机盐的符合条件的密码，将结果直接填入`/etc/shadow`；
 
 于是就绕过了Fedora的密码字典检查（但是这有何意义呢）
 
@@ -198,7 +200,7 @@ Ubuntu server安装设定中的一步会提供选择，是否安装并启用`ssh
 
 整个安装过程非常快，比这几天所有其他经历的安装过程都要快，我粗略估计进度条一共跑了不到两分钟。
 
-需要留意的是，安装完毕之后不会自动重新启动，需要手动在下方选择reboot并确认；
+需要留意的是，安装完毕之后不会自动重新启动，显示`subiquity/late/run`，然后就不动了，需要手动在下方选择reboot并确认；
 
 重启之后，server用起来还是很不错的。
 
@@ -282,7 +284,7 @@ Xorg和xfce4支持，都具备；甚至有显卡驱动支持；
 
 ### 让人逐渐喜欢的使用体验
 
-安装完毕之后，随着EFI定制启动，画面一切正常，令人有些担心的是lightdm出现之前短暂的TTY登录提示，但是在进入桌面之后这些担忧倒是烟消云散了
+安装完毕之后，随着EFI定制启动，画面一切正常，令人有些担心的是lightdm出现之前有一个短暂的TTY登录提示，但是在进入桌面之后这些担忧倒是烟消云散了
 
 看起来是经过定制的xfce，简单改了一下多显示器位置的设定，这套桌面其他的地方都比较精美，我仅仅修改默认面板设置使其自动隐藏腾出桌面地方，在副屏的角落处增加了用来随时看日期时间的半透明小面板，看起来基本没有什么需要改动的地方了；
 
@@ -292,13 +294,31 @@ Xorg和xfce4支持，都具备；甚至有显卡驱动支持；
 
 安装了一下常用的软件，夜已经深了，回顾了一下一整天的经历，假如一开始就下定决心而不是在20.04的基础上修修补补，最终捅了个关于SSL的大篓子，也许会省下许多时间，但问题最终的解决方案也并不是一开始就浮上水面的，事实上直到深夜之前，我都没有想到过Mint其实是正好满足一切需求的发行版；有时候就是需要这样一个灵感，但灵感的产生也并不是那么随心所欲的；
 
+### Fcitx5同时需要gtk2和gtk3
+
+要想让Fcitx5正常工作，`fcitx5-frontend-gtk2`和`fcitx5-frontend-gtk3`是同时被需要的，不能只装一个；
+
+### vscode的颜色设置
+
+上一次配vscode还是很久之前的事情
+
+我也不太想登录账号让它自动同步设置，因为我在三个环境下同时使用vscode，Windows，WSL，LinuxMint，已知Windows和WSL的配置是独立存在的，但后两者之间不太确定
+
+json中的`"workbench.colorCustomizations"`条目就是设置位置了，
+
+`"statusBar.noFolderBackgroud"`是非打开文件夹情况下状态栏的颜色，我不是很喜欢那个紫色，我认为紫色太醒目，所以改成了深蓝色
+
+`"statusBar.backgroud"`是打开文件夹情况下的颜色，直接设成`#1874CD`
+
+`"statusBar.debuggingBackgroud"`是调试代码期间状态栏的颜色，可以随意设定
+
 ### 一些繁杂的经历和一些不太愉快的经历
 
-Linux的字体支持很糟糕，这不完全是Linux的原因，这个世界上有很多人守着字体这棵摇钱树；
+Linux的字体支持很糟糕，这不完全是Linux的原因——这个世界上有很多人守着字体这棵摇钱树；
 
 作为一个个人用户，我对那些不感兴趣，我只关心怎么好看好用，首先搞到几家大公司一起弄出来促进互联网发展的思源黑体，这套字体是开源允许任意使用的，然后是微软的Cascadia开源字体，它包含了对等宽的支持，接下来通过其他手段搞到其他字体文件，比如Consolas之类的；
 
-(4月2日更新：关于字体配置可以去看[Linux字体美化实战(Fontconfig配置)](http://www.jinbuguo.com/gui/linux_fontconfig.html)，这篇文章写得更专业，更全面，顺带一提这真是个非常硬核的作者)
+(4月2日更新：关于字体配置可以去看[Linux字体美化实战(Fontconfig配置)](http://www.jinbuguo.com/gui/linux_fontconfig.html)，这篇文章写得更专业，更全面，我参照文章删掉了原本安装的CJK字体中不需要的几个，顺带一提这真是个非常硬核的作者)
 
 一般来说，Linux下有两种字体，一类是OpenType，一般以otf为扩展名，一类是TrueType，一般以TTF和TTC为扩展名，将它们放到`/usr/share/fonts`对应的字体文件夹里，然后`fc-cache -fv`更新字体缓存
 
@@ -309,6 +329,37 @@ Linux的字体支持很糟糕，这不完全是Linux的原因，这个世界上�
 以及运行没多久，mint的xfce就带来了两次鼠标卡死而其他操作——比如键盘操作——正常的小BUG，所幸通过切换窗口焦点、通过终端`kill`掉对应的进程一般都能解决问题；
 
 最后是虚拟终端字形渲染问题，几乎所有虚拟终端都采用了同样的`vte`库，据称[这个库导致了字体行高异常的问题](https://gitlab.gnome.org/GNOME/vte/-/issues/347)，目前尚不太清楚后续的情况，但是就使用体验而言是还没解决，不知道他们打算什么时候修；
+
+顺带一提，一个不影响使用的小毛病
+
+mint-xfce自带的lightdm无法通过常规方式调整显示器的位置，这也是dm的通病，它们基本都是一个单独的用户，而普通用户对桌面的修改只在自己的文件夹中生效。
+
+Gnome可以通过将Gnome系统的`monitors.xml`文件拷贝到gdm用户的目录下使之生效
+
+但xfce与lightdm的组合，暂时没找到比较好的办法。
+
+gentoo wiki给出了一个创建与修改`/etc/xorg/xorg.conf.d/`中文件的方式调整xorg对显示器的识别方式，过程中需要用到`xrandr`工具检查图形输出，尤其是显示器输出的名称，
+
+我也查找了xorg.conf的manual手册，也许是我看着资料写的`40-monitor.conf`中
+
+```conf
+Section "Device"
+    Identifier "NVIDIA-VIDEO-CARD"
+    Option "Monitor-HDMI-0" "MonitorA"
+    Option "Monitor-DP-0" "MonitorB"
+EndSection
+
+Section "Monitor"
+    Option "MonitorA"
+EndSection
+
+Section "Monitor"
+    Identifier "MonitorB"
+    Option  "RightOf" "MonitorA"
+EndSection
+```
+
+哪里出了问题，总之，xorg并没有在lightdm中正确地排布我的显示器位置。
 
 暂时算是平稳地装完了系统，可以开始享受纯Linux的开发了。
 
