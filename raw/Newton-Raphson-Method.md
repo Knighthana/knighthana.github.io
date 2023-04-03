@@ -76,7 +76,7 @@ $x_0=1$
 
 ![fg1](../img/Newton-Raphson-Method-fg1.svg)
 
-然后根据交点，代入
+然后根据直线与x轴的交点，代入
 $x_1=2$
 ，再画一张图
 
