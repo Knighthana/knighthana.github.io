@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="created" content="2019-05-26"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="../favicon.png" />
+    <link rel="stylesheet" type="text/css" href="../css/github-markdown.css"/>
+    <!-- you can get this css from https://github.com/sindresorhus/github-markdown-css -->
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 45px;
+        }
+    
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+	<title>博客维护更新记录</title>
+</head>
+<body>
+<article class="markdown-body">
+<!-- raw HTML omitted -->
+    <h1>博客维护更新记录</h1>
+    <h2>Giveup Jekyll</h2>
+    <p>早于2019年5月19日的某个时间，我放弃了使用Jekyll作为博客框架的行动。</p>
+    <p>之后转为手动维护。</p>
+    <p>详见<a href="Preparing_For_My_Gulog.html">放弃jekyll，重建咕客记录</a></p>
+    <h2>Try Text2html For The First Day</h2>
+    <p>Today I start a new repo named text2html.<br />
+    Using C programing Language to edit text file is a challangable work, because I'm not used to progress string in the past. The string.h file is a cherish.</p>
+    <h3>strcpy</h3>
+    <p>strcpy function is the function that copy a string to another.<br />
+    e.g. strcpy(str1, str2) means copy str2 to str1 from the first letter, both of them.<br />
+    I got to know about that function very long ago, but what a shame that I forgot it. I almost start to use a loop and a if to write a function like this.</p>
+    <h3>strcat and strncat</h3>
+    <p>These functions are the functions which can add the string to another, automaticly deal with the '\0' problem.<br />
+    e.g. strcat(str1, str2) means add str2 to str1 on the tail, and change the '\0' tag.</p>
+    <h3>struct using</h3>
+    <p>Struct is a great invention. But I didn't use it until now.<br />
+    Struct helps me to divide the inner struct of the data, and focus on what the data means. I don't need to find out where is the start symbol, where is the end symbol, where to replace the text by using the struct.<br />
+    Just malloc a place for the struct, and let the annoying things get away.</p>
+    <h3>error: expected ':', ',', ';', '}' or '<strong>attribute</strong>' before '=' token</h3>
+    <p>Struct can't be assignment when initing.</p>
+    <h3>New conception</h3>
+    <p>Make all data on one structure. Use less pointer.<br />
+    Knighthana @ XDU<br />
+    2019/05/26</p>
+    <h2>Try Text2html: Some progress</h2>
+    <p>四年过去了，我逐渐了解到之前的想法，“用C写一个text2html”是个什么工程。</p>
+    <p>19年的时候，我把这个问题想简单了，随着这几年我学习的内容不断地增加，我了解到，如果想把一种语言的代码转换成另一种语言的代码，需要写一个编译器出来，这种事情听着就头大。</p>
+    <p>一边学习CPTT这个抽象的东西，我一边在想，用C去完成这种工作，是否有些不太容易？（还有：这样造轮子是不是在浪费时间）</p>
+    <p>今天得知了一个好消息——在一次github上的搜索中，我发现<code>ruby gems</code>中有一个项目叫作<code>markdown2html</code>，它基本能满足我对将markdown文本转化成为html的需求；生成的文本仅仅是html文本，我可以自行插入头部的标签和尾部标签，需要引用的<code>css</code>也就可以在那边声明</p>
+    <p>但是获得了更多坏消息：</p>
+    <p>我之前认为最大的阻力在于转换，或者说把markdown编译为html——虽然说确实如此，如果一行行地手敲<code>&lt;p&gt;&lt;/p&gt;</code>过去实在是太累了——然而我因此忽略了另外的一些问题，这些阻力也不小；</p>
+    <p>第一，转换仅仅只是转换，距离把网站搭建起来还差了很多，我需要自动在网页下方加上返回主页的链接，以及需要做一些可能的手动精修；</p>
+    <p>第二，我需要自动统计文章的日期，需要读取文章下方的Tag，然后根据这些内容每次更新我的<code>index.html</code>文件；不然博客页面显得太乱了；</p>
+    <p>第三，这东西还是不支持数学公式，我最近对GitHub自带的markdown渲染器感觉到不太爽的地方就是它的数学公式支持太糟糕了，稍微复杂一点的公式就无法渲染了，而且至今其他项目里还有一个简单的公式不知道为什么始终报错无法渲染；</p>
+    <p>我需要一个什么玩意？</p>
+    <p>最理想的情况当然是写完markdown，敲一个“./run”，于是文章就自动从<code>raw/*.md</code>变成<code>post/*.html</code>，这包括语法转换什么的，还要自动插入博客的链接，毕竟我懒得在撰写文章的时候还要考虑自动跳转之类的东西，然后自动更新我的<code>index.html</code>，不仅要加入新的链接，还要更新按日期分类博客、按Tag分类博客的静态页面；</p>
+    <p>但目前是没有这么便捷的工具的。</p>
+    <p>头痛，虽然发现这个工具能减轻很多工作，但是更新博客还是变成了一种体力活。</p>
+    <p>所以我还是不会把所有的<code>*.md</code>转换成<code>*.html</code>，因为这实在是太消耗精力了。</p>
+    <p>Knighthana</p>
+    <p>2023/04/05</p>
+    <h2>Tag</h2>
+    <p>text2html; BlogMaintenance</p>
+    <p><a href="../index.html">返回主页</a></p>
+</article>
+</body>
+</html> 
