@@ -173,9 +173,9 @@
 
         <p style="font-weight:bold;">在 开 始 编 译 之 前 ， 需 要</p>
 
-        <p>在<code>.config</code>中置n或置空所有有关<code>CONFIG_MODULE_SIG_ALL</code> <code>CONFIG_MODULE_SIG_KEY</code> <code>CONFIG_SYSTEM_TRUSTED_KEYS</code>的选项</p>
+        <p>在<code>.config</code>中置n或置空所有有关<code>CONFIG_MODULE_SIG_ALL</code> <code>CONFIG_SYSTEM_TRUSTED_KEYS</code>的选项</p>
 
-        <p>另外根据我的判断和实践，与"KEY"有关的涉及到"BLACKLIST"和"REVOCATION"的选项也全部置n或置空</p>
+        <p>另外根据我的判断和实践，<span style="font-weight:bold;">与"KEY"有关的涉及到"BLACKLIST"和"REVOCATION"的选项也全部置n或置空</span></p>
 
         <p style="font-weight:bold;color:red;background-color:rgb(228, 228, 228);">前提: 系统仅仅作为实验用途。</p>
 
@@ -212,7 +212,11 @@
 
             <p>不过对于<code>.config</code>文件，我目前的建议是<code>make localconfig</code>，按照目前加载的内核配置进行编译，这样可以减少需要编译的模块，大大节省耗时。</p>
 
+            <p style="font-size:light;font-style:italic;color:lightgray;">2023.04.03更新：在最近的一次针对6.2.9内核的编译过程中发现<code>make localconfig</code>不可用，找到了一个方法说可以使用<code>make localmodconfig</code>代替，但是有人警告说这两个命令不太一样，反正我试了是可以生成正常的<code>.config</code>文件的</p>
+
             <p><code>make</code> 这个就不解释了</p>
+
+            <p style="font-size:light;font-style:italic;color:lightgray;">2023.04.03更新：写文章的时候忘了提，make的时候可以设定架构，务必记得查询本机的CPU线程数以加快编译速度，此外还有对输出日志重定向，以免打印到屏幕浪费算力，如果目标是amd64，本机CPU有8个线程，日志重定向到上一级的文件中，那么就输入<code>make ARCH=x86_64 -j8 > ../makekernel.log</code>，这样会加快速度，而且只在屏幕上打印警告和错误，日志可以稍后自行通过其他方式查看</p>
 
             <p><code>make modules</code> 编译模块</p>
 
@@ -408,7 +412,7 @@
 
     <h2>后续改进计划</h2>
 
-        <h3>使用ttyname函数从用户空间获取输出目标 (STATUS: FIN)</h3>
+        <h3>使用ttyname函数从用户空间获取输出目标 (STATUS: FINISHED)</h3>
         
             <p>用户空间函数<code>char *ttyname(int fd);</code>定义于<code>&lt;unistd.h&gt;</code>提供了获得当前tty名称的功能</p>
 
@@ -418,7 +422,7 @@
 
             <p>先保存一个能成功运行的版本。</p>
 
-        <h3>改变内核的版本号码 (STATUS: FIN)</h3>
+        <h3>改变内核的版本号码 (STATUS: FINISHED)</h3>
 
             <p><a href="https://unix.stackexchange.com/questions/194129/linux-kernel-version-suffix-config-localversion">compiling - Linux kernel version suffix + CONFIG_LOCALVERSION - Unix & Linux Stack Exchange</a></p>
 
