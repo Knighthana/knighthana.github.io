@@ -184,7 +184,11 @@ GNU Libidn 库，IETF(互联网工程任务组)IDN(国际化域名)规范的扩�
 
 不过对于`.config`文件，我目前的建议是`make localconfig`，按照目前加载的内核配置进行编译，这样可以减少需要编译的模块，大大节省耗时。
 
+<p style="font-size:light;font-style:italic;color:lightgray;">2023.04.03更新：在最近的一次针对6.2.9内核的编译过程中发现<code>make localconfig</code>不可用，找到了一个方法说可以使用<code>make localmodconfig</code>代替，但是有人警告说这两个命令不太一样，反正我试了是可以生成正常的<code>.config</code>文件的</p>
+
 `make` 这个就不解释了
+
+<p style="font-size:light;font-style:italic;color:lightgray;">2023.04.03更新：写文章的时候忘了提，make的时候可以设定架构，务必记得查询本机的CPU线程数以加快编译速度，此外还有对输出日志重定向，以免打印到屏幕浪费算力，如果目标是amd64，本机CPU有8个线程，日志重定向到上一级的文件中，那么就输入<code>make ARCH=x86_64 -j8 > ../makekernel.log</code>，这样会加快速度，而且只在屏幕上打印警告和错误，日志可以稍后自行通过其他方式查看</p>
 
 `make modules` 编译模块
 
