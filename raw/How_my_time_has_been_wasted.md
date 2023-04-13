@@ -389,10 +389,20 @@ EndSection
 
 暂时算是平稳地装完了系统，可以开始享受纯Linux的开发了。
 
+## Keep Dissing snap craft
+
+继续炮轰snap craft
+
+snap在整个世界都只有一个软件商店，全指望你Canonical一家的网络资源进行软件包下载，你端得起这么大的盘子吗？
+
+如果说为了所谓的“跨平台移植性”，那为什么不选择同样支持跨平台移植性并且更加开放的flatpak呢？
+
 Knighthana
 
-2023/04/01
+2023/04/01 Pub
+
+2023/04/13 Edited
 
 ## tag
 
-blog; Linux; Bad-experience; solution
+blog; Linux; bad-experience; solution
