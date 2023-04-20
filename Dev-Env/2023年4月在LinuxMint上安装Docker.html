@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>2023年4月在LinuxMint上安装Docker - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="2023年4月在LinuxMint上安装Docker 为了以后少浪费一些时间在配环境上（上次的惨痛经历真是历历在目），另外也是学习一下先进的虚拟化技术，我打算在自己的开发用软件系统里面安装一个Docker。 安装软件一般要遵循官方给出的说明，Docker的说明文档 （少看那些上来就让人从源码编译Docker的教程，搞坏环境从无视包管理器开始） 但是这里有个很坑爹的地方，Docker.com默认诱导">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023年4月在LinuxMint上安装Docker">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85Docker.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="2023年4月在LinuxMint上安装Docker 为了以后少浪费一些时间在配环境上（上次的惨痛经历真是历历在目），另外也是学习一下先进的虚拟化技术，我打算在自己的开发用软件系统里面安装一个Docker。 安装软件一般要遵循官方给出的说明，Docker的说明文档 （少看那些上来就让人从源码编译Docker的教程，搞坏环境从无视包管理器开始） 但是这里有个很坑爹的地方，Docker.com默认诱导">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-12T16:00:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="LinuxMint">
+<meta property="article:tag" content="2023">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1681992772628">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1681992772628">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1681992772628"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>75</div>
+        <div><span>标签</span>121</div>
+        <div><span>分类</span>6</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1681992772629"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">31</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">10</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 12.5px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 11.25px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 11.25px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 10px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 10px;">排队论</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 10px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16.25px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 11.25px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(121);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Blog-Maintenance/2023%E5%B9%B44%E6%9C%88%E6%8A%98%E8%85%BEHexo%E5%92%8CNode.html">2023年4月折腾Hexo和Node</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85CUDA.html">2023年4月在LinuxMint上安装CUDA</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/Linux%E7%89%88Chrome%E4%B8%AD%E6%97%A0%E6%B3%95%E7%94%A8%E9%BC%A0%E6%A0%87%E4%B8%AD%E9%94%AE%E6%BB%9A%E5%8A%A8%E9%A1%B5%E9%9D%A2.html">Linux版本的Chrome无法使用鼠标中键滚动页面</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)Man_cURL.html">(KM)Manual page of cURL</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%90%91trusted.gpg.d%E4%B8%AD%E5%8A%A0%E5%85%A5%E5%AF%86%E9%92%A5%E6%98%AF%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84.html">(KM)向trusted.gpg.d中加入密钥是不安全的</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Docker.png" alt="2023年4月在LinuxMint上安装Docker" loading="lazy">
+            <h1>2023年4月在LinuxMint上安装Docker</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年04月11日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="年4月在linuxmint上安装docker">2023年4月在LinuxMint上安装Docker</h1>
+<p>为了以后少浪费一些时间在配环境上（上次的惨痛经历真是历历在目），另外也是学习一下先进的虚拟化技术，我打算在自己的开发用软件系统里面安装一个Docker。</p>
+<p>安装软件一般要遵循官方给出的说明，<a target="_blank" rel="noopener" href="https://docs.docker.com/">Docker的说明文档</a></p>
+<p>（少看那些上来就让人从源码编译Docker的教程，搞坏环境从无视包管理器开始）</p>
+<p>但是这里有个很坑爹的地方，Docker.com默认诱导读者去安装"Docker Desktop"，我粗略看了一遍说明，这东西是一个VM，当然Docker组织也给出了一些解释——为何Docker Desktop要使用VM的形式：为了平台移植性、为了使用最新的内核（以便享受新特性）、为了提升保全性，为了最小化变更带来的不良效应；</p>
+<p>以及，这个所谓的Docker Desktop支持的桌面环境仅仅包含KDE、Gnome、MATE，虽然他估计到了Mint用户这让人挺开心，但是这并没有照顾到我这个xfce用户啊！（摔）</p>
+<p>越读这个说明越觉得不对劲。花了大概有二十分钟，我搞明白了，虽然这东西虽然看起来很美好，但他不是我需要的那个容器管理器Docker，仔细在页面里找了一下，传统意义上的非VM的Docker现在应该是叫Docker-Engine了</p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">Docker Engine</a></p>
+<p>这个应该就是我要找的东西了</p>
+<p>首先这个页面特地强调了一下，适用于Debian的安装与适用于Ubuntu的安装不一样，虽然不太明白为什么，</p>
+<p>不过既然LinuxMint是从Ubuntu那边衍生出来，而非直接从Debian衍生的，那么应该是按照Ubuntu的做法来的，</p>
+<p>（顺便了解了一下，原来还有一个LMDE项目，这个项目让Mint摆脱了Ubuntu，直接使用Debian构造Mint。但是“目前”而言应该和我没什么关系，但是假如某公司继续做让用户不高兴的事情以至于影响到这边，可能很快就和我有关系了）</p>
+<h2 id="通过官方指导安装">通过官方指导安装</h2>
+<p>先研究一下官方文档怎么说的，之后在通过镜像站安装</p>
+<h3 id="第一步卸载旧版本的docker">第一步，卸载旧版本的Docker</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
+<p>由于没有安装过Docker，所以这一步对我没有意义。</p>
+<p>此外</p>
+<blockquote>
+<p>Images, containers, volumes, and networks stored in /var/lib/docker/ aren’t automatically removed when you uninstall Docker. If you want to start with a clean installation, and prefer to clean up any existing data, read the uninstall Docker Engine section.</p>
+</blockquote>
+<p>懒得翻译，反正就是关于<code>/var/lib/docker/</code>里面的文件，自己决定要不要保留</p>
+<h3 id="第二步准备gpg的安装环境">第二步，准备GPG的安装环境</h3>
+<p>GPG是一套密钥方案，Ubuntu下的APT使用它来管理软件包的密钥，Mint也不例外。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install \</span><br><span class="line">   ca-certificates \</span><br><span class="line">   curl \</span><br><span class="line">   gnupg</span><br></pre></td></tr></table></figure>
+<h3 id="第三步安装docker组织的密钥">第三步，安装Docker组织的密钥</h3>
+<p>下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -m 0755 -p /etc/apt/keyrings</span><br><span class="line"></span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</span><br></pre></td></tr></table></figure>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> \</span><br><span class="line"> <span class="string">"deb [arch="</span>$(dpkg --print-architecture)<span class="string">" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string"> "</span>$(. /etc/os-release &amp;&amp; <span class="built_in">echo</span> <span class="string">"<span class="variable">$VERSION_CODENAME</span>"</span>)<span class="string">" stable"</span> | \</span><br><span class="line"> sudo <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<h4 id="faqgpg权限错误">FAQ：GPG权限错误</h4>
+<p>如果GPG密钥文件的权限错误，可能会有问题，这通常是由于umask设置错误导致的</p>
+<p>通过下列命令解决文件没有读取权限的问题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> a+r /etc/apt/keyrings/docker.gpg</span><br><span class="line"></span><br><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+<h3 id="第四步安装docker">第四步，安装Docker</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
+<h3 id="最后检查安装情况">最后，检查安装情况</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>输出部分应当首先开始下载一个容器</p>
+<p>之后应当展示一个欢迎页面</p>
+<p>按照官方给出的指导，到这一步安装就算完成了</p>
+<h2 id="通过国内的镜像站安装">通过国内的镜像站安装</h2>
+<p>事实上这一部分才是国内用户需要看的。</p>
+<p>参阅<a target="_blank" rel="noopener" href="https://mirrors.bfsu.edu.cn/help/docker-ce/">tuna协会关于docker-ce镜像的说明</a>，整理如下</p>
+<h3 id="卸载旧版本的docker">卸载旧版本的docker</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
+<h3 id="安装必要的工具">安装必要的工具</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install apt-transport-https ca-certificates curl gnupg2 software-properties-common</span><br></pre></td></tr></table></figure>
+<p>gnupg和gnupg2应该是有一个就足够的</p>
+<h3 id="创建钥匙环保存目录如果已有keyrings就不用创建">创建钥匙环保存目录(如果已有<code>keyrings/</code>就不用创建)</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> -m 0755 -p /etc/apt/keyrings</span><br></pre></td></tr></table></figure>
+<h3 id="下载并安装docker.com的gpg密钥">下载并安装docker.com的gpg密钥</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</span><br></pre></td></tr></table></figure>
+<p>前一个指令下载了来自"docker.com"的密钥</p>
+<p>后一个指令生成了二进制密钥，并将二进制密钥以名称<code>docker.gpg</code>存放在了之前建立的钥匙环保存目录中。</p>
+<p>(名字只是一个代号，不过，如果这里不用<code>docker.gpg</code>这个名字，待会sourcelist里面也要对<code>signed-by</code>的参数做对应的修改)</p>
+<h3 id="在sources.list.d目录中创建一个镜像源配置文件">在<code>sources.list.d</code>目录中创建一个镜像源配置文件</h3>
+<h4 id="用tuna协会提供的一条命令搞定">用tuna协会提供的一条命令搞定</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> \</span><br><span class="line">  <span class="string">"deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/ubuntu \</span></span><br><span class="line"><span class="string">  <span class="subst">$(lsb_release -cs)</span> stable"</span> | sudo <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<h4 id="手动创建方式">手动创建方式</h4>
+<p>目前阶段我不是很喜欢上一种方式，作为一个希望尽可能多了解这个系统的人，我需要尽可能搞清楚这条命令中每个部分的含义，然后手动完成</p>
+<p>在熟练之后，我会使用尽可能节省时间的方式完成这样的任务</p>
+<p>但是tuan提供的这条命令给了很多参考，可以直接拿来使用</p>
+<p>手动创建源列表的步骤如下：</p>
+<p>在<code>/etc/apt/sources.list.d/</code>中创建一个文件，命名为<code>docker.list</code>(名字只是一个代号，但是建议命名为<code>docker.list</code>方便之后查找和修改)</p>
+<p>然后查询：</p>
+<ol type="1">
+<li><p>正在使用的计算机系统CPU架构</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg --print-architecture</span><br></pre></td></tr></table></figure></p></li>
+<li><p>正在使用的操作系统代号</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -cs</span><br></pre></td></tr></table></figure></p></li>
+</ol>
+<p>前一个一般为<code>amd64</code>，当然，如果对于当年惨兮兮没有趁手计算机用的我来说也有可能是<code>i386</code>或者<code>i686</code>；</p>
+<p>对于Ubuntu用户，后一个可能是<code>trusty</code> <code>xenial</code> <code>bionic</code> <code>focal</code> <code>jammy</code> <code>kinetic</code></p>
+<p>但是对于我这样的LinuxMint 21.1用户，这个选项的输出是<code>vera</code>，稍稍回忆一下，LinuxMint版本<code>vera</code>对应的Ubuntu版本是<code>jammy</code></p>
+<p>然后在<code>docker.list</code>中输入以下内容，注意替换其中的带引号的中文字符为对应的内容(连左右两侧的引号一起替换，替换后的内容不再带引号)，然后保存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb [arch="CPU架构" signed-by=/etc/apt/keyrings/docker.gpg] https://"你所使用的镜像源网站docker-ce的目录/linux/你所使用的发行版" "操作系统代号" stable</span><br></pre></td></tr></table></figure>
+<p>特别地，对于Mint用户，请使用ubuntu的仓库，并且"操作系统代号"使用对应的ubuntu代号</p>
+<p>比如一个来自XDU的学子，恰巧也是Mint21.1、或者Mint21用户，那么这里就应该写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://linux.xidian.edu.cn/mirrors/docker-ce/linux/ubuntu jammy stable</span><br></pre></td></tr></table></figure>
+<p>来自<a target="_blank" rel="noopener" href="https://linuxmint.com/download_all.php">Mint参考文件</a>的版本对应表格</p>
+<table>
+<thead>
+<tr class="header">
+<th>VERSION</th>
+<th>CODENAME</th>
+<th>PACKAGE BASE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>21.1</td>
+<td>Vera</td>
+<td>Ubuntu Jammy</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>Vanessa</td>
+<td>Ubuntu Jammy</td>
+</tr>
+<tr class="odd">
+<td>20.3</td>
+<td>Una</td>
+<td>Ubuntu Focal</td>
+</tr>
+<tr class="even">
+<td>20.2</td>
+<td>Uma</td>
+<td>Ubuntu Focal</td>
+</tr>
+<tr class="odd">
+<td>20.1</td>
+<td>Ulyssa</td>
+<td>Ubuntu Focal</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>Ulyana</td>
+<td>Ubuntu Focal</td>
+</tr>
+<tr class="odd">
+<td>19.3</td>
+<td>Tricia</td>
+<td>Ubuntu Bionic</td>
+</tr>
+<tr class="even">
+<td>19.2</td>
+<td>Tina</td>
+<td>Ubuntu Bionic</td>
+</tr>
+<tr class="odd">
+<td>19.1</td>
+<td>Tessa</td>
+<td>Ubuntu Bionic</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>Tara</td>
+<td>Ubuntu Bionic</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Elsie</td>
+<td>Debian Bullseye</td>
+</tr>
+</tbody>
+</table>
+<p>软件源文件中的代号一律使用小写字母</p>
+<p>对于LMDE用户，则需要使用Debian仓库以及对应的Debian代号，</p>
+<p>比如一个XDU的LMDE5用户在文件里就应该写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://linux.xidian.edu.cn/mirrors/docker-ce/linux/debian bullseye stable</span><br></pre></td></tr></table></figure>
+<h3 id="更新源数据库并安装docker">更新源数据库并安装docker</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install docker-ce</span><br></pre></td></tr></table></figure>
+<h3 id="检查安装是否成功">检查安装是否成功</h3>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>至此，docker(非VM)安装就完成了。</p>
+<p>Knighthana</p>
+<p>2023/04/11 动笔</p>
+<p>2023/04/13 完稿</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/2023/" rel="tag">2023</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Docker/" rel="tag">Docker</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/LinuxMint/" rel="tag">LinuxMint</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1681992772451"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B44%E6%9C%88%E5%9C%A8linuxmint%E4%B8%8A%E5%AE%89%E8%A3%85docker"><span class="toc-number">1.</span> <span class="toc-text">2023年4月在LinuxMint上安装Docker</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%AE%98%E6%96%B9%E6%8C%87%E5%AF%BC%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">通过官方指导安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%89%88%E6%9C%AC%E7%9A%84docker"><span class="toc-number">1.1.1.</span> <span class="toc-text">第一步，卸载旧版本的Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E5%87%86%E5%A4%87gpg%E7%9A%84%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="toc-number">1.1.2.</span> <span class="toc-text">第二步，准备GPG的安装环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E5%AE%89%E8%A3%85docker%E7%BB%84%E7%BB%87%E7%9A%84%E5%AF%86%E9%92%A5"><span class="toc-number">1.1.3.</span> <span class="toc-text">第三步，安装Docker组织的密钥</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#faqgpg%E6%9D%83%E9%99%90%E9%94%99%E8%AF%AF"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">FAQ：GPG权限错误</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%E5%AE%89%E8%A3%85docker"><span class="toc-number">1.1.4.</span> <span class="toc-text">第四步，安装Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85%E6%83%85%E5%86%B5"><span class="toc-number">1.1.5.</span> <span class="toc-text">最后，检查安装情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%9B%BD%E5%86%85%E7%9A%84%E9%95%9C%E5%83%8F%E7%AB%99%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">通过国内的镜像站安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%89%88%E6%9C%AC%E7%9A%84docker"><span class="toc-number">1.2.1.</span> <span class="toc-text">卸载旧版本的docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="toc-number">1.2.2.</span> <span class="toc-text">安装必要的工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%92%A5%E5%8C%99%E7%8E%AF%E4%BF%9D%E5%AD%98%E7%9B%AE%E5%BD%95%E5%A6%82%E6%9E%9C%E5%B7%B2%E6%9C%89keyrings%E5%B0%B1%E4%B8%8D%E7%94%A8%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.3.</span> <span class="toc-text">创建钥匙环保存目录(如果已有keyrings&#x2F;就不用创建)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E5%B9%B6%E5%AE%89%E8%A3%85docker.com%E7%9A%84gpg%E5%AF%86%E9%92%A5"><span class="toc-number">1.2.4.</span> <span class="toc-text">下载并安装docker.com的gpg密钥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8sources.list.d%E7%9B%AE%E5%BD%95%E4%B8%AD%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E9%95%9C%E5%83%8F%E6%BA%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.2.5.</span> <span class="toc-text">在sources.list.d目录中创建一个镜像源配置文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8tuna%E5%8D%8F%E4%BC%9A%E6%8F%90%E4%BE%9B%E7%9A%84%E4%B8%80%E6%9D%A1%E5%91%BD%E4%BB%A4%E6%90%9E%E5%AE%9A"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">用tuna协会提供的一条命令搞定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">手动创建方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%BA%90%E6%95%B0%E6%8D%AE%E5%BA%93%E5%B9%B6%E5%AE%89%E8%A3%85docker"><span class="toc-number">1.2.6.</span> <span class="toc-text">更新源数据库并安装docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85%E6%98%AF%E5%90%A6%E6%88%90%E5%8A%9F"><span class="toc-number">1.2.7.</span> <span class="toc-text">检查安装是否成功</span></a></li></ol></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>

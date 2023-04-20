@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>使用远程机器的一些问题 - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="使用远程机器的一些问题 SSH的配置问题 当一台远程机器启用SSHD服务器并且允许通过某个端口（默认22）访问之后，就可以在另一台机器（下称终端机）上通过SSH客户端进行基于SSH协议的远程访问了。 假如配置好的远程机器的IP地址是192.168.50.34，其上有一个已经存在的本地用户ubuntu，则通过输入指令 ssh ubuntu@192.168.50.34 即可进行SSH访问请求； 通常情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用远程机器的一些问题">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E6%9C%BA%E5%99%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="使用远程机器的一些问题 SSH的配置问题 当一台远程机器启用SSHD服务器并且允许通过某个端口（默认22）访问之后，就可以在另一台机器（下称终端机）上通过SSH客户端进行基于SSH协议的远程访问了。 假如配置好的远程机器的IP地址是192.168.50.34，其上有一个已经存在的本地用户ubuntu，则通过输入指令 ssh ubuntu@192.168.50.34 即可进行SSH访问请求； 通常情">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-20T11:39:30.254Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="RaspberryPi">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="SSH">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1681992772784">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1681992772784">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1681992772784"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>75</div>
+        <div><span>标签</span>121</div>
+        <div><span>分类</span>6</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1681992772784"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">31</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">10</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 12.5px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 11.25px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 11.25px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 10px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 10px;">排队论</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 10px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16.25px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 11.25px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(121);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Blog-Maintenance/2023%E5%B9%B44%E6%9C%88%E6%8A%98%E8%85%BEHexo%E5%92%8CNode.html">2023年4月折腾Hexo和Node</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85CUDA.html">2023年4月在LinuxMint上安装CUDA</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/Linux%E7%89%88Chrome%E4%B8%AD%E6%97%A0%E6%B3%95%E7%94%A8%E9%BC%A0%E6%A0%87%E4%B8%AD%E9%94%AE%E6%BB%9A%E5%8A%A8%E9%A1%B5%E9%9D%A2.html">Linux版本的Chrome无法使用鼠标中键滚动页面</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)Man_cURL.html">(KM)Manual page of cURL</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%90%91trusted.gpg.d%E4%B8%AD%E5%8A%A0%E5%85%A5%E5%AF%86%E9%92%A5%E6%98%AF%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84.html">(KM)向trusted.gpg.d中加入密钥是不安全的</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="使用远程机器的一些问题" loading="lazy">
+            <h1>使用远程机器的一些问题</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2021年10月31日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="使用远程机器的一些问题">使用远程机器的一些问题</h1>
+<h2 id="ssh的配置问题">SSH的配置问题</h2>
+<p>当一台远程机器启用SSHD服务器并且允许通过某个端口（默认22）访问之后，就可以在另一台机器（下称终端机）上通过SSH客户端进行基于SSH协议的远程访问了。</p>
+<p>假如配置好的远程机器的IP地址是192.168.50.34，其上有一个已经存在的本地用户ubuntu，则通过输入指令</p>
+<p><code>ssh ubuntu@192.168.50.34</code></p>
+<p>即可进行SSH访问请求；</p>
+<p>通常情况下，需要输入该远程机器上的本地用户的密码来进行认证，但如果配置了RSA公私钥对，则可以略过输入密码的步骤；</p>
+<p>在远程机器上的sshd配置文件位于<code>/etc/ssh/sshd_config</code>，这个文件中可以找到对于认证方式的设置，其中：</p>
+<ul>
+<li><p>以下项目规定了有关公私钥认证的设置</p>
+<p><code>PubkeyAuthentication</code> 默认为<code>yes</code></p>
+<p><code>AuthorizedKeysFile</code> 默认为<code>.ssh/authorized_keys .ssh/authorized_keys2</code></p></li>
+<li><p>以下项目规定了密码登入认证的设置</p>
+<p><code>PasswordAuthentication</code> 默认为<code>yes</code></p></li>
+<li><p>该项目作用不确定</p>
+<p><code>ChallengeResponseAuthentication</code> 默认为<code>no</code></p>
+<p>经过查询，该条目会进行一个“键盘交互式”认证，并指出“默认询问密码”，但没有得到进一步的有关这个过程如何进行详细配置，考虑到平常使用中不使用这个功能，因此按照默认的<code>no</code>进行设置。</p></li>
+</ul>
+<p>值得注意的是，ssh方式是远程用户通过将自己登入为一个本地已经存在的用户来进行使用的，因此在远程机器上的配置是针对已经存在的本地用户进行的；</p>
+<p><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/315615/is-ssh-public-key-associated-with-a-user">SSH的公钥是分配给某个用户的吗</a></p>
+<p>因此对于一个已经启用且采用默认配置的SSHd，只要在经常远程登录的用户的<code>.ssh</code>目录下配置<code>authorized_keys</code>文件，就可以直接通过publickey的方式登录。</p>
+<p>配置的方式就是复制自己的公钥并直接粘贴到<code>authorized_keys</code>文件中</p>
+<p>而且可以贴好几个进去</p>
+<p><a target="_blank" rel="noopener" href="https://serverfault.com/questions/486598/which-is-the-maximum-number-of-keys-in-authorized-keys-file">authorized_keys文件里面最多能放几个公钥</a></p>
+<p>注意，假如在登入时公私钥验证的方式不通过，则会要求输入密码，</p>
+<p>之前认为是设置中启用了<code>PasswordAuthentication</code>的缘故，于是将它设置为<code>no</code>，然后可喜可贺地彻底登不上去了。</p>
+<p>之后发现是由于我直接采用终端的复制粘贴功能进行公钥的跨窗口复制粘贴，导致它把vim的换行符也复制进去了，结果就是密钥认证不通过需要手动输入密码</p>
+<p>值得注意的是搜索时发现了这个问题，虽然最终证明和我遇到的情况没有关系，但是还是值得留意一下，例如文件的权限问题等</p>
+<p><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/36540/why-am-i-still-getting-a-password-prompt-with-ssh-with-public-key-authentication">为什么配置密钥之后还是需要输入密码</a></p>
+<p>并且幸运地发现了针对这个操作过程更为标准的工具<a target="_blank" rel="noopener" href="https://www.ssh.com/academy/ssh/copy-id">ssh-copy-id</a>，理论上讲，使用这个工具和手动操作是一样的效果，但是正确使用该工具还是有助于避免乱七八糟的问题。</p>
+<p><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/419317/ssh-copy-id-versus-manual-copy-id-rsa-pub">手动复制ssh公钥和使用ssh-copy-id有何区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/22700818/what-exactly-does-ssh-copy-id-do">ssh-copy-id到底做了什么</a></p>
+<p>（以此祭我在这个问题上浪费掉的四到六个小时时间，苏卡！）</p>
+<p>另外出于安全考虑，在私有的树莓派上对默认用户"ubuntu"进行公私钥配置，在公共服务器上还是另建一个新用户，然后针对该用户进行公钥配置比较好。</p>
+<h2 id="安全网络连接">安全网络连接</h2>
+<p>在终端下可以通过使用<code>proxychains</code>工具进行安全且私密的连接，<code>proxychains</code>会尝试接管单条命令的网络连接；</p>
+<p>直接<code>apt</code>得到的<code>proxychains</code>是proxychains3，更加新的则是<code>proxychains4</code>，手动查看其版本实际为<code>proxychains4-NG</code></p>
+<p>同时也是出于安全原因，不应当在默认的"/etc/proxychains.conf"中留下任何信息</p>
+<p>在个人目录下建立<code>~/.proxychains/proxychains.conf</code>文件，参考默认的<code>/etc/proxychains.conf</code>文件，可以发现其中有用的只有几行，复制粘贴然后修改一下： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">strict_chain</span><br><span class="line">proxy_dns</span><br><span class="line">[ProxyList]</span><br><span class="line">socks5 192.168.50.xx ????</span><br></pre></td></tr></table></figure></p>
+<p>然后执行 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">proxychains</span> xxxxxxxx.sh</span><br></pre></td></tr></table></figure></p>
+<p>然后并没有立刻获取到私密安全的资源。</p>
+<p>ping请求接收者"192.168.50.xx"，显示延迟只有零点几毫秒。</p>
+<p>查看请求接收者端口上负责监听的服务器已经启动了局域网服务功能，检查网络类型，为“专用”，检查防火墙，针对监听服务器的设置为任意远程端口到任意本地端口的入站请求均为允许，因此理论上讲监听服务器正在监听的<code>????</code>端口应当被允许。</p>
+<p>因此看起来防火墙在这件事情上扮演的角色是人畜无害的。</p>
+<p>然而稍后运行<code>wf.msc</code>，设置在<a href="%WINDIR%\System32\LogFiles\Firewall\pfirewall.log">防火墙日志</a>中记录所有请求，包括允许的和拒绝的，并且利用远程机器在局域网上发起数次请求，发现本地机器的日志文件体积在增大。</p>
+<p>阅读之后，发现所有ICMP-ping请求都回复了，所有到本地7890的请求都被拒绝了。</p>
+<p><strong>不愧是你啊Windows</strong></p>
+<p>所以需要手动配置一条允许该端口的规则。</p>
+<p>之后尝试，就正常了。</p>
+<p>2021/10/31</p>
+<p>Knighthana</p>
+<p>纪念一周前在这两件破事上浪费的半个早晨</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Network/" rel="tag">Network</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/RaspberryPi/" rel="tag">RaspberryPi</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/SSH/" rel="tag">SSH</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1681992772474"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%BF%9C%E7%A8%8B%E6%9C%BA%E5%99%A8%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">使用远程机器的一些问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh%E7%9A%84%E9%85%8D%E7%BD%AE%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">SSH的配置问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">安全网络连接</span></a></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>
