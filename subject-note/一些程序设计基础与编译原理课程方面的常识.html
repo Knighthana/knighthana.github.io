@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>一些程序设计基础与编译原理课程方面的常识 - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="一些程序设计基础与编译原理课程方面的常识 介绍一些来自编译原理的常识 可能这些常识对于只有程序设计基础知识、但是对此好奇的人来说很头痛，因为分不清，搞不明白，查了资料也是一知半解； 但是它们在编译原理中仅仅只是前导内容，因此现在把它整理出来，用明了的方式解释清楚，让更少的人为此头痛； 当然，最准确的解释还是得看书本，我这样用一种直观地方式解释，其实只注重在“明了”方面的程度，肯定会有失准确性；如果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些程序设计基础与编译原理课程方面的常识">
+<meta property="og:url" content="https://knighthana.github.io/subject-note/%E4%B8%80%E4%BA%9B%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80%E4%B8%8E%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E8%AF%BE%E7%A8%8B%E6%96%B9%E9%9D%A2%E7%9A%84%E5%B8%B8%E8%AF%86.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="一些程序设计基础与编译原理课程方面的常识 介绍一些来自编译原理的常识 可能这些常识对于只有程序设计基础知识、但是对此好奇的人来说很头痛，因为分不清，搞不明白，查了资料也是一知半解； 但是它们在编译原理中仅仅只是前导内容，因此现在把它整理出来，用明了的方式解释清楚，让更少的人为此头痛； 当然，最准确的解释还是得看书本，我这样用一种直观地方式解释，其实只注重在“明了”方面的程度，肯定会有失准确性；如果">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-20T06:07:06.404Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="编译原理">
+<meta property="article:tag" content="课程笔记">
+<meta property="article:tag" content="计算机程序设计">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1681992772644">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1681992772644">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1681992772644"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>75</div>
+        <div><span>标签</span>121</div>
+        <div><span>分类</span>6</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于博主">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于博主
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1681992772644"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">31</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">14</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">10</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 12.5px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 11.25px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 11.25px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 10px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 10px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 10px;">排队论</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 10px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16.25px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 11.25px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(121);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">26</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Blog-Maintenance/2023%E5%B9%B44%E6%9C%88%E6%8A%98%E8%85%BEHexo%E5%92%8CNode.html">2023年4月折腾Hexo和Node</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85CUDA.html">2023年4月在LinuxMint上安装CUDA</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/Linux%E7%89%88Chrome%E4%B8%AD%E6%97%A0%E6%B3%95%E7%94%A8%E9%BC%A0%E6%A0%87%E4%B8%AD%E9%94%AE%E6%BB%9A%E5%8A%A8%E9%A1%B5%E9%9D%A2.html">Linux版本的Chrome无法使用鼠标中键滚动页面</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)Man_cURL.html">(KM)Manual page of cURL</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%90%91trusted.gpg.d%E4%B8%AD%E5%8A%A0%E5%85%A5%E5%AF%86%E9%92%A5%E6%98%AF%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84.html">(KM)向trusted.gpg.d中加入密钥是不安全的</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-CPTT.jpg" alt="一些程序设计基础与编译原理课程方面的常识" loading="lazy">
+            <h1>一些程序设计基础与编译原理课程方面的常识</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年04月09日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/subject-note/">subject-note</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="一些程序设计基础与编译原理课程方面的常识">一些程序设计基础与编译原理课程方面的常识</h1>
+<p>介绍一些来自编译原理的常识</p>
+<p>可能这些常识对于只有程序设计基础知识、但是对此好奇的人来说很头痛，因为分不清，搞不明白，查了资料也是一知半解；</p>
+<p>但是它们在编译原理中仅仅只是前导内容，因此现在把它整理出来，用明了的方式解释清楚，让更少的人为此头痛；</p>
+<p>当然，最准确的解释还是得看书本，我这样用一种直观地方式解释，其实只注重在“明了”方面的程度，肯定会有失准确性；如果有人觉得有更好的、兼备明了与准确性的措辞欢迎与我交流；</p>
+<h2 id="编译器-vs-解释器">编译器 VS 解释器</h2>
+<p>提到编译器不要立刻想到源代码变成汇编语言，就想到机器语言代码，就想到一串<code>1111111100001001000</code>，然后就迷失得找不到自我了，然后再看解释器，由于人已经处在混沌之中，就会觉得这东西长得和编译器很像什么的；</p>
+<p>先别慌，先把这两个词分清，一个叫“<strong>编译器</strong>”，另一个叫“<strong>解释器</strong>”；</p>
+<p>“编译器”其实并不局限于将高级语言的源代码编译成为机器语言代码(或者先编译成汇编语言代码，再交由汇编程序转换成机器码)这一种功能，因为编译器其实可以理解成“翻译器”，它具有更加强大的功能</p>
+<p>所谓编译器，要做的就是把源语言的程序代码“翻译成为”目标语言的程序代码，就这么简单；源语言可以是高级语言，但也可以是汇编语言，目标语言可以是机器语言，但是也可以是别的什么，甚至可以是高级语言，编译器只是负责把一种语言翻译成另一种语言，仅此而已；</p>
+<p>而解释器是一个程序，它被用户调出来之后就一直在运行着，当接收到用户的输入之后，它就会按照用户的输入去做各种工作，只不过这里的输入恰好是某种可以被解释解释的程序设计语言以及此时用户的现场输入；解释器也不会产生所谓“目标代码”的东西，因为它从一开始就根本不是为了这个用途这么设计的；解释器很像一双手套，“运行”由高级语言设计的逻辑意义上的程序时，还是没有脱离这个解释器，解释器还是在主存里面待着，CPU认的也是解释器而不是什么逻辑意义上的高级语言程序；</p>
+<p>“有没有目标代码”这一个区别是从用途来很清楚明了地解释这个问题，</p>
+<p>形象化一点地理解，假如有一种程序设计语言既可以被编译执行，也可以被解释执行，那么使用编译器把某种语言的源代码翻译成了机器语言的代码文件，和用解释器去解释源代码文件执行各种动作——这也是最常见的用法，这二者会有的一个显著区别就是：所需要执行的这种动作由谁来完成；</p>
+<p>如果是编译得到的机器语言代码文件，那么就是编译得到的由机器语言编写的二进制文件自己在执行这些动作，也就是说，什么时候将这个机器语言代码文件装入内存，把它的首地址装入程序计数器，让CPU把它执行起来，它才会在什么时候开始发挥作用，要等它开始跑了，再往里面灌输入等着它给输出；</p>
+<p>对应地，解释器那边，需要先把解释器装入主存，把解释器在主存的首地址装入程序计数器，让它开动起来，有了一个解释器的运行时，然后往解释器里面灌代码以及输入，解释器会作为一个“手套”去执行这些动作并给出输出；</p>
+<p>这样一看，这两个东西从根源上就如此地不同，仅仅只是“同样都可以用来让高级语言的源代码发挥作用”，就被狠狠地混淆了；</p>
+<h2 id="aot-vs-jit">AOT VS JIT</h2>
+<blockquote>
+<p>AOT：Ahead Of Time</p>
+</blockquote>
+<blockquote>
+<p>JIT：Just In Time</p>
+</blockquote>
+<p>AOT和JIT都是编译器范畴的，没错，可能会在一些解释型程序设计语言那边看到“JIT”这种概念，但是这俩都是属于编译执行的；理解这个概念需要先清清楚楚明明白白地把什么是“编译”什么是“解释”搞懂；</p>
+<p>AOT这种方式只有对代码进行编译才能做到；</p>
+<p>JIT则很具有迷惑性：</p>
+<p>一般来说会弄混的情况是Java，这个特立独行的语言支持先将Java高级语言源代码编译成为“字节码”，这一步是纯粹的编译；再交给“Java Runtime”（各个品牌的JRE都算Java Runtime的，现在2023年比较流行的两种是Oracle的JRE和OpenJDK的JRE）这个虚拟机负责解释执行，这一步又变成了解释；</p>
+<p>在Java高级语言到字节码这一步，全都毫无疑问地是编译，全都是“AOT”，虽然这个“Time”并不是真正执行它的“Time”，但假如我们说拿到字节码这一步就算跑完了，那就是；</p>
+<p>然而，在运行起来服务人类期间如何解释字节码里面的东西的时候，不同的运行时搞出了不同的玩法；</p>
+<p>传统解释型的就是作为解释器，把字节码作为一种需要解释的程序设计语言，和输入一起灌进虚拟机扮演的解释器，解释器解释明白了，就会执行各种动作，给出输出；</p>
+<p>然而JRE还有一个流派就是JIT，这个流派的运行时会在处理输入的前一刻将字节码编译成为机器语言，然后去执行这个机器语言程序，让这个新鲜出炉的机器语言程序执行各种动作，给出输出，而不是自己去执行动作或者给输出；</p>
+<p>那么其它的经常用于解释型的程序设计语言为什么也会有JIT呢？</p>
+<p>用JRE的这个过程去看，JRE是接收字节码和输入，然后用不同的方式，也即“解释执行”和“JIT”两种方式给出执行与输出；</p>
+<p>这些解释型程序设计语言的RE也是类似的，只不过它们接收由高级语言编写的人可以看懂的程序代码输入，随后，不同的流派用不同的方式给出了执行与输出，其中解释派是单纯地用解释器进行解释，而JIT派则是在拿到输入，确定类型之后即刻开始编译得到机器语言代码，然后把机器语言代码装入主存，由机器码去做交给它的工作；</p>
+<h2 id="静态-vs-动态">静态 VS 动态</h2>
+<p>静态：Static</p>
+<p>动态：Dynamic</p>
+<p>静态类型、动态类型、强类型、弱类型，十分混沌邪恶的四个维度；</p>
+<p>今天不扯这些，我们只说“静态”和“动态”是什么场景，剩下的自己慢慢想；</p>
+<p>这里掉一下书袋，来自CPTT机械工业出版社中译本第2版P15对于“静态”和“动态”的解释，我觉得我来解释一遍也不如原书的明了：</p>
+<blockquote>
+<p>如果一个语言使用的策略支持编译器静态决定某个问题，那么我们就说这个语言使用了一个静态策略(static policy)，或者说这个问题可以在编译时刻(compile time)决定；</p>
+<p>一个只允许在运行程序的时候作出决定的策略被称为动态策略(dynamic policy)，或者被认为需要在运行时刻(run time)作出决定。</p>
+</blockquote>
+<p><strong>与原书不同，我把动态策略也完全翻译成了static policy，以与下面的dynamic policy对应相照</strong></p>
+<p>所以说，静态策略的语言能够在编译时敲定一些东西，比如变量的类型之类的，这样可以将程序的机器代码在执行之前就完全编译出来，运行的时候效率就会比较高；</p>
+<p>反之，动态策略的语言无法在编译时敲定这些东西，比如还是变量的类型这个例子，它必须等到运行的时候，用户给进来一个输入，这时候才能确定，哦原来是这么个类型，很显然，这样的策略给代码编写带来了很大的灵活性，比如某些脚本语言的变量类型就可以一会一变；但是有利就有弊，使用这种策略的语言在处理输入的语句中必须拿到用户的输入才能确定类型，才能进行下一步，于是很明显地，这种语言设计出来的玩意想要在用户调用之前提前编译好是有难度的；</p>
+<p>原书下面还提了一下“静态”与“动态”的“作用域”，作用域、命名空间什么的，这几个东西算是同一个范畴，且看原书的解释：</p>
+<blockquote>
+<p>x的一个声明的作用域是指程序的一个区域，在其中对x的使用都指向这个声明；</p>
+<p>如果仅通过阅读程序就可以确定一个声明的作用域，那么这个语言使用的是静态作用域(static scope)，或者说词法作用域(lexical scope)。</p>
+<p>否则，这个语言使用的是动态作用域(dynamic scope)。如果使用动态作用域，当程序运行时，同一个对x的使用会指向x的几个声明中的一个。</p>
+<p>大部分语言(比如C和Java)使用静态作用域。</p>
+</blockquote>
+<p>注意，C里面对“同一个”变量名给出不同层次的声明可不是动态作用域，因为C的代码通过阅读便能了解此刻用的是“这个名字”的哪个声明（其实本质上完全是不同的变量），比如局部变量的优先级就比全局变量的优先级要高，这些都不需要等到运行起来了再做判断，编译时就能敲定，给出一个强硬的相关关系；</p>
+<p>动态作用域会在声明时带上变量使用时间的信息，这样真的除了在运行的时候确定以外别无他法；</p>
+<h2 id="声明-vs-定义">声明 VS 定义</h2>
+<p>这种问题一般会用来考验可怜的大一新生freshman，当然，对这个问题的了解程度不同，给出的答案也不同，这种东西向来是答错了也不要紧，能体现出了解程度就行，也就是有区分度即可；</p>
+<p>比如我当年被问到这个问题的时候扯了半天的“内存”什么的，其实当时的回答也不能算完全对，但是有区分度也就行了；</p>
+<p>声明用来确定一个事物的类型；</p>
+<p>定义用来确定一个事物的值；</p>
+<p>就这么简单；</p>
+<p>注意，这里说的是“事物”，并没有说是“变量”，也就是说，变量和过程(C中称作函数的那个，OOPL——面向对象程序设计语言里面唤作方法的那个)都是有自己的“声明”和“定义”的；</p>
+<p>奇妙吧？多学习，以后还有更奇妙的</p>
+<h2 id="结点-vs-节点">结点 VS 节点</h2>
+<p>一个普通程序员搞不清结点和节点可能比较正常，但是作为科班出身的计算机领域工作者，必须搞清楚结点和节点，不要在自己写的东西里面闹笑话；</p>
+<p><strong>结点</strong>是一个存储单元，链表的结点是一个“结点”，树的“结点”是一个结点，这些结点里面可能存了变量名、地址指针之类的东西，但是，结点自身是一个静态的东西，如果外力不去更改它，它不会乱动；</p>
+<p>节点与结点完完全全不同，<strong>节点</strong>带有计算能力，甚至有自己的维护能力，我们可以说一个大型分布式处理器中的一个运算单元是一个节点，也可以说一个由一堆嗡嗡作响的服务器和一群运维人员组成的大型数据中心是一个节点，但唯独不会说一段内存中的静止数据是“节点”</p>
+<p>Knighthana</p>
+<p>2023/04/09</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="tag">编译原理</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" rel="tag">计算机程序设计</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" rel="tag">课程笔记</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1681992772454"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E5%9F%BA%E7%A1%80%E4%B8%8E%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%E8%AF%BE%E7%A8%8B%E6%96%B9%E9%9D%A2%E7%9A%84%E5%B8%B8%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">一些程序设计基础与编译原理课程方面的常识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8-vs-%E8%A7%A3%E9%87%8A%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">编译器 VS 解释器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#aot-vs-jit"><span class="toc-number">1.2.</span> <span class="toc-text">AOT VS JIT</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81-vs-%E5%8A%A8%E6%80%81"><span class="toc-number">1.3.</span> <span class="toc-text">静态 VS 动态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E-vs-%E5%AE%9A%E4%B9%89"><span class="toc-number">1.4.</span> <span class="toc-text">声明 VS 定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E7%82%B9-vs-%E8%8A%82%E7%82%B9"><span class="toc-number">1.5.</span> <span class="toc-text">结点 VS 节点</span></a></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>
