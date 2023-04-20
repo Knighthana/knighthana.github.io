@@ -1,4 +1,14 @@
-<meta name="created" content="2021-09-23">
+---
+title: 进行Minecraft Fabric MOD开发的经验记录
+date: 2021-09-23 00:00:00
+cover: /img/logo-minecraft.svg
+categories:
+  - Dev-Code
+tags:
+  - Minecraft
+  - Fabric
+  - Java
+---
 
 # 进行Minecraft Fabric MOD开发的经验记录
 
@@ -43,11 +53,11 @@ Fabric在Github上有一个[Fabric MOD模板项目](https://github.com/FabricMC/
 后来发现wiki上的原文中有小字部分对此限制做了如下描述:
 
 > 请记住，传递给Identifier构造函数的参数只能包含某些字符。
-
+>
 > 两个参数（命名空间namespace和路径path）都可以包含小写字母、数字、下划线、点和横杠。[a-z0-9_.-]
-
+>
 > 第二个参数（path）还可以包含斜杠。[a-z0-9/_.-]
-
+>
 > 避免使用其他符号，否则将引发InvalidIdentifierException！
 
 经过我个人的尝试，这里也无法`new`一个`TranslatableText()`来提供字符串，IDEA将会提示“这里需要一个string但是传入了一个text”。
@@ -64,7 +74,7 @@ Fabric在Github上有一个[Fabric MOD模板项目](https://github.com/FabricMC/
 
 最简单的描述方式是
 
-```
+```java
 {
     "parent": "builtin/generated",
     "textures": {
