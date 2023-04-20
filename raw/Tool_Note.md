@@ -1,3 +1,15 @@
+---
+title: Useful tools and arguments
+date: 2018-04-18 00:00:00
+updated: 2021-03-30 00:00:00
+cover: /img/Tux.svg
+categories:
+  - Dev-Env
+tags:
+  - gksudo
+  - alien
+  - rsync
+---
 
 # Useful tools and arguments
 
