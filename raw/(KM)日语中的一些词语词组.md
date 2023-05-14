@@ -17,6 +17,7 @@ tags:
 |そちら|そちら|sochira|那个(离你近的)|
 |あちら|あちら|achira|那个(离我们都远的)|
 |どちら|どちら|dochira|哪个|
+|お願いします|おねがいします|onegaishimasu|拜托了|
 |しばらく お待ちください|しばらく おまちください|shibaraku omachikudasai|请稍等|
 |お疲れ様です|おつかれさまです|otsukaresamadesu|辛苦了|
 
