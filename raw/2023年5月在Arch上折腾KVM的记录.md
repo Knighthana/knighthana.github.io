@@ -1,8 +1,8 @@
 ---
-title: 2023年4月在LinuxMint上安装Docker
+title: 2023年5月在Arch上折腾KVM的记录
 date: 2023-05-11 21:16:00
 updated: 2023-05-14 22:00:00
-cover: /img/Cover-Docker.png
+cover: /img/kvmbanner-logo.png
 categories:
   - Dev-Env
 tags: 
@@ -35,7 +35,7 @@ LC_ALL=C lscpu | grep Virtualization
 
 > If nothing is displayed after running either command, then your processor does not support hardware virtualization, and you will not be able to use KVM.
 
-![CPU_Virtual]()
+![CPU_Virtual](/img/20230515-083845.jpg)
 
 如果出现如图所示的情况，那么就是支持虚拟化技术
 
@@ -49,6 +49,8 @@ zgrep CONFIG_KVM /proc/config.gz
 > The module is available only if it is set to either y or m.
 
 基本上需要确认`kvm`、`kvm_amd`、`kvm_intel`三个选项都是`y`或者`m`
+
+![Kernel_Module_Support](/img/20230515-083910.jpg)
 
 检查这些模块是否自动加载
 ```bash
@@ -259,7 +261,7 @@ cgdisk /dev/sda
 
 比如我执行到这一步的时候看起来是这样的
 
-![CGDISK]()
+![CGDISK](/img/20230515-083917.jpg)
 
 请注意，分区表上、下方留出空白的未使用空间是正常现象，不要想着全榨干净
 
@@ -356,7 +358,7 @@ pacman -Syy
 
 可以更新一下缓存，虽然由于我们正在使用archiso做不做都行，但还是做一下，检查一下自己的镜像设置有没有写错什么的
 
-![]()
+![pacman -Syy](/img/20230515-083925.jpg)
 
 带宽跑满，看来没写错，进入下一步
 
@@ -392,7 +394,7 @@ vim /mnt/etc/fstab
 
 我们记得硬盘上设置了两个分区，每个分区挂载在不同的目录中，因此这个文件中应该有两个条目，一条是`/dev/sda1`，另一条是`/dev/sda2`
 
-![]()
+![fstab](/img/20230515-083933.jpg)
 
 这样应该就算是写入正确了
 
@@ -629,6 +631,8 @@ zgrep CONFIG_KVM /proc/config.gz
 ```bash
 lsmod | grep kvm
 ```
+
+![ls mod grep kvm](/img/20230515-083940.jpg)
 
 检查到的结果发现，模块没有加载，那么就需要[手动加载这些模块](https://wiki.archlinuxcn.org/wiki/Kernel_modules#%E6%89%8B%E5%8A%A8%E5%8A%A0%E8%BD%BD%E6%97%B6%E8%AE%BE%E7%BD%AE)
 
@@ -890,7 +894,7 @@ cat /sys/module/kvm_amd/parameters/nested
 startx
 ```
 
-![]()
+![GUI libvirt](/img/20230515-083950.jpg)
 
 如图，打开这个桌面应用，完成！
 
@@ -910,7 +914,7 @@ startx
 
 用HTTP协议传到虚拟机里面吧
 
-![]()
+![cURL](/img/20230515-083958.jpg)
 
 ### 启动GUI下的QEMU
 
@@ -918,23 +922,27 @@ startx
 
 用起来感觉和VBox没什么不同啊（
 
-![]()
+![VBox-like GUI](/img/20230515-084006.jpg)
 
 啊，熟悉的界面，爷少回！
 
-![]()
+![Windows Setup](/img/20230515-084019.jpg)
 
 等待安装，已经开始显示汉字了
 
-![]()
+![Windows XP Setup Chinese](/img/20230515-084025.jpg)
 
 关于虚拟计算机的硬件信息
 
-![]()
+![Hardware Info](/img/20230515-084031.jpg)
 
 在磁盘上查找了一下对应的文件，发现所有者是单独的一位用户`libvirt-qemu`，这一点很有意思
 
+![file-owner](/img/20230515-084036.jpg)
+
 以及Windows XP由于缺少驱动的原因是既没声音也没网，就这样吧
+
+![No Driver](/img/20230515-084051.jpg)
 
 如此这般之后，感觉没什么事做了
 

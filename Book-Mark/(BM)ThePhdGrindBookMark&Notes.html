@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>The Ph.D. Grind Book Mark and Notes - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="The Ph.D. Grind 读书笔记（初读）  我经常会花⼏个⼩时设置好 Klee 所需的复杂的实验环境，以分析某⼀个驱动程序的程序缺陷；但这种⼯作又往往以 Klee 因为其⾃⾝的程序缺陷⽽崩溃告终，让我的努⼒付诸东流。   随着时间的流逝，我对于⼿头的⼯作越来越感到沮丧，我觉得⾃⼰被分配的任务就是单纯的苦⼒，毫⽆知识含量——我的时间都⽤在让 Klee 能正常运⾏上了。  痛苦的代码细节工作，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Ph.D. Grind Book Mark and Notes">
+<meta property="og:url" content="https://knighthana.github.io/Book-Mark/(BM)ThePhdGrindBookMark&Notes.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="The Ph.D. Grind 读书笔记（初读）  我经常会花⼏个⼩时设置好 Klee 所需的复杂的实验环境，以分析某⼀个驱动程序的程序缺陷；但这种⼯作又往往以 Klee 因为其⾃⾝的程序缺陷⽽崩溃告终，让我的努⼒付诸东流。   随着时间的流逝，我对于⼿头的⼯作越来越感到沮丧，我觉得⾃⼰被分配的任务就是单纯的苦⼒，毫⽆知识含量——我的时间都⽤在让 Klee 能正常运⾏上了。  痛苦的代码细节工作，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-14T15:50:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="career">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1684113123852">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1684113123852">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1684113123852"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>86</div>
+        <div><span>标签</span>134</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1684113123852"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">15</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">33</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">20</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 13.75px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 12.5px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12.5px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11.25px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 11.25px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11.25px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11.25px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11.25px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 17.5px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12.5px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(134);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)git%20clone%20--depth=1.html">(KM)git clone --depth=1</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E6%80%9D%E8%80%83%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%92%E5%BA%A6.html">(KM)思考职业生涯问题的角度</a>
+          </li>
+        
+          <li>
+            <a href="/Book-Mark/(BM)ThePhdGrindBookMark&Notes.html">The Ph.D. Grind Book Mark and Notes</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html">2023年5月在Arch上折腾KVM的记录</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%A5%87%E5%8A%A0%E5%81%B6%E5%87%8F-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86.html">奇加偶减-容斥原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/bookmark.svg" alt="The Ph.D. Grind Book Mark and Notes" loading="lazy">
+            <h1>The Ph.D. Grind Book Mark and Notes</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年05月14日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Book-Mark/">Book Mark</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="the-ph.d.-grind-读书笔记初读">The Ph.D. Grind 读书笔记（初读）</h1>
+<blockquote>
+<p>我经常会花⼏个⼩时设置好 Klee 所需的复杂的实验环境，以分析某⼀个驱动程序的程序缺陷；但这种⼯作又往往以 Klee 因为其⾃⾝的程序缺陷⽽崩溃告终，让我的努⼒付诸东流。</p>
+</blockquote>
+<blockquote>
+<p>随着时间的流逝，我对于⼿头的⼯作越来越感到沮丧，我觉得⾃⼰被分配的任务就是单纯的苦⼒，毫⽆知识含量——我的时间都⽤在让 Klee 能正常运⾏上了。</p>
+</blockquote>
+<p>痛苦的代码细节工作，身为科学家，却觉得自己做的事情和苦工没什么区别</p>
+<p>这种痛苦太容易设身处地的感受到了，想象一下就让人犯恶心</p>
+<p>之所以要留在学校，就是不愿意做打螺丝的苦工，但如果留在学校里，不仅做着打螺丝的苦工，还拿的低得可怜的工资，头上还悬着着“毕业”这样的达摩克利斯之剑，该怎么办呢？</p>
+<blockquote>
+<p>⽽现在的学术研究在情绪上和⼼理上都是⽆休⽆⽌的。我晚上⼏乎没法让⼤脑停⽌思考问题，尽情放松休息——后来我发现⼏乎所有的博⼠研究⽣都有类似的困扰。</p>
+</blockquote>
+<p>突然想到，做学术更会难以休息，这么想，突然变得有些难受起来</p>
+<blockquote>
+<p>Klee 实际上只能在不超过⼤概 3000 ⾏，由 C 语⾔写成的代码中找到缺陷。最⼩的 Linux 驱动程序代码⼤概有 100⾏，所以 Klee 分析它们游刃有余。⽽稍微⼤⼀些的驱动程序就有⼤约 1000⾏代码，⽽这些代码还与⼤约⼀万⾏到两万⾏的 Linux 操作系统代码密不可分。这就导致问题⼀下远远超过 Klee 可以分析解决的范围，因为 Klee并不能把这 1000 ⾏代码和其他部分“斩断联系”⽽单独分析。</p>
+</blockquote>
+<p>啊，极高的耦合度，依赖地狱，到处都是像触手一样乱戳的调用，根本没法把代码单独划出来进行封装吗？</p>
+<p>原来像Linux这样成熟的项目里也全是这样的问题吗？</p>
+<blockquote>
+<p>但是这⾥有个巨⼤的问题。等到我们得到那些不错的结果时，到论⽂截⽌⽇期已经只剩下三天了，⽽我们都完全没有着⼿开始写论⽂。在这么短的时间⾥，撰写、编辑、完善⼀篇⽂章，使得它能被顶级计算机科学学术会议录⽤是完全不可能的。但我们还是努⼒这么做了。在提交截⽌前的 72⼩时⾥，Dawson 和我们五个学⽣（其中⼀位现在已经退学了）两个通宵住在办公室，以期完成实验和论⽂。我们所有学⽣⼼⾥都知道这篇论⽂不可能被接收，但我们还是在 Dawson 的带领下，顺从地向⽬标前进。</p>
+</blockquote>
+<p>这三天的时间必然是地狱般的三天，估计是“度日如年”了</p>
+<blockquote>
+<p>最终，我们提交了⼀篇令⼈尴尬的⽂章，⾥⾯充满了错误拼写、不通顺的句⼦⽚段、没有解释的图表，甚⾄连结论段都没有。整个是⼀团乱麻。</p>
+</blockquote>
+<p>赶工是这样的，赶出来的东西往往都不太好</p>
+<blockquote>
+<p>我把⾃⼰完全与世隔绝，⼼理上基本处于崩溃状态，但我仍然试着每天能有所进步。我尝试着每天阅读⼏篇计算机科学的学术论⽂，并做好笔记，以帮助我激发⾃⼰的灵感。但因为没有良好的引导和研究背景，我最后浪费了很多时间，有时读完了论⽂却⼀⽆所获。我曾经骑着⾃⾏车在校园⾥漫⽆⽬的地游荡，试图在过程中思考⾃⼰的研究思路但常常⽆功⽽返。最终，我把时间都浪费在了拖延上，可能甚于我这辈⼦⾄今为⽌的任何⼀段时光：我看了很多电视节⽬，睡了很多觉，花了⽆数个钟头在⽹上蹉跎。</p>
+</blockquote>
+<p>这不就是“停摆”吗？</p>
+<p>我对此深有体会</p>
+<p><em>也许这段时间可以去看看《EVA》，虽然这没什么帮助</em></p>
+<p>但话说回来，停摆状态下干啥事有帮助呢？</p>
+<p>不解决导致停摆的困扰因素，别的都是白扯，而且越拖越严重</p>
+<blockquote>
+<p>找⼈抱怨也毫⽆意义 这种现实简直可悲到可笑的地步。但我觉得⼤家凑在⼀起互倒苦⽔也毫⽆裨益</p>
+</blockquote>
+<p>孤独，真的孤独啊</p>
+<blockquote>
+<p>和想象中⼀位孤独的学者坐在路边，⼀边喝着拿铁咖啡⼀边在⼀张笔记纸上涂涂画画这种浪漫化的场景不同的是，真正的学术研究从来就不是在“真空”中完成的。为了创新，⼀个⼈需要有坚实的知识、历史、甚⾄物质基础（⽐如实验室设备）。在那⼏周中，我应该追寻的更明智的路线是找更多机会和Dawson 谈话，并积极寻求和其他教授以及⾼年级学⽣的合作。</p>
+</blockquote>
+<p>这种经验也是非常宝贵的</p>
+<p>但是既然Dawson的热情，和经费都绑定在Klee上，我仍然怀疑Dawson能不能给出设身处地的建议呢？并不是从人品方面，我是说，人家也未必能想到你这个情况该做什么吧。当然这只是揣测</p>
+<p>不过从另一个方向来思考，也没有更好的办法了，那还不如找导师谈谈呢</p>
+<p>最坏的情况，导师表示“我不管你在想什么，无论你遇到什么实际困难，我不管你也不会给你建议，而且你必须做我的项目”，那最坏不过退学算了</p>
+<blockquote>
+<p>教授就得从他们的经费中拿出⼤约 1500 美元，来承担学⽣参加研讨会并作报告产⽣的车旅费、住宿费和注册费。</p>
+</blockquote>
+<p>“注册费”？</p>
+<p>虽然说不出所料吧</p>
+<p>但怎么干啥都要交钱啊？？？</p>
+<blockquote>
+<p>我学着扮演⼀个⼀半推销员⼀半乞求者的⾓⾊，坚持不懈地询问同学是否有 Python 程序可以拿来给我⽤作案例研究，或者更好的是，是否愿意安装并使⽤ IncPy，以此作为⽇常⼯作的基础，并向我提供他们的使⽤感受。</p>
+</blockquote>
+<p>本社恐看到这里痛苦面具已经戴上了</p>
+<blockquote>
+<p>在我那个⼀⼩时报告的过程中，我被三个研究员稍稍吓了⼀跳，他们⽼是打断我，反复纠缠⼀些 IncPy 在实际中表现如何的细节问题。</p>
+</blockquote>
+<p>如果有人反复地问细节问题，也许正是对这个被推销的东西感兴趣，所以我觉得，也许大可以从他们那里收集他们实际感兴趣的地方——会上或者会下</p>
+<p>总之，那肯定不是挑刺，毕竟对不感兴趣的会议议题，“睡一觉”会更舒服一些</p>
+<blockquote>
+<p>在我尝试给伯克利这些神经科学家的电脑上安装 IncPy 之前，我已经搭建和测试了⼏个⽉，所以我很⾃信也能给他们安装成功。然⽽，安装之后没⼀会⼉，我们就发现 IncPy 与这些科学家天天都在使⽤的很多第三⽅Python 插件（称为拓展模块）并不相容。我⾃⼰测试的时候，只测试了⼀些基本⽤例，⽽没有考虑到这些扩展模块。这给了我⼀个关于现实部署的深刻教训：失败可能以你没有料到的形式出现，⽽⼀旦给⽤户留下⼀个不好的第⼀印象，就全完了！</p>
+</blockquote>
+<blockquote>
+<p>但我并没有放弃。我花了接下来⼏个星期的时间重新设计和实现了IncPy 中⼀个关键部分的代码，使它能够与任何 Python 拓展模块⼀起完美⼯作。</p>
+</blockquote>
+<p>无法想象这种工作该有多复杂，让它适配所有可能的外部插件吗？那些插件各有各的不同，这到底是怎么做到的？</p>
+<p>“插件”到底说的是什么东西？<code>import</code>的包吗？</p>
+<p>这是本来就可以实现的功能，只是在这次改进之后把原型项目改成了标准的形式，还是说……我还是没搞明白，这几个星期到底做了什么，得以让这个解释器去适配截然不同领域的Python插件？</p>
+<blockquote>
+<p>我又给伯克利那⼏位神经科学家发了封邮件，希望他们再给我⼀次机会，但我没有得到任何回复。</p>
+</blockquote>
+<p>毕竟大家都是很忙的，时间是很有限的</p>
+<p>没人会当面问，但是一定会在心里问的问题是，“用你的项目，如果不成功，那么浪费掉的时间算谁的”</p>
+<p>我对“第一印象”深有体会，至今为止，我都对KDE和Jekyll有非常糟糕的第一印象，尽管我知道这是一种初期技术力不足导致的个人偏见；即便我也不会真的去尝试因为这些偏见做什么，但我还是会下意识地避免使用这两个项目</p>
+<p>如果一个冒冒失失的博士研究生的“垃圾项目”在我的研究环境中“连基础都跑不通”，真的只会留下糟糕的第一印象，因为会对这样的程序抱有不切实际的期待，无暇顾及这根本只是一个试验性项目，而且仅仅只有一个人编写和维护</p>
+<p>但是，面对这样的困境，应该怎么办呢？</p>
+<blockquote>
+<p>我仍然还没拥有⼀条通往毕业的康庄⼤道，但我⾄少能开始⾃我管理⾃⼰的研究内容，⽽不是跟着别⼈⼀起做他们的研究项⽬了。</p>
+</blockquote>
+<p>唉，但是这样的话，难道心里一点都不发愁“毕业"的事情吗，感觉挺悬……</p>
+<blockquote>
+<p>我感到了⼀种紧迫感，因为我的外源奖学⾦只持续到这⼀年结束。</p>
+</blockquote>
+<p>挺幸运，还有机会感受到紧迫感</p>
+<p>想象有多少人申请不到奖学金，就只能且不得不去做导师布置的那种“破项目”？而不是真的有精力去找适合自己且有内源驱动力的项目？</p>
+<p>复刻这样经历的，又能有几个人呢？</p>
+<blockquote>
+<p>最值得注意的是，我介绍 IncPy 时采⽤了⼀种不太明智地包装策略，这使得我的论⽂被安排给⼀些来⾃对我的研究理念不太“友好”的⼦领域的学者来审阅。</p>
+</blockquote>
+<p>有人因为这样的机制可以“作弊”让自己的论文更容易被接收而受益，就有人为这样的机制要付出代价</p>
+<p>我看不起SEO技术，平常称之为“SEO作弊”，但是，这投论文又何尝不是一种SEO呢？</p>
+<blockquote>
+<p>不过他还有⼀个更为具体的建议：另⼀个能到达博⼠论⽂⽔准的项⽬，就是能够把我对 Python 的兴趣以及他所喜爱的类似 Klee 的想法结合起来，从⽽做出⼀个能够⾃动查找Python 程序中漏洞的⼯具。</p>
+</blockquote>
+<p>我有理由相信，Klee是Dawson的青春岁月</p>
+<blockquote>
+<p>只要把我的原始想法稍加改进，CDE 就能帮⽤户打包他们的程序，从⽽让其他⽤户能够成功运⾏，⽽不再⽤担⼼环境不⼀致的问题。我感到⼗分激动，因为 CDE 有可能缓解 Linux ⾥存在了⼗余年的依赖地狱问题。</p>
+</blockquote>
+<p>该不会是Docker吧，不会是Docker吧，不会是Docker吧？？？</p>
+<blockquote>
+<p>叫<strong>系统调用重定向</strong>的技术</p>
+</blockquote>
+<p>虚拟机？</p>
+<blockquote>
+<p>他还给我提供了⼀个实习⽣职位，我可以在即将来临的这个暑假来⾕歌开展有关 CDE 的⼯作。</p>
+</blockquote>
+<p>这就是美国的博士生吗？几乎每学期都有机会实习……</p>
+<blockquote>
+<p>我和Dawson 聊了聊我这⼀左右为难的感受，他很⽀持我去实习，于是我接受了这个实习邀请。</p>
+</blockquote>
+<p>不错啊……这么一看倒也挺顺利的</p>
+<blockquote>
+<p>我只是研究细节并继续改善 CDE。在暑期实习结束、我博⼠第六年开始时，我最终停⽌了在CDE 上的全职⼯作。</p>
+</blockquote>
+<p>忽然就在想，那个“Torch”没人继续维护，是不是也是这种原因啊（无端妄测</p>
+<blockquote>
+<p>他就发表了 19 篇基本全都是顶级会议的论⽂，这是⼀个普通博⼠⽣发表数的五到⼗倍。这也是获得⼀个像斯坦福这样⼀流⼤学的教职所需要的硬性条件。</p>
+</blockquote>
+<p>QAQ？</p>
+<blockquote>
+<p>我需要再有⼀个灵感的爆发，⽽这个灵感最后来源于⼀个意想不到的地⽅。</p>
+</blockquote>
+<p>既不是斯坦福，也不是MIT，也不是谷歌或者微软吗？</p>
+<p>什么程度上的“意想不到”？</p>
+<p>我猜是之前的成果的用户那边给出的灵感，所以说是NASA或者某个其他领域实验室，比如说生物、神经学一类的领域来的灵感吗？</p>
+<p>暂且蒙在鼓里</p>
+<blockquote>
+<p>⼏年来我⼀直在思考离开学术界，⽽现在我觉得我有了合理的原因来这样做：我领教了计算机科学中的“学术游戏”是怎么玩的，也知道我并不想再继续玩下去了。</p>
+</blockquote>
+<p>很沉重，很现实，没有人的工作是容易的。</p>
+<blockquote>
+<p>对这些资历较浅的研究者来说，会议上的职业交际也是⼀个需要认真对待的全职⼯作，因为他们初期的职业⽣涯和学术声誉都依赖于在这⽅⾯的良好表现。</p>
+</blockquote>
+<p>唔，完全没想到呢</p>
+<blockquote>
+<p>我和 Dawson 聊了下，他很⼤度地愿意出经费⽀持我这⼏个⽉，即使我没有在 Klee 上开展⼯作（我的外源奖学⾦那时已经到期了）。</p>
+</blockquote>
+<p>考虑到每个人都不容易，这真的很大度</p>
+<blockquote>
+<p>如果我没有积极地抓住幸运地降临在我⾝上的这些机会的话，研究⽣最后的这段征途也不会变成可能。…… 那么我现在还在斯坦福，挣扎着四处寻找最后⼀个项⽬和论⽂委员会的成员。</p>
+</blockquote>
+<p>原来是哈佛吗？</p>
+<blockquote>
+<p>这时，我已经懂得了保持与⽼资历的合作者（以及论⽂审稿⼈）的主观偏好相⼀致的重要性，即使我是在⼀个所谓客观的技术领域内做科研。</p>
+</blockquote>
+<p>是说“只要想，什么学术课题都能打出交叉来”的意思吗？</p>
+<blockquote>
+<p>虽然我的外表和动作都像⼀个准⼈类（即，不修边幅、⾐冠不整），我的内⼼状态却是欣喜若狂的。我每天都要编程和调试⼗余个⼩时，但我的脑⼦还是很放松的，因为我的技术技艺应付所⾯对的挑战已经是游刃有余了。</p>
+</blockquote>
+<p>看着就感觉好爽啊！！！！！</p>
+<blockquote>
+<p>经历了研究⽣早期在不确定并且失败的项⽬上数年的研磨之后，我现在感到精⼒充沛，并朝⼀个我知道能够实现的⽬标紧张地⼯作着。</p>
+</blockquote>
+<p>without any of self-suspicious！！！</p>
+<blockquote>
+<p>在⼀个学⽣坐下来“写”毕业论⽂之前，所有的挥洒汗⽔的⾟苦劳动其实都已经做完了。</p>
+</blockquote>
+<p>啊？写论文之前工作肯定已经做完了啊，这不是常识吗？</p>
+<blockquote>
+<p>尽管没有得到主流的认可，我还是觉得我的博⼠⽣涯画上了圆满的句号，因为我成功地让我的创意结出了果实，并且以⼀个我⼗分引以为豪的博⼠论⽂成功毕业。</p>
+</blockquote>
+<p>至少在本科生看来，这太强大了</p>
+<blockquote>
+<p>如果没有在斯坦福六年中前五年的外源奖学⾦⽀持，我不会有如此多的⾃由。</p>
+</blockquote>
+<p>自由永远不是免费的……</p>
+<blockquote>
+<p>最终，我的博⼠论⽂也像⼤多数博⼠论⽂那样，将⼈类知识的边界向外拓宽了⾮常⾮常⼩的⼀点。</p>
+</blockquote>
+<p>想要推动边界是很艰辛的啊……多少人在里面打转连边界在哪都看不到</p>
+<blockquote>
+<p>如果有任何⼈想投⼊到这个荣耀的战役中去，我很愿意帮助他，但我却不够勇敢把我⾃⼰的⽣涯放到这上⾯去。相反，我现在计划去追求⼀个完全不同的职业热情，可能某⼀天它会成为我另⼀本书的主题</p>
+</blockquote>
+<p>总觉得做学术研究会更自由，但现在看来并不是这样的……</p>
+<p>但不可否认，学术研究的环境肯定是最优的，不是说“理论上最优”，而是说“最”的那个含义，就是说，找不到更好的了</p>
+<p>这就更加困苦了</p>
+<blockquote>
+<p>让我吃惊的是这个笔记是我六年前写的，也就是 2006 年夏天我即将要开始我在斯坦福的博⼠⽣项⽬的时候。</p>
+</blockquote>
+<p>我现在看自己几年前写的东西，有时候也是会感觉到陌生的……就是那种，仰望的那种陌生</p>
+<blockquote>
+<p>这个常见问题⾮常重要，因为⼤多数博⼠⽣都不能获得⼀份像他们⼤学⾥的指导者以及⾏为榜样——终⾝制教授——⼀样的⼯作。</p>
+</blockquote>
+<p>教职并不容易拿到，尤其是，想要在自己就读的学校拿到教职，基本是不可能的，并不是说，读了博，就能拿到稳定的教职</p>
+<p>虽然知道这是理论上的事实，还是真令人沮丧……</p>
+<p>面前的山高耸入云不知道山顶在哪，现在说，爬到了山顶也不太可能拿到想要的东西</p>
+<p>“这么折磨自己不是有病吗”，很难不冒出这样的念头</p>
+<blockquote>
+<p>⽐如，我六年的博⼠训练让我⽐起还是⼀个研究⽣新⽣时，变得更加智慧、有悟性、坚韧、刚毅、专注、有创造⼒、有⼜才、感觉敏锐，并且专业地⾼效。（两个明显的警⽰：不是每⼀个博⼠⽣都能如此受益——很多⼈也因挣扎⽽变得厌倦、疲惫不堪。当然，也有很多⼈在没有读博⼠的情况下，同样培养出了这些积极的品质。）</p>
+</blockquote>
+<p>我觉得，即便写了这两条警示，这也不是令人满意的答案</p>
+<blockquote>
+<p>从某种意义上来说，读博⼠就是智⼒上的⾼强度体育训练。</p>
+</blockquote>
+<p>通篇看下来，训练的磨难是有了</p>
+<blockquote>
+<p>相反，我知道⼀些有着最理想主义⽬的的学⽣——梦想着并热切地希望彻底变⾰他们的领域——但他们没做出什么结果，最终他们的幻想也破灭了。</p>
+</blockquote>
+<p>不做“圣人”</p>
+<blockquote>
+<p>获得博⼠学位的唯⼀途径就是成功地产⽣科研输出（例如，发表的论⽂），⽽不仅仅是靠上课或者读他⼈的论⽂这些吸收来输⼊。</p>
+</blockquote>
+<p>虽然都是学生身份，但是做研究和单纯的学习是很不一样的</p>
+<p>想想无论如何，随着本科即将画上句号，轻松的“学习”生涯就要结束了，接下来，即便能继续做学生，恐怕也不会再这样轻松地只要好好吸收了前人的成果就能得到认可，这多少令人有些难过</p>
+<blockquote>
+<p>相反，对毕业论⽂项⽬的相关⼯作⽂献的搜索则有效得多了，因为我的阅读是紧紧朝着⼀个清晰的⽬标的：找出竞争者，以及可以修改加到我⾃⼰的项⽬中的好创意。</p>
+</blockquote>
+<p>但是得先找到一个项目不是么</p>
+<p>要不然，即便有了个想法，打开知网，输入关键词，看着满屏的结果也并不知道该从哪开始，拿着别人的论文，一看不出好坏，二不知道从哪开始</p>
+<blockquote>
+<p>与传统的课堂学习不同，当我做科研的时候，我并没有教材，没有课堂笔记，没有授课教师提供给我的标准答案。</p>
+</blockquote>
+<p>而且找到的“答案”也可能是错的</p>
+<p>做研究和做学习真的不一样</p>
+<blockquote>
+<p>但如果我没有持续尝试，那么我可能也不会这么幸运。</p>
+</blockquote>
+<p>幸运如果可以预测的话，就不叫“幸运”了</p>
+<p>但行好事莫问前程，即便从最功利的角度来理解，也是因为前程根本没法预知，也无法量化自己做的努力的大小——量化一个计算机程序尚且如此困难，难道还真能量化自己的努力不成</p>
+<p>唯一有帮助的，也许就是自己脑子里学到的经验带来的“判断力”了——诶嘿，还不知道是不是对的，真—是—刺—☆—激—呢（棒读）</p>
+<blockquote>
+<p>作为⼀个博⼠⽣，我处于社会等级的底层，没有能⼒去改变这个“学术游戏”。具体⽽⾔，尽管我惧怕我的论⽂⼀次又⼀次地被拒，我也没有其他办法，只能继续学着怎么尽⾃⼰所能去玩发表论⽂的游戏。</p>
+</blockquote>
+<p>不可改变的事情有很多，无奈地发现改变自己的方式是最简单的道路</p>
+<blockquote>
+<p>当我通过阅读 Margo 的论⽂和资⾦申请书，知道了她的研究品味之后，</p>
+</blockquote>
+<p>啥叫“研究品味”啊，感兴趣的那种方向，致力于解决的社会问题那种的？</p>
+<blockquote>
+<p>因此对教授既是专家也是⼈类这⼀点⼼领神会很重要。</p>
+</blockquote>
+<p>只可意会不可言传的话题了属于是</p>
+<p>再写下去确实会得罪人</p>
+<blockquote>
+<p>总的来说，我努⼒地找出天性就和我相处融洽的那些⼈，然后再花时间来培养这份关系。</p>
+</blockquote>
+<p>确实，如果有机会选择，一定要找那些能处得来的人</p>
+<p>而且不见得就一定要是志趣相投，也许志趣不相投，但只要一些相处原则一致也是可以的</p>
+<p>与之相反，志趣相投的人，在一些相处原则上不见得一致，也就不见得相处得来</p>
+<blockquote>
+<p>作为⼀个资历较浅的实验室成员，尽⼀些义务、做⼀个“好⼠兵”是很有必要的，⽽不是从第⼀天就开始提⼀些蛮横的要求。</p>
+</blockquote>
+<p>权力持有者向权力的来源表示服从，经费持有者向经费的来源服从，不可避免</p>
+<blockquote>
+<p>学⽣们必须⾃我判断他们被默认安排的项⽬是否有前景，</p>
+</blockquote>
+<p>有人受得起摔倒在坑里的代价，如果自己受不起，就早早跑路</p>
+<p>问题不在于如何下决心</p>
+<p>问题在于有没有能力看出来这是“不合适”的，而不是抱着“我在努努力就可以了”的幻想催眠自己，如果有那样的坚决意志果敢地认识到这个事实，必然对需要做出的决定不抱疑惑</p>
+<p>接下来的困难应该是“去哪找一个能让我毕业的项目”，因为这个自己能做主</p>
+<p>而不是“我该如何向教授提出我的要求”，因为但就这件事情本身而言，自己做不了主，如果当好士兵，固然能提高可行性，如果有自己的经费来源，那么事情更容易成功，但这些都已经不是这一阶段可以考虑的问题了</p>
+<blockquote>
+<p>从失败中站起来</p>
+</blockquote>
+<p>说起来容易，也是老生常谈的话题，但是从失败中站起来真的不太容易，失败对于人心境的打击、扰乱是很严重的</p>
+<p>站起来之后也很难不盲目，病急乱投医，是常理，是人情</p>
+<blockquote>
+<p>当我与专业的圈内⼈合作时，我发表论⽂变得更为容易了</p>
+</blockquote>
+<p>但是显而易见地，想认识人家可真的不太容易啊</p>
+<p>毕竟大家都很忙啊</p>
+<blockquote>
+<p>在整个博⼠阶段中，我做了⼆⼗余个科研报告，从在⼤学实验室组会上的⾮正式报告，到⼤型酒店舞会厅的会议报告。</p>
+</blockquote>
+<p>不说别的，勤作报告不就没那么怯场了</p>
+<p>但我觉得，怯不怯场还是和自己做的东西有关，熟练了，投入到自己的东西里面了，自然就不怯场了</p>
+<p>我刚开始做毕业设计答辩的时候，就很害怕，但是随着我开始往下讲，套到自己的思路里面之后，就一点都不害怕了，还只恨时间太短，我的想法说不完</p>
+<blockquote>
+<p>但我意识到令⼈信服地将⾃⼰的⼯作推销出去才是发表、获得任何、顺利毕业的关键。</p>
+</blockquote>
+<p>首先需要时刻相信之前和朋友们探讨问题时总结出的一个结论</p>
+<p>“人类文明是一个草台班子”</p>
+<p>这句话永远正确</p>
+<p>人对社会的影响太严重了，而且并没有那么多理性，更多的是直觉和感性</p>
+<p>有时候想想真不可思议，这么不靠谱的两样东西，是怎么撑起这个社会来的？</p>
+<blockquote>
+<p>博⼠⽣经历中我最喜欢的⼀个特征就是我并没有⼀直处于和同学们的竞争中</p>
+</blockquote>
+<p>这种环境一定得设法避免，毕竟本来做的研究，整个领域只有自己一个人就已经够孤独的了，要是身边的人全都是竞争对手，那还不如别读了</p>
+<blockquote>
+<p>因此，我们中的⼤多数都慷慨地互相帮助，尤其是在遭受外部审稿⼈严厉的批评之前，就互相给予关于想法和论⽂草稿的反馈。</p>
+</blockquote>
+<p>靠谱的朋友圈太重要了</p>
+<p>“到底是朋友们成就了一个人，还是一个人成就了他的朋友们？”</p>
+<p>无论是哪个，找到朋友是很重要的</p>
+<p>另外，这一小节的标题“<strong>慷慨地提供帮助</strong>”，我觉得也是上面那节“幸运”所说的，但行好事，莫问前程——谁知道前程在哪</p>
+<blockquote>
+<p>在过去的六年⾥，我变得善于决定何时、找谁、以及如何来寻求帮助。</p>
+</blockquote>
+<p>很有用的技能……但看起来太复杂，很难掌握</p>
+<blockquote>
+<p>这些年来，我学会了向给予过我帮助的⼈表达感谢。</p>
+</blockquote>
+<p>这个倒是很重要，注重正向反馈，不能因为太忙或者觉得“没啥用处”就不做</p>
+<blockquote>
+<p>正如我第⼀年结束时发现的那样，凭空想出⼀个实质性的想法⼏乎是不可能的。</p>
+</blockquote>
+<p>想法不是天上掉下来的</p>
+<p>在做学习的时候很容易产生这种不切实际的念头“我可以拍脑袋想出一个研究方向”</p>
+<p>这种想法不切实际，需要避免</p>
+<blockquote>
+<p>聪明地研磨需要有感知⼒、直觉和⼀种乐于寻求帮助的意愿</p>
+</blockquote>
+<p>必须在有益的方向“折磨自己”</p>
+<p>事实上，如果这个方向足够好，足够把自己放进去契合起来，只是会感觉有点累——并且主要来自身体而不是精神——而已，并不会“折磨”</p>
+<blockquote>
+<p>并且⾮常⾼兴我最终还是决定去做⼀个⼤学教授！</p>
+</blockquote>
+<p>所以教职还是未来啊（doge</p>
+<blockquote>
+<p>可它就是我获得博⼠学位必须要玩的游戏。</p>
+</blockquote>
+<blockquote>
+<p>我基于我六年博⼠⽣阶段所看到的，把我认为这些过程是如何进⾏的最诚实的解释写了出来。</p>
+</blockquote>
+<blockquote>
+<p>由于你所处的环境可能和我的有很⼤不同，我觉得我没有资格给你提供建议。欢迎你以任何合理的⽅式来理解我的话，然后⽤你最好的判断⼒来决定。祝你好运！</p>
+</blockquote>
+<p>每个人都有每个人的游戏要玩</p>
+<p>即便因为阅读这本书产生了多大的共鸣</p>
+<p>面对每个人不同的实际情况，陌生人们之间除了一句“祝你好运”以外也实在没什么能说的话了</p>
+<blockquote>
+<p>尽管同⾏评议的发表规则是⼀个不甚完美的游戏，我也没有⼀个能够控制质量的更好的解决⽅案。</p>
+</blockquote>
+<p>反正关于学术，“面向考试”“同行评议”各有各让人憎恨的地方</p>
+<p>但是确实想不到什么更好的办法</p>
+<p>有时候想到了一些观点，但是也没能力推动它，更没法验证它是不是合理，那怎么办呢？</p>
+<p>反正目前我也不可能想出什么来</p>
+<p>只能说，在积攒到足以做出评论的实力（提出真正可行的想法，或者有那个能力对它动手）之前，还是先保持沉默比较好，毕竟只是个nobody</p>
+<blockquote>
+<p>因为这些是都和获得博⼠学位⽆关的活动。我选择排他性地把我的回忆录聚焦在做科研的过程上，因为这才是博⼠经历的核⼼。</p>
+</blockquote>
+<p>看起来要做破事还不少，好麻烦啊……</p>
+<p>阅后感：</p>
+<p>这本书挺短的，读完只花了半个晚上</p>
+<p>待办清单上的事情划掉一个，这个周末也算是做了点事</p>
+<p>鉴于时间已经不早了，不发表其他感想了，要说的都在笔记里面了</p>
+<p>感谢两位译者</p>
+<p>齐鹏 (pengqi@cs.stanford.edu)</p>
+<p>罗宇男 (luoyunan@gmail.com)</p>
+<p>带来这本书的中文版本，如果让我研读英文原版的话，半晚上肯定读不完</p>
+<p>当然，不可能不感谢作者</p>
+<p>Philip J. Guo (philip@pgbovine.net)</p>
+<p>带来这本书</p>
+<p>这是作者本人Philip J. Guo提供的<a target="_blank" rel="noopener" href="http://www.pgbovine.net/PhD-memoir/pguo-PhD-grind.pdf">英文原著链接</a>，也是合法的获取渠道</p>
+<p>上面这些东西就是初读的体会了，就这样。</p>
+<p>Knighthana</p>
+<p>2023/05/15</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/career/" rel="tag">career</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1684113123667"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#the-ph.d.-grind-%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%88%9D%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">The Ph.D. Grind 读书笔记（初读）</span></a></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>
