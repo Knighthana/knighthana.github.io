@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2023-04-20T11:50:58.405Z</updated>
+  <updated>2023-05-15T00:36:35.134Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,319 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>(KM)git clone --depth=1</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)git%20clone%20--depth=1.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)git%20clone%20--depth=1.html</id>
+    <published>2023-05-14T14:36:00.000Z</published>
+    <updated>2023-05-15T00:36:35.134Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;git-clone---depth1&quot;&gt;git clone --depth=1&lt;/h1&gt;
+&lt;p&gt;对于陈年型活跃项目，使用&lt;code&gt;git</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="git" scheme="https://knighthana.github.io/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(KM)思考职业生涯问题的角度</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E6%80%9D%E8%80%83%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%92%E5%BA%A6.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E6%80%9D%E8%80%83%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%92%E5%BA%A6.html</id>
+    <published>2023-05-14T14:27:00.000Z</published>
+    <updated>2023-05-15T00:36:35.134Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;思考职业生涯问题的角度&quot;&gt;思考职业生涯问题的角度&lt;/h1&gt;
+&lt;p&gt;摘录自知乎问题 &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="be aware" scheme="https://knighthana.github.io/tags/be-aware/"/>
+    
+    <category term="career" scheme="https://knighthana.github.io/tags/career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>The Ph.D. Grind Book Mark and Notes</title>
+    <link href="https://knighthana.github.io/Book-Mark/(BM)ThePhdGrindBookMark&amp;Notes.html"/>
+    <id>https://knighthana.github.io/Book-Mark/(BM)ThePhdGrindBookMark&amp;Notes.html</id>
+    <published>2023-05-13T16:00:00.000Z</published>
+    <updated>2023-05-14T15:50:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;the-ph.d.-grind-读书笔记初读&quot;&gt;The Ph.D. Grind 读书笔记（初读）&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我经常会花⼏个⼩时设置好 Klee 所需的复杂的实验环境，以分析某⼀个驱动程序的程序缺陷；但这种⼯作又往往以 Klee</summary>
+        
+      
+    
+    
+    
+    <category term="Book Mark" scheme="https://knighthana.github.io/categories/Book-Mark/"/>
+    
+    
+    <category term="career" scheme="https://knighthana.github.io/tags/career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2023年5月在Arch上折腾KVM的记录</title>
+    <link href="https://knighthana.github.io/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html"/>
+    <id>https://knighthana.github.io/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html</id>
+    <published>2023-05-11T13:16:00.000Z</published>
+    <updated>2023-05-14T14:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Env" scheme="https://knighthana.github.io/categories/Dev-Env/"/>
+    
+    
+    <category term="2023" scheme="https://knighthana.github.io/tags/2023/"/>
+    
+    <category term="ArchLinux" scheme="https://knighthana.github.io/tags/ArchLinux/"/>
+    
+    <category term="KVM" scheme="https://knighthana.github.io/tags/KVM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>奇加偶减-容斥原理</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E5%A5%87%E5%8A%A0%E5%81%B6%E5%87%8F-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E5%A5%87%E5%8A%A0%E5%81%B6%E5%87%8F-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86.html</id>
+    <published>2023-05-06T14:50:00.000Z</published>
+    <updated>2023-05-06T14:50:01.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;奇加偶减-容斥原理&quot;&gt;奇加偶减-容斥原理&lt;/h1&gt;
+&lt;p&gt;在学习概率论与数理统计时提到过一个技巧，对于多个事件，计算其并事件时，遵循一个口诀“奇加偶减”&lt;/p&gt;
+&lt;p&gt;这个口诀的背后是容斥原理&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="课程笔记" scheme="https://knighthana.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="Math" scheme="https://knighthana.github.io/tags/Math/"/>
+    
+    <category term="概率论与数理统计" scheme="https://knighthana.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>从光电鼠标到光流法</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E4%BB%8E%E5%85%89%E7%94%B5%E9%BC%A0%E6%A0%87%E5%88%B0%E5%85%89%E6%B5%81%E6%B3%95.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E4%BB%8E%E5%85%89%E7%94%B5%E9%BC%A0%E6%A0%87%E5%88%B0%E5%85%89%E6%B5%81%E6%B3%95.html</id>
+    <published>2023-05-06T14:00:00.000Z</published>
+    <updated>2023-05-06T14:50:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="DSP" scheme="https://knighthana.github.io/tags/DSP/"/>
+    
+    <category term="鼠标" scheme="https://knighthana.github.io/tags/%E9%BC%A0%E6%A0%87/"/>
+    
+    <category term="互相关" scheme="https://knighthana.github.io/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/"/>
+    
+    <category term="光流法" scheme="https://knighthana.github.io/tags/%E5%85%89%E6%B5%81%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pandoc的一些用法</title>
+    <link href="https://knighthana.github.io/Dev-Code/pandoc%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%A5%E9%97%A8%E7%94%A8%E6%B3%95.html"/>
+    <id>https://knighthana.github.io/Dev-Code/pandoc%E7%9A%84%E4%B8%80%E4%BA%9B%E5%85%A5%E9%97%A8%E7%94%A8%E6%B3%95.html</id>
+    <published>2023-05-05T17:45:00.000Z</published>
+    <updated>2023-05-05T18:56:19.893Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;pandoc的一些用法&quot;&gt;pandoc的一些用法&lt;/h1&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Code" scheme="https://knighthana.github.io/categories/Dev-Code/"/>
+    
+    
+    <category term="HTML" scheme="https://knighthana.github.io/tags/HTML/"/>
+    
+    <category term="pandoc" scheme="https://knighthana.github.io/tags/pandoc/"/>
+    
+    <category term="markdown" scheme="https://knighthana.github.io/tags/markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>生灭过程</title>
+    <link href="https://knighthana.github.io/subject-note/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B.html"/>
+    <id>https://knighthana.github.io/subject-note/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B.html</id>
+    <published>2023-05-05T15:04:16.000Z</published>
+    <updated>2023-05-05T17:25:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;生灭过程&quot;&gt;生灭过程&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;我的理解将会和教科书上的不太一致，因此我也不能保证这里的理解一定是对的&lt;/strong&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="subject-note" scheme="https://knighthana.github.io/categories/subject-note/"/>
+    
+    
+    <category term="课程笔记" scheme="https://knighthana.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="随机过程" scheme="https://knighthana.github.io/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/"/>
+    
+    <category term="排队论" scheme="https://knighthana.github.io/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/"/>
+    
+    <category term="生灭过程" scheme="https://knighthana.github.io/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(KM)5s管理法</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)5s%E7%AE%A1%E7%90%86%E6%B3%95.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)5s%E7%AE%A1%E7%90%86%E6%B3%95.html</id>
+    <published>2023-05-03T16:00:00.000Z</published>
+    <updated>2023-05-05T14:40:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="管理" scheme="https://knighthana.github.io/tags/%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(KM)日语中的一些词语词组</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E6%97%A5%E8%AF%AD%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AF%8D%E8%AF%AD%E8%AF%8D%E7%BB%84.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E6%97%A5%E8%AF%AD%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E8%AF%8D%E8%AF%AD%E8%AF%8D%E7%BB%84.html</id>
+    <published>2023-05-03T14:25:00.000Z</published>
+    <updated>2023-05-03T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;日语中的一些词语词组&quot;&gt;日语中的一些词语词组&lt;/h1&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="日语" scheme="https://knighthana.github.io/tags/%E6%97%A5%E8%AF%AD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vim的一点介绍</title>
+    <link href="https://knighthana.github.io/Dev-Env/vim%E7%9A%84%E4%B8%80%E7%82%B9%E4%BB%8B%E7%BB%8D.html"/>
+    <id>https://knighthana.github.io/Dev-Env/vim%E7%9A%84%E4%B8%80%E7%82%B9%E4%BB%8B%E7%BB%8D.html</id>
+    <published>2023-05-02T08:25:00.000Z</published>
+    <updated>2023-05-05T17:41:12.762Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Env" scheme="https://knighthana.github.io/categories/Dev-Env/"/>
+    
+    
+    <category term="vim" scheme="https://knighthana.github.io/tags/vim/"/>
+    
+  </entry>
   
   <entry>
     <title>2023年4月折腾Hexo和Node</title>
@@ -114,7 +427,7 @@
     <link href="https://knighthana.github.io/KnowledgeMark/(KM)Man_cURL.html"/>
     <id>https://knighthana.github.io/KnowledgeMark/(KM)Man_cURL.html</id>
     <published>2023-04-15T16:00:00.000Z</published>
-    <updated>2023-04-20T10:58:17.654Z</updated>
+    <updated>2023-05-15T00:36:35.134Z</updated>
     
     
       
@@ -775,7 +1088,7 @@
     <link href="https://knighthana.github.io/Dev-Env/%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98%E5%8F%8A%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7%E7%9A%84%E9%97%AE%E9%A2%98%E9%9B%86.html"/>
     <id>https://knighthana.github.io/Dev-Env/%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98%E5%8F%8A%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7%E7%9A%84%E9%97%AE%E9%A2%98%E9%9B%86.html</id>
     <published>2023-01-13T16:00:00.000Z</published>
-    <updated>2023-04-20T14:15:00.000Z</updated>
+    <updated>2023-05-02T08:18:00.000Z</updated>
     
     
       

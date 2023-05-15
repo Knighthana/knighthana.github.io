@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>vim的一点介绍 - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="vim的一点介绍 最近在网络社交论坛上经常(“多次”、“反复”)看到关于vim的话题，讨论的双方中，一方认为不知道vim鼎鼎大名的人不配做程序员，另一方认为2023年还在用vim的人除了装逼之外没有别的目的。 就感觉……挺无聊的，有这个功夫不如去争论一下“PHP到底是不是最好的语言”，哦对，时过境迁，现在的话应该是争论“JavaScript是不是最好的语言”，毕竟人家都已经有Webassembly">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vim的一点介绍">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/vim%E7%9A%84%E4%B8%80%E7%82%B9%E4%BB%8B%E7%BB%8D.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="vim的一点介绍 最近在网络社交论坛上经常(“多次”、“反复”)看到关于vim的话题，讨论的双方中，一方认为不知道vim鼎鼎大名的人不配做程序员，另一方认为2023年还在用vim的人除了装逼之外没有别的目的。 就感觉……挺无聊的，有这个功夫不如去争论一下“PHP到底是不是最好的语言”，哦对，时过境迁，现在的话应该是争论“JavaScript是不是最好的语言”，毕竟人家都已经有Webassembly">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-02T08:25:00.000Z">
+<meta property="article:modified_time" content="2023-05-05T17:41:12.762Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="vim">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1684113123913">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1684113123913">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1684113123913"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>86</div>
+        <div><span>标签</span>134</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1684113123913"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">15</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">33</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">20</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 13.75px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 12.5px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12.5px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11.25px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 11.25px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11.25px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11.25px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11.25px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 17.5px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12.5px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(134);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)git%20clone%20--depth=1.html">(KM)git clone --depth=1</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E6%80%9D%E8%80%83%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%92%E5%BA%A6.html">(KM)思考职业生涯问题的角度</a>
+          </li>
+        
+          <li>
+            <a href="/Book-Mark/(BM)ThePhdGrindBookMark&Notes.html">The Ph.D. Grind Book Mark and Notes</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html">2023年5月在Arch上折腾KVM的记录</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%A5%87%E5%8A%A0%E5%81%B6%E5%87%8F-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86.html">奇加偶减-容斥原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="vim的一点介绍" loading="lazy">
+            <h1>vim的一点介绍</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年05月02日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="vim的一点介绍"><code>vim</code>的一点介绍</h1>
+<p>最近在网络社交论坛上经常(“多次”、“反复”)看到关于<code>vim</code>的话题，讨论的双方中，一方认为不知道<code>vim</code>鼎鼎大名的人不配做程序员，另一方认为2023年还在用<code>vim</code>的人除了装逼之外没有别的目的。</p>
+<p>就感觉……挺无聊的，有这个功夫不如去争论一下“PHP到底是不是最好的语言”，哦对，时过境迁，现在的话应该是争论“JavaScript是不是最好的语言”，毕竟人家都已经有Webassembly这种玩意了；</p>
+<p>首先声明，我现在已经不把<code>vim</code>当做主要的代码工具来用了，但是，如果需要临时快速编写或处理一些文本、调整配置文件，乃至提交<code>git</code>的<code>commit</code>，都是会使用vim的，有使用习惯和高效率两方面的原因。因此这篇文章的水平也不会高到哪里去，我只能保证它比初学者的水平高。</p>
+<p>这篇文章是面向初学者的，我觉得，假如之前还有初学者在围观这种无聊的争论，不知道自己是不是应该使用这个“逼格很高”的工具，现在看到这篇文章，也差不多该学一学然后散了，各做各的事情去。</p>
+<p>生命苦短，不看吵架。</p>
+<p>在</p>
+<blockquote>
+<p>讲一些<code>vimtutor</code>中没有的东西</p>
+</blockquote>
+<p>一节中会讲一些常用的高阶用法，阅读前半节打开<code>vimtutor zh</code>窗口的同时，可以直接跳到后面看一看“讲一些<code>vimtutor</code>中没有的东西”的内容，至于前面的半节内容，其实不看也无妨。 （善用目录功能）</p>
+<h2 id="vim的入门vimtutor-zh"><code>vim</code>的入门——<code>vimtutor zh</code></h2>
+<p><code>vim</code>的入门不应该有太复杂的心理负担，虽然说有人声称<code>vim</code>的学习曲线非常高耸，画了一条骇人听闻的曲线，确实，它的操作比起记事本和<code>micro$oft word</code>是有些反常识了，但这是思路的问题，是常识本来就不兼容的问题。</p>
+<p>最基本的<code>hjkl</code>交互逻辑，在Unix、GNU/Linux中本就是经常可以看到的，这也是常识的一种，比如<code>man</code>。</p>
+<p>我觉得任何人，入门<code>vim</code>的最佳方式，都应该是抽出半个小时，甚至半个小时都用不上，十几分钟，把<code>vimtutor</code>过一遍；我想不到还有什么比这个交互式教程更快的学习方式了。</p>
+<p>而不是先打开搜索引擎：我惊讶于有这么多人从网站开始学习<code>vim</code>，他们会表示太难，太反直觉，往往在浏览器窗口和终端窗口来回切换，叫苦连天；但是却对它自带的教程充耳不闻；</p>
+<p>就vim而言，这种学习方式不太妥当；</p>
+<p>对于初学者来说，直接在终端中输入<code>vimtutor</code>即可，不过由于每个人使用的系统语言设置不同，此条命令有可能会打开一个英文版本的教程，所以请使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vimtutor zh</span><br></pre></td></tr></table></figure> 打开中文教程。</p>
+<p>它会在<code>/tmp/</code>中创建一个副本，所以基本不用担心修改到原文件。</p>
+<p><code>vimtutor zh</code>的作者有</p>
+<p>Michael C. Pierce</p>
+<p>Robert K. Ware</p>
+<p>(创意) Charles Smith</p>
+<p>(修订) Bram Moolenaar</p>
+<p>(翻译) 梁昌泰</p>
+<p>(翻译) 赵涛</p>
+<p>(通信) Sven Guckes</p>
+<h2 id="移动-hjkl">移动 hjkl</h2>
+<p>移动是非常基础的操作，虽然<code>vim</code>支持使用方向键<code>←↑↓→</code>移动，但适应<code>hjkl</code>的操作有右手不离开主键区一直处于准备位置且只有最灵活的食指需要移动的好处；</p>
+<p>按<code>j</code>往下一行翻动页面。</p>
+<p>虽然说当初刚开始使用<code>vim</code>的时候，即便在这篇教程内，我也是用方向键的，但是现在已经更习惯hjkl了，甚至有时会在<code>nano</code>里面打出hijk。</p>
+<h2 id="退出">退出</h2>
+<p>我记得有个经久不衰的笑话，</p>
+<blockquote>
+<p>如何最快获得一串完全随机的字符</p>
+<p>找一个新手，让他试着退出<code>vim</code>或者<code>emacs</code></p>
+</blockquote>
+<p><code>vim</code>的退出这么奇怪，是因为，作为一个命令行环境的编辑器它必须提供命令和编辑两种交互逻辑，粗略来说，vim有两种模式，</p>
+<ol type="1">
+<li><p>“正常模式”，这种情况下，输入被视为命令；我觉得叫它“命令模式”也无妨；</p></li>
+<li><p>插入模式，或者说，编辑模式，非正常模式，这种情况下，输入被视为字符；</p></li>
+</ol>
+<p>当然还有其他模式，但是将它们基本归类在正常模式之内也无妨，</p>
+<p>从插入模式到正常模式的方式是按<code>esc</code>键，如果不确定自己在哪个模式，多按几下<code>esc</code>总是能回到正常模式的；</p>
+<p>在正常模式下，各种键盘输入会被当做命令来理解，最简单的退出，需要先输入一个冒号，也就是<code>shift+;</code>，然后输入<code>w</code>，这大概是"write to file"的意思，再输入一个<code>q</code>，也许是"quit"的意思，然后回车，</p>
+<p>如果不想保存，那么输入<code>:q</code>也是可以的，但是问题在于，假如对文件有过改动，<code>vim</code>会阻止不保存而退出的行为，所以需要强制执行，那就是<code>:q!</code></p>
+<p>也就是说<code>:wq</code>+回车，或者<code>:q!</code>+回车，就可以退出<code>vim</code></p>
+<p>在终端界面中输入<code>vimtutor zh</code>以重新回到教程；</p>
+<h2 id="进入插入模式">进入插入模式</h2>
+<p>编辑文档，这是一个文本编辑器最重要的功能；上面的内容算是简单介绍GUI中的菜单栏，下面说说中间的窗口，编辑文档，或者说插入模式；</p>
+<p>从正常模式到插入模式的转换方式有很多，最常见的是按<code>i</code>，这是从GUI转过来的人觉得最熟悉的方式，</p>
+<p>但是<code>vim</code>比起GUI的编辑器强大的地方在于，正常模式下，vim有26个小写英文字母和26个大写英文字母，一共52个字母用于精细地进行控制，它不像严重依赖光标的GUI编辑器，而是可以非常精准地表达自己要做的事情，例如：</p>
+<p><code>r</code>，替换光标位置的单个字符，替换结束之后自动返回正常模式，是基于单个字符的替换，并且保留在正常模式，一般用来替换文本中已有的单个不当字符</p>
+<p><code>R</code>(大写r)，连续替换，类似<code>insert</code>键的功能</p>
+<p><code>s</code>，删除光标所在字符，并进入编辑模式，也是基于单个字符的替换，但是会进入编辑模式，类似于GUI的<code>delete</code>+输入</p>
+<p><code>o</code>，在下方直接插入一个新行，并进入编辑模式，类似<code>enter</code>+输入</p>
+<p><code>A</code>(大写a)，在行尾进入编辑模式；这个操作在GUI中基本需要右手离开键盘，用鼠标精准地定位到行尾点击，然后右手回到键盘进行操作；当然，简单来说，对于具有104键键盘的GUI使用者来说，一个<code>end</code>键就可以搞定了；但是用大写A可以不用伸出右手去摸控制键位的位置；</p>
+<p><code>a</code>(小写a)，这个并不是很常用，它会在光标之后插入文本；</p>
+<p>还有很多，不一一举例了，因为其它的我也没怎么用过；</p>
+<h2 id="基于字符或单词粒度的光标位置或命令控制">基于字符或单词粒度的光标位置或命令控制</h2>
+<p>有点抽象，所谓字符粒度，单词粒度，说的是一次移动多少，停留在哪里，例如：</p>
+<p><code>w</code>，这个输入使光标一次跳过一个单词，出现在下一个单词开始的位置，对于中文的分词能力则较弱，一般是跳到下一个空格后的第一个字符的位置，<code>w</code>的跳转不限于单行内；</p>
+<p><code>e</code>，这个输入也会使光标一次跳过一个单词，但是光标会出现在单词末尾的位置，同样，对于中文的分词它就不是那么聪明了，一般是根据空格和特殊符号决定自己何时出现的；</p>
+<p>命令则是另外的一些东西，</p>
+<p><code>x</code>，删除单个字符(实际上是剪切)</p>
+<p><code>d</code>，是删除命令的开头，后面需要跟一个描述需要删多长的命令字符，比如<code>dd</code>，表示删除一整行，<code>dw</code>，表示删掉一个单词</p>
+<h2 id="介绍到此为止">介绍到此为止</h2>
+<p>之后的内容我觉得应该全部交给 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vimtutor zh</span><br></pre></td></tr></table></figure></p>
+<p>无论是撤销，查找替换，高亮搜索，还是可视模式与剪切复制粘贴一类的东西，这些通过阅读<code>vimtutor</code>讲解，在其中练习，都比阅读一篇教程要来得好。</p>
+<p><code>vim</code>在处理很长的单行文档方面的能力，是我目前见过的编辑器之中最强大的，不用担心它会崩溃卡死；如果<code>vim</code>也崩溃卡死了，那么这个文档可能确实是很难处理了。</p>
+<h1 id="讲一些vimtutor中没有的东西">讲一些<code>vimtutor</code>中没有的东西</h1>
+<p>有些东西教程里面没有写，可能是觉得过于高级不必介绍，但我觉得这些挺常用的，因此写在这一节</p>
+<h2 id="分窗">分窗</h2>
+<p>正常模式中，输入 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">vs</span></span><br></pre></td></tr></table></figure> +回车以将窗口竖直切开一分为二以便打开多个文件，这个最常用，因为代码竖着看比较方便；</p>
+<p>输入 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">sp</span></span><br></pre></td></tr></table></figure> +回车以将窗口水平切开一分为二，如果要用的话也是可以的；</p>
+<p>还可以组合执行，例如将已经vs切开的窗口再度sp切开，这样会得到三个窗口；</p>
+<p>按下两次<code>ctrl</code>+<code>w</code>以便在多个窗口之间来回切换，</p>
+<p>用<code>:q</code>或<code>:wq</code>或<code>:q!</code>来退出单个窗口，如此原来被切开的窗口会重新占据两个窗口的位置</p>
+<h2 id="使用ctrlp或ctrln进行补全">使用<code>ctrl</code>+<code>p</code>或<code>ctrl</code>+<code>n</code>进行补全</h2>
+<p>教程没有讲这些进阶操作，但是对于经常用<code>vim</code>码代码的人来说，补全是挺常用的功能，</p>
+<p><code>ctrl</code>+<code>p</code>或者<code>ctrl</code>+<code>n</code>会给出可供选择的补全列表，p是在变量名之间选择可能的补全，n是在所有输入过的字符串中选择可能的补全</p>
+<p>在帮助命令</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">help</span> compl-generic</span><br></pre></td></tr></table></figure>
+<p>中会有其它更加详细的补全介绍</p>
+<h2 id="临时调用sudo提高权限保存文档">临时调用<code>sudo</code>提高权限保存文档</h2>
+<p>这是很经常的事情，比如去<code>/etc/</code>里面修改配置文件，退出的时候发现忘了使用超级用户权限，</p>
+<p>假如直接退出，那么编辑的内容就没了，但是想写入的话，却因为缺乏权限完全做不到。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">w</span> !sudo tee %</span><br></pre></td></tr></table></figure>
+<p>使用这个命令需要安装有<code>tee</code>这个文本编辑输入输出工具，一般来说在各大发行版中<code>tee</code>是默认安装的</p>
+<p>这将会是这种困境下最方便也基本是最优雅的选择。</p>
+<h2 id="vim的鼠标模式"><code>vim</code>的鼠标模式</h2>
+<p>vim支持鼠标</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">set</span> mouse=<span class="keyword">a</span></span><br></pre></td></tr></table></figure>
+<p>可以通过窗口中的冒号命令，如上，临时启用鼠标支持，</p>
+<p>也可以通过修改<code>~/.vimrc</code>持久启用或关闭鼠标的支持，将这条命令去掉冒号，单独一行保存在<code>.vimrc</code>中即可</p>
+<p><code>a</code>是启用了所有情况下的鼠标支持，可能用不到那么多情况，<code>vim</code>支持针对场景进行自定义的鼠标支持</p>
+<p>可以阅读 <a target="_blank" rel="noopener" href="https://blog.51cto.com/lxw1844912514/3107723">vim鼠标模式打开与关闭</a> 获取直观的介绍</p>
+<p>或者在<code>vim</code>中输入</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="keyword">help</span> mouse</span><br></pre></td></tr></table></figure>
+<p>获取来自帮助文档中的更加详细的说明</p>
+<hr>
+<p>不看草台教程，浪费时间，</p>
+<p>不看吵架，浪费生命！</p>
+<p>Knighthana</p>
+<p>2023/05/02</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/vim/" rel="tag">vim</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1684113123672"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#vim%E7%9A%84%E4%B8%80%E7%82%B9%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">vim的一点介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#vim%E7%9A%84%E5%85%A5%E9%97%A8vimtutor-zh"><span class="toc-number">1.1.</span> <span class="toc-text">vim的入门——vimtutor zh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8-hjkl"><span class="toc-number">1.2.</span> <span class="toc-text">移动 hjkl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA"><span class="toc-number">1.3.</span> <span class="toc-text">退出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E6%8F%92%E5%85%A5%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">进入插入模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%AD%97%E7%AC%A6%E6%88%96%E5%8D%95%E8%AF%8D%E7%B2%92%E5%BA%A6%E7%9A%84%E5%85%89%E6%A0%87%E4%BD%8D%E7%BD%AE%E6%88%96%E5%91%BD%E4%BB%A4%E6%8E%A7%E5%88%B6"><span class="toc-number">1.5.</span> <span class="toc-text">基于字符或单词粒度的光标位置或命令控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D%E5%88%B0%E6%AD%A4%E4%B8%BA%E6%AD%A2"><span class="toc-number">1.6.</span> <span class="toc-text">介绍到此为止</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%B2%E4%B8%80%E4%BA%9Bvimtutor%E4%B8%AD%E6%B2%A1%E6%9C%89%E7%9A%84%E4%B8%9C%E8%A5%BF"><span class="toc-number">2.</span> <span class="toc-text">讲一些vimtutor中没有的东西</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%AA%97"><span class="toc-number">2.1.</span> <span class="toc-text">分窗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8ctrlp%E6%88%96ctrln%E8%BF%9B%E8%A1%8C%E8%A1%A5%E5%85%A8"><span class="toc-number">2.2.</span> <span class="toc-text">使用ctrl+p或ctrl+n进行补全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B4%E6%97%B6%E8%B0%83%E7%94%A8sudo%E6%8F%90%E9%AB%98%E6%9D%83%E9%99%90%E4%BF%9D%E5%AD%98%E6%96%87%E6%A1%A3"><span class="toc-number">2.3.</span> <span class="toc-text">临时调用sudo提高权限保存文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vim%E7%9A%84%E9%BC%A0%E6%A0%87%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.</span> <span class="toc-text">vim的鼠标模式</span></a></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>

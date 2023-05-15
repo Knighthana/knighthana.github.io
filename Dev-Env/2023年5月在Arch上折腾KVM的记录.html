@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>2023年5月在Arch上折腾KVM的记录 - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="2023年5月在Arch上折腾KVM的记录 突(tū)发(rán)奇(fàn)想(bìng)打算折腾一下KVM 决定一作死到底(bushi)，直接用ArchLinux来安装KVM(为什么不用Manjaro？好问题) 那么还得复习一下ArchLinux的安装流程，边做边查 因为是做实验，所以就在VirtualBox上进行了 首先用浏览器打开Arch Wiki关于KVM的介绍，放在旁边备用 第一步核验">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023年5月在Arch上折腾KVM的记录">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="2023年5月在Arch上折腾KVM的记录 突(tū)发(rán)奇(fàn)想(bìng)打算折腾一下KVM 决定一作死到底(bushi)，直接用ArchLinux来安装KVM(为什么不用Manjaro？好问题) 那么还得复习一下ArchLinux的安装流程，边做边查 因为是做实验，所以就在VirtualBox上进行了 首先用浏览器打开Arch Wiki关于KVM的介绍，放在旁边备用 第一步核验">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083845.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083910.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083917.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083925.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083933.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083940.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083950.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-083958.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084006.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084019.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084025.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084031.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084036.jpg">
+<meta property="og:image" content="https://knighthana.github.io/img/20230515-084051.jpg">
+<meta property="article:published_time" content="2023-05-11T13:16:00.000Z">
+<meta property="article:modified_time" content="2023-05-14T14:00:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="2023">
+<meta property="article:tag" content="ArchLinux">
+<meta property="article:tag" content="KVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knighthana.github.io/img/20230515-083845.jpg">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1684113123857">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1684113123857">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1684113123857"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>86</div>
+        <div><span>标签</span>134</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1684113123858"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">15</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">33</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">20</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 13.75px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.5px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 15px;">Blog</a> <a href="/tags/C/" style="font-size: 18.75px;">C</a> <a href="/tags/CJK/" style="font-size: 11.25px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.25px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.5px;">Git</a> <a href="/tags/HTML/" style="font-size: 12.5px;">HTML</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.25px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11.25px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12.5px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.25px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.25px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.25px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.75px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.25px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.25px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.25px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11.25px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 11.25px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11.25px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.25px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11.25px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11.25px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.25px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.75px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.25px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 17.5px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.25px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12.5px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.25px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(134);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)git%20clone%20--depth=1.html">(KM)git clone --depth=1</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E6%80%9D%E8%80%83%E8%81%8C%E4%B8%9A%E7%94%9F%E6%B6%AF%E9%97%AE%E9%A2%98%E7%9A%84%E8%A7%92%E5%BA%A6.html">(KM)思考职业生涯问题的角度</a>
+          </li>
+        
+          <li>
+            <a href="/Book-Mark/(BM)ThePhdGrindBookMark&Notes.html">The Ph.D. Grind Book Mark and Notes</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/2023%E5%B9%B45%E6%9C%88%E5%9C%A8Arch%E4%B8%8A%E6%8A%98%E8%85%BEKVM%E7%9A%84%E8%AE%B0%E5%BD%95.html">2023年5月在Arch上折腾KVM的记录</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%A5%87%E5%8A%A0%E5%81%B6%E5%87%8F-%E5%AE%B9%E6%96%A5%E5%8E%9F%E7%90%86.html">奇加偶减-容斥原理</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/kvmbanner-logo.png" alt="2023年5月在Arch上折腾KVM的记录" loading="lazy">
+            <h1>2023年5月在Arch上折腾KVM的记录</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年05月11日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="年5月在arch上折腾kvm的记录">2023年5月在Arch上折腾KVM的记录</h1>
+<p>突(tū)发(rán)奇(fàn)想(bìng)打算折腾一下KVM</p>
+<p>决定一作死到底(bushi)，直接用ArchLinux来安装KVM(为什么不用Manjaro？好问题)</p>
+<p>那么还得复习一下ArchLinux的安装流程，边做边查</p>
+<p>因为是做实验，所以就在VirtualBox上进行了</p>
+<p>首先用浏览器打开Arch Wiki关于<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/KVM">KVM</a>的介绍，放在旁边备用</p>
+<h2 id="第一步核验本机的虚拟化技术支持情况">第一步核验本机的虚拟化技术支持情况</h2>
+<p>KVM需要芯片带有虚拟化技术支持，因此必须先验证机器支不支持虚拟化技术</p>
+<p>使用命令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LC_ALL=C lscpu | grep Virtualization</span><br></pre></td></tr></table></figure> 核验本机的虚拟化技术支持情况</p>
+<blockquote>
+<p>If nothing is displayed after running either command, then your processor does not support hardware virtualization, and you will not be able to use KVM.</p>
+</blockquote>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083845.jpg" alt="" data-caption="" loading="lazy"><figcaption>CPU_Virtual</figcaption>
+</figure>
+<p>如果出现如图所示的情况，那么就是支持虚拟化技术</p>
+<h2 id="核验内核是否支持kvm模块">核验内核是否支持KVM模块</h2>
+<p>检查必要的模块是否可用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zgrep CONFIG_KVM /proc/config.gz</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>The module is available only if it is set to either y or m.</p>
+</blockquote>
+<p>基本上需要确认<code>kvm</code>、<code>kvm_amd</code>、<code>kvm_intel</code>三个选项都是<code>y</code>或者<code>m</code></p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083910.jpg" alt="" data-caption="" loading="lazy"><figcaption>Kernel_Module_Support</figcaption>
+</figure>
+<p>检查这些模块是否自动加载 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep kvm</span><br></pre></td></tr></table></figure></p>
+<p>这一步什么都没有显示，我突然意识到，操作系统还没有安装，那没法查啊</p>
+<p>所以先进入操作系统安装流程</p>
+<h2 id="安装archlinux">安装ArchLinux</h2>
+<p>若干年前安装Arch的时候还要照着贴吧的教程一步一步来</p>
+<p>今非昔比，我们直接用原始材料</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinux.org/title/installation_guide">ArchLinux Installation Guide</a></p>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97">ArchLinux安装指南</a></p>
+<p>如果发生了任何错误，都可以通过重新加载archiso，进入<code>arch-chroot</code>解决，所以不必慌乱</p>
+<h3 id="前略">前略</h3>
+<p>获取安装映像 验证签名 准备安装介质 启动到 Live 环境 控制台键盘布局</p>
+<p>几个步骤因为各自不同的原因略去</p>
+<h3 id="验证引导模式-检查网络连接-更新系统时间">验证引导模式 检查网络连接 更新系统时间</h3>
+<p>要验证引导模式，请用下列命令行出 efivars 目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /sys/firmware/efi/efivars</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果命令结果显示了目录且没有报告错误，则系统以 UEFI 模式引导。 如果目录不存在，则系统可能以 BIOS 模式 (或 CSM 模式) 引导。如果系统未以您想要的模式引导启动，请参考您的主板说明书。</p>
+</blockquote>
+<p>要在 Live 环境中配置网络连接，请跟随以下步骤：</p>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip <span class="built_in">link</span></span><br></pre></td></tr></table></figure> 检查系统是否启用了网络接口</p>
+<p>对于VirtualBox虚拟机来说，是不用操心这些事情的，至于其他情况如下</p>
+<p>以太网——连接网线</p>
+<p>Wirless-LAN——使用<code>iwctl</code>验证并连接无线网络</p>
+<p>移动宽带调制解调器——使用<code>mmcli</code>连接到移动网络</p>
+<p>获取IP地址：</p>
+<p>对于局域网中带有DHCP服务器的情况，不需要操心这个问题</p>
+<p>手动配置IP的情况参考<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE#%E9%9D%99%E6%80%81_IP_%E5%9C%B0%E5%9D%80">IP地址</a></p>
+<p>用 ping 检查网络连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping archlinuxcn.org</span><br></pre></td></tr></table></figure>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">timedatectl status</span><br></pre></td></tr></table></figure> 确保系统时间是准确的，例如ssl协议等需要准确的时间才能使用</p>
+<h3 id="格式化硬盘">格式化硬盘</h3>
+<p>在 <a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97#%E5%BB%BA%E7%AB%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA">创建硬盘分区</a> 提到使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fdisk</span><br></pre></td></tr></table></figure></p>
+<p>我不太确认fdisk是否支持GPT分区</p>
+<p>虽然据称</p>
+<blockquote>
+<p>fdisk (link to manual); note: fdisk from linux-utils 2.30.2 partially understands GPT now</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://unix.stackexchange.com/a/340913">Should I use fdisk for partitioning or GPT aware tools?</a></p>
+<p>但我还是不太愿意冒这个风险，</p>
+<p>另外，工具<a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man8/parted.8.html">parted</a> <a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/Parted">parted</a>也提供了GPT的分区功能</p>
+<p>但感觉这个工具的包装做的不是很好，泄露的东西太多</p>
+<p>比较符合传统操作习惯的是<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/GPT_fdisk">gdisk</a></p>
+<p>和<code>fdisk</code>类似，它也有一个友好界面版本<code>cgdisk</code></p>
+<p>于是，我使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgdisk</span><br></pre></td></tr></table></figure> 作为本次的磁盘分区工具</p>
+<h4 id="the-secondary-headers-self-pointer-indicates-that-it-doesnt-reside-at-the-end-of-the-disk">the secondary header's self-pointer indicates that it doesn't reside at the end of the disk</h4>
+<p>这个虚拟磁盘经过扩容，但其中的GPT分区表没能认知到这个变化过程</p>
+<p>于是<code>gdisk</code>中使用<code>v</code>，或者直接运行<code>cgdisk</code>，就会提示</p>
+<blockquote>
+<p>the secondary header's self-pointer indicates that it doesn't reside at the end of the disk</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/TuvianNavy/ad993eae707c8ddd3d59349708fee9ce">rebuilding GPT on cloned disk</a></p>
+<p>从<code>bash</code>中运行<code>gdisk</code>打开磁盘分区工具</p>
+<p>然后输入<code>x</code>回车，进入专家模式</p>
+<p><em>(疑惑：在主界面杵那么多东西，你跟我说主界面不是“专家模式”？)</em></p>
+<p>然后输入<code>e</code>回车执行重映射，</p>
+<p>再输入<code>v</code>回车检查</p>
+<p>一般来说到这一步问题就解决了，最后记得<code>w</code>回车向硬盘写入更改</p>
+<h4 id="there-is-a-gap-between-the-main-partition-table-ending-sector-33and-the-first-usable-sector">there is a gap between the main partition table (ending sector 33)and the first usable sector</h4>
+<p>然而我遇到了问题，那就是使用<code>v</code>检查之后，提示</p>
+<blockquote>
+<p>There is a gap between the main partition table (ending sector 33)and the first usable sector</p>
+</blockquote>
+<p>根据提示，在专家模式输入<code>j</code>回车，</p>
+<p>再次回车，输入默认设置，</p>
+<p>这时候再次使用<code>v</code>回车检查硬盘情况，会发现一切良好</p>
+<p>于是<code>w</code>回车，将更改写入磁盘，并进入下一步</p>
+<h4 id="开始分区">开始分区</h4>
+<p>在处理完硬盘的一些glitch之后，准备开始分区工作</p>
+<p>我的虚拟机只有一块SATA硬盘，因此使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cgdisk /dev/sda</span><br></pre></td></tr></table></figure>
+<p>进入友好的GPT硬盘分区界面</p>
+<p>左右方向键选择下方的功能</p>
+<p>上下方向键选择分区</p>
+<p>用上下方向键选中<code>free space</code> （对于一个空硬盘，可以略过此步，因为默认所有空间都是<code>free space</code>）</p>
+<p>用左右方向键选择下面的<code>[  New  ]</code>创建新的分区，起始位置按照默认，直接回车，</p>
+<p>第二步会询问</p>
+<blockquote>
+<p><code>Size in sectors or {KMGTP}</code></p>
+</blockquote>
+<p>这个“KMGTP”的意思其实就是传统的单位</p>
+<p>由于EFI特有的对启动分区的格式要求，我们得留一个FAT32分区给它用作ESP(EFI system partition)</p>
+<p>注意，手册中有提示</p>
+<blockquote>
+<p>如果要启动的磁盘已经有一个EFI系统分区，不要新建 EFI 分区，请使用现有的分区。</p>
+</blockquote>
+<p>但这是虚拟机，当然没有，所以得自己新建</p>
+<p>那么这一步输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">512Mi</span><br></pre></td></tr></table></figure>
+<p>回车确认</p>
+<p>之后会询问分区的类型</p>
+<p>查询<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/GPT_fdisk#Partition_type">Partition type</a></p>
+<p>可知，应该输入<code>ef00</code>回车，将其设置为EFI分区</p>
+<p>如此这般，分出一个512MiB的分区留给EFI</p>
+<p>然后在下方的<code>free space</code>里面再<code>[  New  ]</code>一个分区，起始位置默认，大小默认（会使用所有剩余的空间），类型默认（默认是<code>8300</code>，也可以手动指定为<code>8304</code>，这样的话只能用来挂载根目录）</p>
+<p>因为这是虚拟机，我没有留SWAP分区，如果需要的话，可以建立一个需要大小的，类型为<code>8200</code>的分区</p>
+<p>这样的话硬盘里的分区们就做好了</p>
+<p>不放心的话，可以用<code>[  Verify  ]</code>检查一下，应该会提示</p>
+<blockquote>
+<p>No problems found.</p>
+</blockquote>
+<p>如果之前有些步骤做错了，可以通过<code>[  Delete  ]</code>删掉分区重做</p>
+<p>如果只是类型设置错误，可以通过<code>[  Type  ]</code>修改</p>
+<p>那就可以了，使用<code>[  Write  ]</code>向硬盘写入更改</p>
+<p>这一步是危险操作，会有所提示，不过既然之前检查之后没什么问题，那就继续</p>
+<p>比如我执行到这一步的时候看起来是这样的</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083917.jpg" alt="" data-caption="" loading="lazy"><figcaption>CGDISK</figcaption>
+</figure>
+<p>请注意，分区表上、下方留出空白的未使用空间是正常现象，不要想着全榨干净</p>
+<p>右侧的<code>Partition Name</code>列中的字符串只是标识符，可以自己在下方用<code>[ naMe  ]</code>定义，留空也没有影响，我为了辨识方便做了一些标记</p>
+<p>最后使用<code>[  Quit  ]</code>退出<code>cgdisk</code></p>
+<p>那么硬盘上往分区表里面要写入的内容完毕了，下来是建立文件系统。</p>
+<h4 id="建立文件系统">建立文件系统</h4>
+<p>经过上面的步骤之后，硬盘内应当会有一些分区</p>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> /dev/</span><br></pre></td></tr></table></figure> 检查目前的情况，不出意外的话，硬盘相关的应该是<code>sda</code> <code>sda1</code> <code>sda2</code>三个条目，其中<code>sda1</code>是<code>sda</code>上的首个主分区，之后会把ESP放到这个分区里</p>
+<p><code>sda2</code>是<code>sda</code>上的第二个分区，之后会将主要的文件系统放在这里</p>
+<p>但它们现在还不能使用，得往里面建立文件系统</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.fat -F 32 /dev/sda1</span><br></pre></td></tr></table></figure>
+<p>稍候片刻，一个为ESP而建立的FAT32文件系统就建立在<code>sda1</code>中了</p>
+<p>然后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.ext4 /dev/sda2</span><br></pre></td></tr></table></figure>
+<p>稍候片刻，一个ext4文件系统就建立在硬盘分区<code>sda2</code>中了</p>
+<h3 id="挂载">挂载</h3>
+<p>挂载这一步比较迷惑，因为在广泛使用UEFI的今天，并不清楚应该把ESP挂在哪里 是<code>/boot</code>或<code>/EFI/</code>或<code>/boot/EFI</code>还是别的什么玩意</p>
+<p>查了一圈，各有各的说法</p>
+<p>我决定遵循这个回答<a target="_blank" rel="noopener" href="https://www.reddit.com/r/linux4noobs/comments/mqf7kp/what_is_the_difference_between_boot_and_bootefi/">What is the difference between /boot and /boot/efi, do I need both partitions?</a></p>
+<blockquote>
+<p>Although this is old, there are some incorrect points here.</p>
+<p>Most distros mount EFI System Partition (esp) on /boot/efi . This means the efi folder in /boot is a partition. /boot is just a folder in your root / partition.</p>
+<p>/boot/efi is FAT32 filesystem (as neccessary for esp ) and /boot is probably ext4 in this case.</p>
+<p>Arch linux doesn't care if esp is /boot or /boot/efi</p>
+<p>But that isn't the case for other distros ( mainly debian and its deivatives).</p>
+<p>If your using only arch, there's nothing wrong with esp in /boot</p>
+<p>If you are mult-booting or has debian based ones then use /boot/efi as esp</p>
+</blockquote>
+<p>那么，在ext4中建立<code>/boot</code>，然后把FAT32挂载到<code>/boot/efi</code>中看起来是一个比较稳妥的方案</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sda2 /mnt</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /mnt</span><br><span class="line"><span class="built_in">mkdir</span> boot</span><br><span class="line"><span class="built_in">cd</span> boot</span><br><span class="line"><span class="built_in">mkdir</span> EFI</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount /dev/sda1 /mnt/boot/EFI</span><br></pre></td></tr></table></figure>
+<p>这样的话应该就挂载完毕了</p>
+<p>对于需要swap分区的情况，请参考<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97#%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA">挂载分区</a></p>
+<h3 id="为archlinux设置镜像源-并-安装必需的软件包">为ArchLinux设置镜像源 并 安装必需的软件包</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>然后遵照自己使用的镜像源的说明添加对应的URL项目 注意，务必添加在其他<code>Server</code>项目的前面，这样优先级更高</p>
+<p>之后 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -Syy</span><br></pre></td></tr></table></figure></p>
+<p>可以更新一下缓存，虽然由于我们正在使用archiso做不做都行，但还是做一下，检查一下自己的镜像设置有没有写错什么的</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083925.jpg" alt="" data-caption="" loading="lazy"><figcaption>pacman -Syy</figcaption>
+</figure>
+<p>带宽跑满，看来没写错，进入下一步</p>
+<p>执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacstrap -K /mnt base linux linux-firmware</span><br></pre></td></tr></table></figure> 安装<code>base</code>软件包、Linux内核、固件</p>
+<p>这个K参数的意思是</p>
+<blockquote>
+<p>Initialize an empty pacman keyring in the target (implies -G).</p>
+</blockquote>
+<p>由于是虚拟机，所以“可以不执行固件安装”，但管他呢，全打进去，以及vim什么的趁手的软件都带上，最后回车！</p>
+<p><em>一共121个软件包，设置好软件源非常重要</em></p>
+<h3 id="fstab">fstab</h3>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">genfstab -U /mnt &gt;&gt; /mnt/etc/fstab</span><br></pre></td></tr></table></figure> 为在<code>/mnt</code>中的操作系统生成需要的<code>fstab</code>信息</p>
+<p>注意使用<code>&gt;&gt;</code>，因为<code>NEWOSROOT/etc/fstab</code>（比如现在是<code>/mnt/etc/fstab</code>）是一个已经存在的文件，我们需要的是在它的后面增补信息，而不是全抹掉写新的</p>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /mnt/etc/fstab</span><br></pre></td></tr></table></figure> 查看生成的<code>fstab</code>文件是否有问题</p>
+<p>我们记得硬盘上设置了两个分区，每个分区挂载在不同的目录中，因此这个文件中应该有两个条目，一条是<code>/dev/sda1</code>，另一条是<code>/dev/sda2</code></p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083933.jpg" alt="" data-caption="" loading="lazy"><figcaption>fstab</figcaption>
+</figure>
+<p>这样应该就算是写入正确了</p>
+<p>注意，这是最后一步在archiso操作系统中的操作，接下来会转移到新的操作系统中，所以还有什么要做的都得赶紧咯</p>
+<h3 id="换目录">换目录</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arch-chroot /mnt</span><br></pre></td></tr></table></figure>
+<p>于是我们进入了新的操作系统</p>
+<p><em>之前几步忘了给新的操作系统安装zsh，于是暂时没有zsh用了，淦！</em></p>
+<h3 id="时区">时区</h3>
+<p>中国是亚洲上海时区，因此这一步输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br></pre></td></tr></table></figure>
+<p>勤用TAB自动补全，也避免输错。</p>
+<p>然后 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hwclock --systohc</span><br></pre></td></tr></table></figure></p>
+<p>生成<code>/etc/adjtime</code></p>
+<p>设置完时区之后，应该可以顺便安装点程序，我在这一步之后安装了<code>vim</code></p>
+<h3 id="本地化">本地化</h3>
+<p>编辑<code>/etc/locale.gen</code>文件，取消掉需要使用的本地化前面的注释，其中<code>en_US.UTF-8 UTF-8</code>是必须去掉注释的</p>
+<p>那么我就照做，把<code>en_US.UTF-8 UTF-8</code>前的注释去掉</p>
+<p>再去掉<code>zh_CN.UTF-8 UTF-8</code>前的注释，顺便去掉了<code>ru_RU.UTF-8 UTF-8</code> <code>ja_JP.UTF-8 UTF-8</code>前的注释</p>
+<p>按照推荐，</p>
+<blockquote>
+<p>也可以设置为 en_GB.UTF-8 或 en_SG.UTF-8，附带以下优点：</p>
+<ul>
+<li><p>进入桌面环境后以 24 小时制显示时间；</p></li>
+<li><p>LibreOffice 等办公软件的纸张尺寸会默认为 A4 而非 Letter(US)；</p></li>
+<li><p>可尽量避免不必要且可能造成处理麻烦的英制单位。</p></li>
+</ul>
+</blockquote>
+<p>就把英国和新加坡的英语本地化一并开启，它们同属英语，应该不会额外占用太多空间</p>
+<p>执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">locale-gen</span><br></pre></td></tr></table></figure> 生成locale信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/locale.conf</span><br></pre></td></tr></table></figure>
+<p>添加 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LANG=en_SG.UTF-8</span><br></pre></td></tr></table></figure></p>
+<h3 id="网络配置">网络配置</h3>
+<h4 id="hostname">hostname</h4>
+<p>在</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/hostname</span><br></pre></td></tr></table></figure>
+<p>中写上主机名</p>
+<h4 id="安装网络管理器">安装网络管理器</h4>
+<p>坑爹的官方安装教程对这里是一点没提，网络配置里面也写得含糊其辞，但是这一步很重要</p>
+<p>通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S networkmanager</span><br></pre></td></tr></table></figure> 安装<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE#%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%99%A8">网络管理器</a></p>
+<p><strong>必须安装！</strong></p>
+<p>等待它安装完毕</p>
+<p>这是一个守护进程，但是我们目前在<code>chroot</code>模式下，因此只能在重启机器，以<code>systemd</code>启动后，才能为它设置启动项</p>
+<h3 id="root用户自己的密码">ROOT用户自己的密码</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd</span><br></pre></td></tr></table></figure>
+<p>这一步很重要，务必记得修改root密码</p>
+<h3 id="用户管理">用户管理</h3>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84">用户和用户组</a></p>
+<p>虽然安装页面中没有提，但是安装期间最好还是为自己建立一个用户，避免日常使用root用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -m -s <span class="string">"/bin/zsh"</span> <span class="string">"username"</span></span><br></pre></td></tr></table></figure>
+<p>由于没有通过<code>-G</code>指定用户所在的组，因此会为用户单独创建一个组</p>
+<p>如果这是第一个用户，那么uid和gid应该都是1000</p>
+<p>虽然<code>sudo</code>不是用户管理的一部分，但是<code>sudo</code>是一个很重要的工具，一并安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S sudo</span><br></pre></td></tr></table></figure>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">visudo</span><br></pre></td></tr></table></figure> 以便打开配置文件<code>/etc/sudoers</code>，修改文件，在保存前<code>visudo</code>会检查格式是否正常</p>
+<p>顺便把其他杂七杂八要用的工具，例如网络连接实用程序、git一类的也一起装上并配置好，免得待会手忙脚乱，安全起见，shell有关的成功开机之后再配</p>
+<h3 id="安装引导程序-一般来说是grub">安装引导程序 一般来说是GRUB</h3>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/zh-hans/GRUB">GRUB</a></p>
+<p>首先把工具安装上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pacman -S grub efibootmgr</span><br></pre></td></tr></table></figure>
+<p>然后让grub去做剩下的工作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-install --target=x86_64-efi --efi-directory=/boot/EFI --bootloader-id=GRUB</span><br></pre></td></tr></table></figure>
+<p>如无意外，提示</p>
+<blockquote>
+<p>Installation finished. No error reported</p>
+</blockquote>
+<p>安装就成功了</p>
+<p><a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/zh-hans/GRUB#UEFI_%E5%BC%82%E5%B8%B8">如果遇到问题，查看 UEFI 故障排查</a></p>
+<p>接下来是配置</p>
+<h4 id="配置grub">配置GRUB</h4>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure></p>
+<p>来生成配置文件</p>
+<p>当启动的内核发生变化，比如安装了新的内核之后，就需要更新这个文件，也就是重新运行<code>grub-mkconfig</code></p>
+<h4 id="探测其他操作系统">探测其他操作系统</h4>
+<p>有这个可行性，参考<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/zh-hans/GRUB#%E6%8E%A2%E6%B5%8B%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F">探测其他操作系统</a></p>
+<p>但目前虚拟机中不需要</p>
+<h3 id="安装完成">安装完成</h3>
+<p>在配置好GRUB之后，ArchLinux的安装就算是完成了，退出chroot，关机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br><span class="line">poweroff</span><br></pre></td></tr></table></figure>
+<p>弹出虚拟光盘，重启一下试试能否正常引导</p>
+<p>如果发生了任何错误，都可以通过重新加载archiso，进入<code>arch-chroot</code>解决，所以不必慌乱</p>
+<h3 id="进入系统">进入系统</h3>
+<p>先检查一下shell、文件系统有无故障</p>
+<p>如无意外，系统此时是连不上网的</p>
+<h4 id="启动网络管理器">启动网络管理器</h4>
+<p>一般来说，在带有DHCP的环境中，照顾好自己计算机系统的网络配置就可以了</p>
+<p>启动服务进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
+<p>注意大小写</p>
+<p>用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping</span><br></pre></td></tr></table></figure> 工具检查网络管理器是否正常工作，例如<code>ping www.sina.com</code></p>
+<p>如果没有回应，换一个网站再试试</p>
+<p>如果有回应，说明网络管理器工作正常，那么将网络管理器添加进入开机启动项</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> NetworkManager</span><br></pre></td></tr></table></figure>
+<p>注意大小写</p>
+<p>至此，ArchLinux安装完毕</p>
+<h2 id="安装kvm">安装KVM</h2>
+<p>继续之前KVM安装前的检查部分</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zgrep CONFIG_KVM /proc/config.gz</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep kvm</span><br></pre></td></tr></table></figure>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083940.jpg" alt="" data-caption="" loading="lazy"><figcaption>ls mod grep kvm</figcaption>
+</figure>
+<p>检查到的结果发现，模块没有加载，那么就需要<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/Kernel_modules#%E6%89%8B%E5%8A%A8%E5%8A%A0%E8%BD%BD%E6%97%B6%E8%AE%BE%E7%BD%AE">手动加载这些模块</a></p>
+<p>但我偏不这么做，我要让系统自动加载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/modules-load.d/kvm-init.conf</span><br></pre></td></tr></table></figure>
+<p>输入以下内容： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Load KVM modules at boot 2023/05/12</span><br><span class="line">kvm_intel</span><br><span class="line">kvmgt</span><br><span class="line">mdev</span><br><span class="line">vfio</span><br><span class="line">kvm</span><br><span class="line">irqbypass</span><br></pre></td></tr></table></figure></p>
+<p><code>:wq</code>退出，<code>reboot</code>重启</p>
+<p>启动时有一行标红报错一闪而过，不过我并没有注意到，其实那是</p>
+<blockquote>
+<p>failed to start load kernel modules</p>
+</blockquote>
+<p>开机之后，按照教程的说法，检查内核模块加载的情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep kvm</span><br></pre></td></tr></table></figure>
+<p>会发现没有<code>kvm_intel</code>选项，下方的说法提到</p>
+<blockquote>
+<p>提示：如果 <code>modprobe kvm_intel</code> 或 <code>kvm_amd</code> 失败，但 <code>modprobe kvm</code> 成功，并且 <code>lscpu</code> 声称支持硬件加速，检查 <code>BIOS</code> 设置。某些厂商，特别是笔记本电脑厂商，默认禁用这些处理器扩展。<code>modprobe</code> 失败后，<code>dmesg</code> 的输出可以告诉你这些扩展是硬件不支持还是在 BIOS 中禁用。</p>
+</blockquote>
+<p>使用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg | grep kvm</span><br></pre></td></tr></table></figure> 之后，会发现提示<code>kvm_intel : vmx not supported by cpu 0</code></p>
+<p>然而，根据VirtualBox管理页面的显示，我的虚拟计算机是启用了<code>VT-x</code>硬件加速的，VBox BIOS中也并没有类似的选项</p>
+<p>这期间我在互联网上找了很多东西，都没有满意的答案，事情陷入了困局</p>
+<p>注意到，VBox的管理页面有一个选项叫“启用嵌套 VT-x/AMD-V”(Nested Virtualization)，这个选项是灰色的，默认不可选，考虑到主页提示过“VT-x已经启用”，也许使用这个选项是没有必要的？</p>
+<p>无论如何试试看</p>
+<h3 id="启用virtualbox的嵌套vt-xamd-v">启用VirtualBox的嵌套VT-x/AMD-V</h3>
+<p>首先关闭虚拟计算机</p>
+<p>参考<a target="_blank" rel="noopener" href="https://apad.pro/virtualbox-win-vt-x-amd-v/">VirtualBox启用套嵌VT-x/AMD-V</a></p>
+<p>我的解决方案是，在Windows中打开<code>Powershell</code></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="string">'C:\Program Files\Oracle\VirtualBox\'</span></span><br><span class="line">.\VBoxManage.exe list vms</span><br></pre></td></tr></table></figure>
+<p>得到输出 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">........................</span><br><span class="line"><span class="string">"ArchLinux"</span> {e2f0d5f5<span class="literal">-bd01-401b-9ffd-3d63b597061b</span>}</span><br><span class="line">........................</span><br></pre></td></tr></table></figure></p>
+<p>然后对其进行修改 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\VBoxManage.exe modifyvm <span class="string">"ArchLinux"</span> <span class="literal">--nested-hw-virt</span> on</span><br></pre></td></tr></table></figure></p>
+<p>然后退出PowerShell</p>
+<h3 id="检查kvm内核模块情况">检查KVM内核模块情况</h3>
+<p>这次启动虚拟计算机，就没有任何内核模块加载失败的提示了</p>
+<p>进入界面，输入 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsmod | grep kvm</span><br></pre></td></tr></table></figure> 提示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kvmgt        479232  0</span><br><span class="line">mdev          24576  1 kvmgt</span><br><span class="line">vfio          61440  2 kvmgt,vfio_iommu_type1</span><br><span class="line">i915        3837952  1 kvmgt</span><br><span class="line">kvm_intel    458752  0</span><br><span class="line">kvm         1327104  2 kvmgt,kvm_intel</span><br><span class="line">irqbypass     16384  1 kvm</span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>kvm_intel</code>已经正确加载，问题得以解决</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">egrep -o <span class="string">'vmx | svm'</span> /proc/cpuinfo | <span class="built_in">wc</span> -l</span><br></pre></td></tr></table></figure>
+<p>显示的数值不再等于0</p>
+<p>OK！准备下一步</p>
+<h2 id="添加archlinuxcn社区源可以不做">添加ArchLinuxCN社区源（可以不做）</h2>
+<p>这一步和今天的主题没啥关系，但是我得记录一下，以备之后的维护</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/pacman.conf</span><br></pre></td></tr></table></figure>
+<p>我使用了本校的源，但是我校的开源镜像站并不对外部网络连接开放，那么文章里写本校源不是很好</p>
+<p>当然，Arch Linux CN的源原本就在国内，所以用最上流的源也很合适 或者可以用清华TUNA源，地址是<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/archlinuxcn/">Tuna: Arch Linux CN 软件仓库镜像使用帮助</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[archlinuxcn]</span><br><span class="line">Server = https://repo.archlinuxcn.org/$arch</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Sy</span><br><span class="line">sudo pacman -S archlinuxcn-keyring</span><br></pre></td></tr></table></figure>
+<h2 id="gui-or-not">GUI？ or not？</h2>
+<p>这一步我犹豫了一下，因为Linux的GUI那个安装管理使用实在是一言难尽，而且现在是在做实验，引入不必要的部分可能会带来“unforeseen consequences”，比如已经可以预见到显卡驱动全崩，需要在640x480的分辨率下去不知道哪个目录里面装卸驱动的惨状了</p>
+<p>不过GUI确实会方便监视系统和虚拟计算机的运行状况，所以还是装吧</p>
+<p>说实话我想给这一步的系统打个快照，但是目前的情况似乎不太允许</p>
+<p>用什么呢？</p>
+<p>虽然我很讨厌KDE，但我考虑要不要在这台虚拟机里使用<code>KDE</code>，或者避免<code>KDE</code>和<code>Gnome44</code>中的任何一个，去用<code>MATE</code>，要不然就是继续用<code>xfce4</code>，这也是我最熟悉的桌面环境</p>
+<p>还是试试MATE吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Syy</span><br><span class="line">sudo pacman -S --needed xorg</span><br><span class="line">sudo pacman -S xorg-xinit</span><br><span class="line">sudo pacman -S mate mate-extra</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">vim .xinitrc</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec mate-session</span><br></pre></td></tr></table></figure>
+<p><code>:wq</code></p>
+<p>测试一下 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">startx</span><br></pre></td></tr></table></figure></p>
+<p>肉眼可见地卡卡的，考虑到我只分配了2核心2GiB内存，显存只有16MiB的情况，还是去VBox里把显存调到支持的上限，128MiB吧，内存也加到8GiB，毕竟要跑图形界面</p>
+<p>情况稍微有所改善</p>
+<p>退出桌面，目前暂时还不需要图形环境</p>
+<p>在菜单栏中寻找“登出”，也就是<code>logout</code>，将用户从MATE登出，即可关闭图形界面</p>
+<h2 id="安装qemu">安装QEMU</h2>
+<p>参考<a target="_blank" rel="noopener" href="https://thiscute.world/posts/qemu-kvm-usage/">QEMU/KVM 虚拟化环境的搭建与使用</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -Syy</span><br><span class="line">sudo pacman -S qemu-full virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S libguestfs</span><br></pre></td></tr></table></figure>
+<h3 id="启动守护进程">启动守护进程</h3>
+<p>启用<code>libvirtd</code>守护进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl <span class="built_in">enable</span> libvirtd.service</span><br><span class="line">sudo systemctl start libvirtd.service</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件组管理">修改配置文件，组管理</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/libvirt/libvirtd.conf</span><br></pre></td></tr></table></figure>
+<p>查找 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unix_sock_group="libvirt"</span><br><span class="line">unix_sock_rw_perms="0770"</span><br></pre></td></tr></table></figure> 去掉注释，使之生效</p>
+<p>回到终端，进行组管理 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo newgrp libvirt</span><br><span class="line">sudo usermod -aG libvirt <span class="variable">$USER</span></span><br></pre></td></tr></table></figure></p>
+<p>如此操作之后，目前正在使用的用户就被加入了一个允许读取socket的用户组<code>libvirt</code>中</p>
+<p>最后检查一下<code>/etc/group</code>文件，确保刚才操作中的更改没有出错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/group</span><br></pre></td></tr></table></figure>
+<p>找到<code>libvirt</code>用户组，参考<a target="_blank" rel="noopener" href="http://c.biancheng.net/view/841.html">用户组文件</a>，和<a target="_blank" rel="noopener" href="https://wiki.archlinuxcn.org/wiki/%E7%94%A8%E6%88%B7%E5%92%8C%E7%94%A8%E6%88%B7%E7%BB%84#%E7%94%A8%E6%88%B7%E7%BB%84">用户组</a></p>
+<p>一般来说，在<code>libvirt</code>这个用户组后面看到自己的用户名，并且其他地方没有预料之外的修改，那就对了</p>
+<p>重启<code>libvirtd</code>服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart libvirtd.service</span><br></pre></td></tr></table></figure>
+<h3 id="嵌套虚拟化">嵌套虚拟化</h3>
+<p>就像刚才在VBox中为ArchLinux开启嵌套虚拟化一样</p>
+<p>现在需要为Arch带有的KVM启用嵌套虚拟化，方便将来要用的虚拟机使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /sys/module/kvm_intel/parameters/nested</span><br></pre></td></tr></table></figure>
+<p>如果提示<code>Y</code>，则说明启用了嵌套虚拟化</p>
+<p>对于农企U，则是 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /sys/module/kvm_amd/parameters/nested</span><br></pre></td></tr></table></figure></p>
+<p>我这里提示开启了，真是不枉刚才折腾了半天KVM</p>
+<p>如果没有开启，可以查看<a target="_blank" rel="noopener" href="https://thiscute.world/posts/qemu-kvm-usage/#3-%E5%90%AF%E7%94%A8%E5%B5%8C%E5%A5%97%E8%99%9A%E6%8B%9F%E5%8C%96">启用嵌套虚拟化</a></p>
+<h3 id="检查虚拟化环境的情况">检查虚拟化环境的情况</h3>
+<p>之前安装了<code>qemu-full</code>，和<code>libvirt</code>，进图形界面检查一下 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">startx</span><br></pre></td></tr></table></figure></p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083950.jpg" alt="" data-caption="" loading="lazy"><figcaption>GUI libvirt</figcaption>
+</figure>
+<p>如图，打开这个桌面应用，完成！</p>
+<h2 id="在kvm中安装windows-xp">在KVM中安装Windows XP</h2>
+<p>为什么要安装Windows XP呢？</p>
+<p>因为Windows具有和Linux完全不同的内核</p>
+<p>而XP是目前手头能找到的，最简单的Windows操作系统安装映像了</p>
+<p>如果需要的话之后试一下Windows 7</p>
+<h3 id="把镜像搞到虚拟机里面">把镜像搞到虚拟机里面</h3>
+<p>由于这个ArchLinux刚刚安装完毕，文件拷贝有些不太好办，懒得装VBox的客户工具了（主要是客户工具涉及到内核模块，不想引入额外的复杂度）</p>
+<p>用HTTP协议传到虚拟机里面吧</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-083958.jpg" alt="" data-caption="" loading="lazy"><figcaption>cURL</figcaption>
+</figure>
+<h3 id="启动gui下的qemu">启动GUI下的QEMU</h3>
+<p>初学KVM，先看看要怎么用这个东西</p>
+<p>用起来感觉和VBox没什么不同啊（</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084006.jpg" alt="" data-caption="" loading="lazy"><figcaption>VBox-like GUI</figcaption>
+</figure>
+<p>啊，熟悉的界面，爷少回！</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084019.jpg" alt="" data-caption="" loading="lazy"><figcaption>Windows Setup</figcaption>
+</figure>
+<p>等待安装，已经开始显示汉字了</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084025.jpg" alt="" data-caption="" loading="lazy"><figcaption>Windows XP Setup Chinese</figcaption>
+</figure>
+<p>关于虚拟计算机的硬件信息</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084031.jpg" alt="" data-caption="" loading="lazy"><figcaption>Hardware Info</figcaption>
+</figure>
+<p>在磁盘上查找了一下对应的文件，发现所有者是单独的一位用户<code>libvirt-qemu</code>，这一点很有意思</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084036.jpg" alt="" data-caption="" loading="lazy"><figcaption>file-owner</figcaption>
+</figure>
+<p>以及Windows XP由于缺少驱动的原因是既没声音也没网，就这样吧</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/20230515-084051.jpg" alt="" data-caption="" loading="lazy"><figcaption>No Driver</figcaption>
+</figure>
+<p>如此这般之后，感觉没什么事做了</p>
+<p>用又没甚用，卡又卡得慌，毕竟是在VB虚拟机里面的，也不能指望KVM表现出它正常情况下的性能</p>
+<p>至于命令行调度虚拟机，用到的时候再说</p>
+<p>总之，这个KVM用起来，感觉就是一个普通的虚拟机而已，不可否认，由于获得了来自内核模块的加速支持，它的性能肯定是要强一些的</p>
+<p>本以为KVM会是一种单独的操作系统什么的，最后看来并不是这样呢，完全可以理解为一种QEMU的内核级加速(虽然QEMU只是KVM的一种适配形式，但除了QEMU，民用也拿不到别的东西来用了)呢</p>
+<p>Knighthana</p>
+<p>2023/05/12</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/2023/" rel="tag">2023</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/ArchLinux/" rel="tag">ArchLinux</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/KVM/" rel="tag">KVM</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1684113123668"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B45%E6%9C%88%E5%9C%A8arch%E4%B8%8A%E6%8A%98%E8%85%BEkvm%E7%9A%84%E8%AE%B0%E5%BD%95"><span class="toc-number">1.</span> <span class="toc-text">2023年5月在Arch上折腾KVM的记录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E6%A0%B8%E9%AA%8C%E6%9C%AC%E6%9C%BA%E7%9A%84%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF%E6%94%AF%E6%8C%81%E6%83%85%E5%86%B5"><span class="toc-number">1.1.</span> <span class="toc-text">第一步核验本机的虚拟化技术支持情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E9%AA%8C%E5%86%85%E6%A0%B8%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81kvm%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.</span> <span class="toc-text">核验内核是否支持KVM模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85archlinux"><span class="toc-number">1.3.</span> <span class="toc-text">安装ArchLinux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%95%A5"><span class="toc-number">1.3.1.</span> <span class="toc-text">前略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E5%BC%95%E5%AF%BC%E6%A8%A1%E5%BC%8F-%E6%A3%80%E6%9F%A5%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5-%E6%9B%B4%E6%96%B0%E7%B3%BB%E7%BB%9F%E6%97%B6%E9%97%B4"><span class="toc-number">1.3.2.</span> <span class="toc-text">验证引导模式 检查网络连接 更新系统时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E7%A1%AC%E7%9B%98"><span class="toc-number">1.3.3.</span> <span class="toc-text">格式化硬盘</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#the-secondary-headers-self-pointer-indicates-that-it-doesnt-reside-at-the-end-of-the-disk"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">the secondary header&#39;s self-pointer indicates that it doesn&#39;t reside at the end of the disk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#there-is-a-gap-between-the-main-partition-table-ending-sector-33and-the-first-usable-sector"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">there is a gap between the main partition table (ending sector 33)and the first usable sector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E5%88%86%E5%8C%BA"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">开始分区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">建立文件系统</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD"><span class="toc-number">1.3.4.</span> <span class="toc-text">挂载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BAarchlinux%E8%AE%BE%E7%BD%AE%E9%95%9C%E5%83%8F%E6%BA%90-%E5%B9%B6-%E5%AE%89%E8%A3%85%E5%BF%85%E9%9C%80%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="toc-number">1.3.5.</span> <span class="toc-text">为ArchLinux设置镜像源 并 安装必需的软件包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fstab"><span class="toc-number">1.3.6.</span> <span class="toc-text">fstab</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8D%A2%E7%9B%AE%E5%BD%95"><span class="toc-number">1.3.7.</span> <span class="toc-text">换目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E5%8C%BA"><span class="toc-number">1.3.8.</span> <span class="toc-text">时区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%96"><span class="toc-number">1.3.9.</span> <span class="toc-text">本地化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.10.</span> <span class="toc-text">网络配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hostname"><span class="toc-number">1.3.10.1.</span> <span class="toc-text">hostname</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">1.3.10.2.</span> <span class="toc-text">安装网络管理器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#root%E7%94%A8%E6%88%B7%E8%87%AA%E5%B7%B1%E7%9A%84%E5%AF%86%E7%A0%81"><span class="toc-number">1.3.11.</span> <span class="toc-text">ROOT用户自己的密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.12.</span> <span class="toc-text">用户管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F-%E4%B8%80%E8%88%AC%E6%9D%A5%E8%AF%B4%E6%98%AFgrub"><span class="toc-number">1.3.13.</span> <span class="toc-text">安装引导程序 一般来说是GRUB</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEgrub"><span class="toc-number">1.3.13.1.</span> <span class="toc-text">配置GRUB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A2%E6%B5%8B%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.13.2.</span> <span class="toc-text">探测其他操作系统</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90"><span class="toc-number">1.3.14.</span> <span class="toc-text">安装完成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.3.15.</span> <span class="toc-text">进入系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%BD%91%E7%BB%9C%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">1.3.15.1.</span> <span class="toc-text">启动网络管理器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85kvm"><span class="toc-number">1.4.</span> <span class="toc-text">安装KVM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8virtualbox%E7%9A%84%E5%B5%8C%E5%A5%97vt-xamd-v"><span class="toc-number">1.4.1.</span> <span class="toc-text">启用VirtualBox的嵌套VT-x&#x2F;AMD-V</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5kvm%E5%86%85%E6%A0%B8%E6%A8%A1%E5%9D%97%E6%83%85%E5%86%B5"><span class="toc-number">1.4.2.</span> <span class="toc-text">检查KVM内核模块情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0archlinuxcn%E7%A4%BE%E5%8C%BA%E6%BA%90%E5%8F%AF%E4%BB%A5%E4%B8%8D%E5%81%9A"><span class="toc-number">1.5.</span> <span class="toc-text">添加ArchLinuxCN社区源（可以不做）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gui-or-not"><span class="toc-number">1.6.</span> <span class="toc-text">GUI？ or not？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85qemu"><span class="toc-number">1.7.</span> <span class="toc-text">安装QEMU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.7.1.</span> <span class="toc-text">启动守护进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-number">1.7.2.</span> <span class="toc-text">修改配置文件，组管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B5%8C%E5%A5%97%E8%99%9A%E6%8B%9F%E5%8C%96"><span class="toc-number">1.7.3.</span> <span class="toc-text">嵌套虚拟化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E8%99%9A%E6%8B%9F%E5%8C%96%E7%8E%AF%E5%A2%83%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">1.7.4.</span> <span class="toc-text">检查虚拟化环境的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8kvm%E4%B8%AD%E5%AE%89%E8%A3%85windows-xp"><span class="toc-number">1.8.</span> <span class="toc-text">在KVM中安装Windows XP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%8A%E9%95%9C%E5%83%8F%E6%90%9E%E5%88%B0%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%87%8C%E9%9D%A2"><span class="toc-number">1.8.1.</span> <span class="toc-text">把镜像搞到虚拟机里面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8gui%E4%B8%8B%E7%9A%84qemu"><span class="toc-number">1.8.2.</span> <span class="toc-text">启动GUI下的QEMU</span></a></li></ol></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>
