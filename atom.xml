@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2023-05-15T00:36:35.134Z</updated>
+  <updated>2023-05-15T16:00:00.000Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>(KM)转载-技术人员的发展之路</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E8%BD%AC%E8%BD%BD-%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%9A%84%E5%8F%91%E5%B1%95%E4%B9%8B%E8%B7%AF.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E8%BD%AC%E8%BD%BD-%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%9A%84%E5%8F%91%E5%B1%95%E4%B9%8B%E8%B7%AF.html</id>
+    <published>2023-05-15T16:00:00.000Z</published>
+    <updated>2023-05-15T16:00:00.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;转载-技术人员的发展之路&quot;&gt;转载-技术人员的发展之路&lt;/h1&gt;
+&lt;h1 id=&quot;转载事由&quot;&gt;转载事由&lt;/h1&gt;
+&lt;p&gt;缅怀&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="career" scheme="https://knighthana.github.io/tags/career/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>(KM)ls的用法</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)ls%E7%9A%84%E7%94%A8%E6%B3%95.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)ls%E7%9A%84%E7%94%A8%E6%B3%95.html</id>
+    <published>2023-05-15T10:36:00.000Z</published>
+    <updated>2023-05-15T10:15:44.129Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;ls的用法&quot;&gt;ls的用法&lt;/h1&gt;
+&lt;p&gt;按照时间顺序显示项目(新前旧后)&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="ls" scheme="https://knighthana.github.io/tags/ls/"/>
+    
+  </entry>
   
   <entry>
     <title>(KM)git clone --depth=1</title>
@@ -64,9 +118,9 @@
     <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
     
     
-    <category term="be aware" scheme="https://knighthana.github.io/tags/be-aware/"/>
-    
     <category term="career" scheme="https://knighthana.github.io/tags/career/"/>
+    
+    <category term="be aware" scheme="https://knighthana.github.io/tags/be-aware/"/>
     
   </entry>
   
@@ -224,7 +278,7 @@
     <link href="https://knighthana.github.io/subject-note/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B.html"/>
     <id>https://knighthana.github.io/subject-note/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B.html</id>
     <published>2023-05-05T15:04:16.000Z</published>
-    <updated>2023-05-05T17:25:00.000Z</updated>
+    <updated>2023-05-16T18:49:00.000Z</updated>
     
     
       
@@ -483,7 +537,7 @@
     <link href="https://knighthana.github.io/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85Docker.html"/>
     <id>https://knighthana.github.io/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85Docker.html</id>
     <published>2023-04-10T16:00:00.000Z</published>
-    <updated>2023-04-12T16:00:00.000Z</updated>
+    <updated>2023-05-14T16:00:00.000Z</updated>
     
     
       
@@ -617,9 +671,9 @@
     <category term="subject-note" scheme="https://knighthana.github.io/categories/subject-note/"/>
     
     
-    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
     <category term="课程笔记" scheme="https://knighthana.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     <category term="计算机程序设计" scheme="https://knighthana.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/"/>
     
@@ -784,9 +838,9 @@
     <category term="subject-note" scheme="https://knighthana.github.io/categories/subject-note/"/>
     
     
-    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
     <category term="课程笔记" scheme="https://knighthana.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
     <category term="书页相关" scheme="https://knighthana.github.io/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/"/>
     
@@ -899,9 +953,9 @@
     <category term="subject-note" scheme="https://knighthana.github.io/categories/subject-note/"/>
     
     
-    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
-    
     <category term="课程笔记" scheme="https://knighthana.github.io/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/"/>
+    
+    <category term="编译原理" scheme="https://knighthana.github.io/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
