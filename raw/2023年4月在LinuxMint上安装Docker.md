@@ -1,7 +1,7 @@
 ---
 title: 2023年4月在LinuxMint上安装Docker
 date: 2023-04-11 00:00:00
-updated: 2023-04-13 00:00:00
+updated: 2023-05-15 00:00:00
 cover: /img/Cover-Docker.png
 categories:
   - Dev-Env
@@ -250,8 +250,63 @@ sudo apt install docker-ce
 
 至此，docker(非VM)安装就完成了。
 
+## Docker的可用性配置
+
+[参考1](https://www.runoob.com/docker/ubuntu-docker-install.html)
+
+[参考2](https://www.runoob.com/docker/docker-mirror-acceleration.html)
+
+[参考3](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket?comment=168605)
+
+### Docker镜像设置
+
+由于我使用的是基于Debian的Ubuntu的LinuxMint，使用systemd
+
+那么对应需要修改的镜像配置文件是
+
+```bash
+/etc/docker/daemon.json
+```
+
+这是一个json文件(若无需要新建)，加入以下内容
+
+```json
+{
+  "registry-mirrors":[
+    "https://$mirrorsiteA",
+    "https://$mirrorsiteB"
+  ]
+}
+```
+
+重启docker守护进程
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+注意，对于systemd操作系统而言，并不是修改`/etc/default/docker` 
+*反正我改了没效果*
+
+### 修改Docker组成员
+
+由于我们是通过系统的包管理器安装的Docker
+
+默认存储目录的所有者都是`root`，需要将我们自己加入用户组`docker`之后，才可以不借超级用户身份就执行操作
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+之后[需要登出登入一遍](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket?comment=168605)，让针对用户组文件的修改生效
+
+然后，以本用户的身份使用docker应该就畅行无阻了
+
 Knighthana
 
 2023/04/11 动笔
 
 2023/04/13 完稿
+
+2023/05/15 第一次更新
