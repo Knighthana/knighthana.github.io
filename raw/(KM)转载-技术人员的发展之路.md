@@ -43,7 +43,7 @@ tags:
 
 另外，顺便提一下，陈浩先生的朋友[yihong0618](https://twitter.com/yihong0618)将陈浩的推特转成了数据，保存在[yihong0618/twint](https://github.com/yihong0618/twint/blob/master/haoel.csv)
 
-他的另一位朋友，也是合伙人[zhao-kun](https://github.com/megaease/Remembering-Haoel)为他创建的纪念页面
+他的另一位朋友，也是合伙人[zhao-kun](https://twitter.com/_zhaokun_)为他创建的[纪念页面](https://github.com/megaease/Remembering-Haoel)
 
 # 技术人员的发展之路
 
