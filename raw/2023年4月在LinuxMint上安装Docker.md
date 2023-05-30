@@ -1,7 +1,7 @@
 ---
 title: 2023年4月在LinuxMint上安装Docker
 date: 2023-04-11 00:00:00
-updated: 2023-05-15 00:00:00
+updated: 2023-05-18 00:00:00
 cover: /img/Cover-Docker.png
 categories:
   - Dev-Env
@@ -37,7 +37,7 @@ tags:
 
 ## 通过官方指导安装
 
-先研究一下官方文档怎么说的，之后在通过镜像站安装
+先研究一下官方文档怎么说的，之后再通过镜像站安装
 
 ### 第一步，卸载旧版本的Docker
 
@@ -248,15 +248,33 @@ sudo apt install docker-ce
  sudo docker run hello-world
 ```
 
+这将会打印一条很长的提示信息
+
 至此，docker(非VM)安装就完成了。
+
+注意，每运行一次上面这个命令，都会创建一个新的容器
+
+如果想要清理这些运行`docker run`后创建的容器文件，可以先
+
+```bash
+docker container ls -a
+```
+
+检查目前所有容器的列表
+
+然后运行
+```bash
+docker container rm $容器名称
+```
+来删掉它们
 
 ## Docker的可用性配置
 
-[参考1](https://www.runoob.com/docker/ubuntu-docker-install.html)
+[参考1 | 菜鸟教程](https://www.runoob.com/docker/ubuntu-docker-install.html)
 
-[参考2](https://www.runoob.com/docker/docker-mirror-acceleration.html)
+[参考2 | 菜鸟教程](https://www.runoob.com/docker/docker-mirror-acceleration.html)
 
-[参考3](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket?comment=168605)
+[参考3 | digitalocean](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket?comment=168605)
 
 ### Docker镜像设置
 
@@ -310,3 +328,5 @@ Knighthana
 2023/04/13 完稿
 
 2023/05/15 第一次更新
+
+2023/05/18 第二次更新
