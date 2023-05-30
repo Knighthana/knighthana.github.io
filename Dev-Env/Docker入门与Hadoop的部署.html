@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+    
+    <title>Docker入门与Hadoop的部署 - Knighthana的鸽子巢</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="Blog Linux Student Developer">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <meta name="description" content="Docker入门与初步使用 之前折腾了一次安装docker，由于一直没什么用途，也就没有继续探索 现在需要使用docker完成另一项任务，因此先探索一下docker具体的用法 外部链接：其他教程 关于如何使用Docker,有三个教程 网站设在国内的，全中文，十分方便食用的 Docker 教程 | 菜鸟教程 来自官方的，比较标准的，但是全英文的 Overview | Docker Documenta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker入门与Hadoop的部署">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/Docker%E5%85%A5%E9%97%A8%E4%B8%8EHadoop%E7%9A%84%E9%83%A8%E7%BD%B2.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="Docker入门与初步使用 之前折腾了一次安装docker，由于一直没什么用途，也就没有继续探索 现在需要使用docker完成另一项任务，因此先探索一下docker具体的用法 外部链接：其他教程 关于如何使用Docker,有三个教程 网站设在国内的，全中文，十分方便食用的 Docker 教程 | 菜鸟教程 来自官方的，比较标准的，但是全英文的 Overview | Docker Documenta">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-05-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-05-17T16:00:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="LinuxMint">
+<meta property="article:tag" content="2023">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary">
+    
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+    <link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1685454977973">
+    
+    <link rel="stylesheet" href="/css/style.css?v=1685454977973">
+
+    
+
+    
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+
+
+    <script async src="/js/app.js?v=1685454977973"></script>
+    
+     
+
+    
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div id="nexmoe-background">
+        <div class="nexmoe-bg" 
+            style="background-image: url(/img/background.jpg)"
+        ></div>
+        <div class="mdui-appbar mdui-shadow-0">
+            <div class="mdui-toolbar">
+                <a mdui-drawer="{target: '#drawer', swipe: true}" title="menu" class="mdui-btn mdui-btn-icon mdui-ripple"><i class="mdui-icon nexmoefont icon-menu"></i></a>
+                <div class="mdui-toolbar-spacer"></div>
+                <!--<a href="javascript:;" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">search</i></a>-->
+                <a href="/" title="Knighthana" class="mdui-btn mdui-btn-icon"><img src="/favicon.png" alt="Knighthana"></a>
+            </div>
+        </div>
+    </div>
+    <div id="nexmoe-header">
+        <div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>91</div>
+        <div><span>标签</span>137</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    <aside id="nexmoe-sidebar">
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1685454977974"></script>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">15</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">34</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">24</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 14.44px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.22px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14.44px;">Blog</a> <a href="/tags/C/" style="font-size: 18.89px;">C</a> <a href="/tags/CJK/" style="font-size: 11.11px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 11.11px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.11px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.78px;">Git</a> <a href="/tags/HTML/" style="font-size: 12.22px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.11px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11.11px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15.56px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12.22px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.11px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.11px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.11px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.33px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.11px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.67px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.67px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11.11px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 12.22px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 14.44px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11.11px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.11px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11.11px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11.11px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.11px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.33px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.11px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 17.78px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.11px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12.22px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.11px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(137);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+        
+            
+            
+            <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">42</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+        
+            
+            
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%80%E4%B9%A6%E5%BC%80%E7%AF%87%E5%B0%B1%E8%A7%A3%E7%AD%94%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98.html">(KM)设计模式一书开篇就解答的两个问题</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%81%94%E5%90%88%E4%BD%93%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93.html">(KM)联合体和结构体</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/Docker%E5%85%A5%E9%97%A8%E4%B8%8EHadoop%E7%9A%84%E9%83%A8%E7%BD%B2.html">Docker入门与Hadoop的部署</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%BD%AC%E8%BD%BD-%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%9A%84%E5%8F%91%E5%B1%95%E4%B9%8B%E8%B7%AF.html">(KM)转载-技术人员的发展之路</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)ls%E7%9A%84%E7%94%A8%E6%B3%95.html">(KM)ls的用法</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+        
+            
+            <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+        
+    </aside>
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer -->
+    </div>
+    <div id="nexmoe-content">
+        <div class="nexmoe-primary">
+    <div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Docker.png" alt="Docker入门与Hadoop的部署" loading="lazy">
+            <h1>Docker入门与Hadoop的部署</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年05月17日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="docker入门与初步使用">Docker入门与初步使用</h1>
+<p>之前折腾了一次安装<code>docker</code>，由于一直没什么用途，也就没有继续探索</p>
+<p>现在需要使用<code>docker</code>完成另一项任务，因此先探索一下<code>docker</code>具体的用法</p>
+<h2 id="外部链接其他教程">外部链接：其他教程</h2>
+<p>关于如何使用Docker,有三个教程</p>
+<p>网站设在国内的，全中文，十分方便食用的 <a target="_blank" rel="noopener" href="https://www.runoob.com/docker/docker-tutorial.html">Docker 教程 | 菜鸟教程</a></p>
+<p>来自官方的，比较标准的，但是全英文的 <a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/">Overview | Docker Documentation</a></p>
+<p>来自微软的，局限于vscode，但同样方便食用的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/docker/tutorials/docker-tutorial?WT.mc_id=vscode_docker_aka_getstartedwithdocker">教程：使用 Visual Studio Code 创建 Docker 应用</a></p>
+<p>BTW: 检测到环境中安装有Docker之后，vscode会自动提醒可以安装Docker插件</p>
+<h2 id="安装docker">安装Docker</h2>
+<p>关于 <a href="https://knighthana.github.io/Dev-Env/2023%E5%B9%B44%E6%9C%88%E5%9C%A8LinuxMint%E4%B8%8A%E5%AE%89%E8%A3%85Docker.html">安装Docker</a> 的博客，我在之前写过，因此不再赘述</p>
+<p>这篇博客中还提到了<code>docker-ce</code>的权限与用户组设置（以便以普通用户而不是超级用户的身份使用docker），<code>docker</code>的镜像设置</p>
+<h2 id="什么是映像什么是容器">什么是映像，什么是容器？</h2>
+<p>如 <a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/overview/#docker-objects">Docker objects</a> 所言</p>
+<blockquote>
+<p>映像是创建容器的指导性文件，只读，之后行文的时候可能也会写作“镜像”</p>
+<p>容器是运行中的映像实例，有一个自己的读写文件系统</p>
+</blockquote>
+<p>通过阅读这段文字，我可以认为，映像是程序，容器是进程</p>
+<h2 id="下载第一个映像">下载第一个映像</h2>
+<p>有一篇很有趣的小文章讲了一下常见映像的大小 <a target="_blank" rel="noopener" href="https://dzone.com/articles/minideb-a-minimalist-debian-based-docker-image">Minideb: A Minimalist, Debian-Based Docker Image</a> ，最有趣的是，Python在冗余方面从来不负众望</p>
+<p>虽然教程给的是centos，但是我对<code>yum</code>或者说<code>dnf</code>的一套东西不太熟悉，我更加熟悉的是debian系的<code>apt</code>和arch系的<code>pacman</code>，所以本教程就用debian映像进行之后的操作了</p>
+<p>通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull debian</span><br></pre></td></tr></table></figure> 将会下载第一个映像</p>
+<p>下载速度取决于镜像站设置，或者是否对这段网络连接进行了“加速处理”</p>
+<p>下载完毕之后，会看到明显的提示</p>
+<p>可以手动检查一下，输入 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image <span class="built_in">ls</span> -a</span><br></pre></td></tr></table></figure></p>
+<p>可以看到以下输出： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker image <span class="built_in">ls</span> -a</span><br><span class="line">REPOSITORY    TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">debian        latest    34b4fa67dc04   2 weeks ago     124MB</span><br><span class="line">hello-world   latest    feb5d9fea6a5   20 months ago   13.3kB</span><br></pre></td></tr></table></figure></p>
+<p>其中的<code>debian</code>就是刚刚下载的映像了，可以发现它的大小只有124MiB，甚至远远小于<code>debain-11.7.0-amd64-netinst.iso</code>的389MiB</p>
+<p>下面的<code>hello-world</code>是之前向世界宣布我们的<code>docker-ce</code>安装成功时自动下载来的映像，由于只有13Ki大，我打算留着它</p>
+<h2 id="进容器瞧瞧看看">进容器瞧瞧看看</h2>
+<p>此时，通过运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it debian /bin/bash</span><br></pre></td></tr></table></figure>
+<p>就会使用<code>debian</code>映像创建一个容器、进入容器、并且调用<code>bash</code>作为交互界面</p>
+<p>由于之前下载过程的反馈提示中说下载了“最新版本”的Debian映像，我很好奇这究竟是哪个版本，那么不妨检查一下</p>
+<p>常见的<code>lsb_release</code>或<code>debian_version</code>命令并没有打包在映像中，不过可以通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/os-release</span><br></pre></td></tr></table></figure> 来查看系统信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:~<span class="comment"># cat /etc/os-release </span></span><br><span class="line">PRETTY_NAME=<span class="string">"Debian GNU/Linux 11 (bullseye)"</span></span><br><span class="line">NAME=<span class="string">"Debian GNU/Linux"</span></span><br><span class="line">VERSION_ID=<span class="string">"11"</span></span><br><span class="line">VERSION=<span class="string">"11 (bullseye)"</span></span><br><span class="line">VERSION_CODENAME=bullseye</span><br><span class="line">ID=debian</span><br><span class="line">HOME_URL=<span class="string">"https://www.debian.org/"</span></span><br><span class="line">SUPPORT_URL=<span class="string">"https://www.debian.org/support"</span></span><br><span class="line">BUG_REPORT_URL=<span class="string">"https://bugs.debian.org/"</span></span><br></pre></td></tr></table></figure>
+<p>不出所料，是“bullseye”，也就是“牛眼”版本</p>
+<p>再看看都预装了什么软件包：</p>
+<details>
+<summary>Debian的Docker映像中预装软件包列表</summary>
+<pre>
+<code class="lang-bash">
+
+root@da62261bc436:/etc/apt# apt list | grep installed
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+adduser/now 3.118 all [installed,local]
+apt/now 2.2.4 amd64 [installed,local]
+base-files/now 11.1+deb11u7 amd64 [installed,local]
+base-passwd/now 3.5.51 amd64 [installed,local]
+bash/now 5.1-2+deb11u1 amd64 [installed,local]
+bsdutils/now 1:2.36.1-8+deb11u1 amd64 [installed,local]
+coreutils/now 8.32-4+b1 amd64 [installed,local]
+dash/now 0.5.11+git20200708+dd9ef66-5 amd64 [installed,local]
+debconf/now 1.5.77 all [installed,local]
+debian-archive-keyring/now 2021.1.1+deb11u1 all [installed,local]
+debianutils/now 4.11.2 amd64 [installed,local]
+diffutils/now 1:3.7-5 amd64 [installed,local]
+dpkg/now 1.20.12 amd64 [installed,local]
+e2fsprogs/now 1.46.2-2 amd64 [installed,local]
+findutils/now 4.8.0-1 amd64 [installed,local]
+gcc-10-base/now 10.2.1-6 amd64 [installed,local]
+gcc-9-base/now 9.3.0-22 amd64 [installed,local]
+gpgv/now 2.2.27-2+deb11u2 amd64 [installed,local]
+grep/now 3.6-1+deb11u1 amd64 [installed,local]
+gzip/now 1.10-4+deb11u1 amd64 [installed,local]
+hostname/now 3.23 amd64 [installed,local]
+init-system-helpers/now 1.60 all [installed,local]
+libacl1/now 2.2.53-10 amd64 [installed,local]
+libapt-pkg6.0/now 2.2.4 amd64 [installed,local]
+libattr1/now 1:2.4.48-6 amd64 [installed,local]
+libaudit-common/now 1:3.0-2 all [installed,local]
+libaudit1/now 1:3.0-2 amd64 [installed,local]
+libblkid1/now 2.36.1-8+deb11u1 amd64 [installed,local]
+libbz2-1.0/now 1.0.8-4 amd64 [installed,local]
+libc-bin/now 2.31-13+deb11u6 amd64 [installed,local]
+libc6/now 2.31-13+deb11u6 amd64 [installed,local]
+libcap-ng0/now 0.7.9-2.2+b1 amd64 [installed,local]
+libcom-err2/now 1.46.2-2 amd64 [installed,local]
+libcrypt1/now 1:4.4.18-4 amd64 [installed,local]
+libdb5.3/now 5.3.28+dfsg1-0.8 amd64 [installed,local]
+libdebconfclient0/now 0.260 amd64 [installed,local]
+libext2fs2/now 1.46.2-2 amd64 [installed,local]
+libffi7/now 3.3-6 amd64 [installed,local]
+libgcc-s1/now 10.2.1-6 amd64 [installed,local]
+libgcrypt20/now 1.8.7-6 amd64 [installed,local]
+libgmp10/now 2:6.2.1+dfsg-1+deb11u1 amd64 [installed,local]
+libgnutls30/now 3.7.1-5+deb11u3 amd64 [installed,local]
+libgpg-error0/now 1.38-2 amd64 [installed,local]
+libgssapi-krb5-2/now 1.18.3-6+deb11u3 amd64 [installed,local]
+libhogweed6/now 3.7.3-1 amd64 [installed,local]
+libidn2-0/now 2.3.0-5 amd64 [installed,local]
+libk5crypto3/now 1.18.3-6+deb11u3 amd64 [installed,local]
+libkeyutils1/now 1.6.1-2 amd64 [installed,local]
+libkrb5-3/now 1.18.3-6+deb11u3 amd64 [installed,local]
+libkrb5support0/now 1.18.3-6+deb11u3 amd64 [installed,local]
+liblz4-1/now 1.9.3-2 amd64 [installed,local]
+liblzma5/now 5.2.5-2.1~deb11u1 amd64 [installed,local]
+libmount1/now 2.36.1-8+deb11u1 amd64 [installed,local]
+libnettle8/now 3.7.3-1 amd64 [installed,local]
+libnsl2/now 1.3.0-2 amd64 [installed,local]
+libp11-kit0/now 0.23.22-1 amd64 [installed,local]
+libpam-modules-bin/now 1.4.0-9+deb11u1 amd64 [installed,local]
+libpam-modules/now 1.4.0-9+deb11u1 amd64 [installed,local]
+libpam-runtime/now 1.4.0-9+deb11u1 all [installed,local]
+libpam0g/now 1.4.0-9+deb11u1 amd64 [installed,local]
+libpcre2-8-0/now 10.36-2+deb11u1 amd64 [installed,local]
+libpcre3/now 2:8.39-13 amd64 [installed,local]
+libseccomp2/now 2.5.1-1+deb11u1 amd64 [installed,local]
+libselinux1/now 3.1-3 amd64 [installed,local]
+libsemanage-common/now 3.1-1 all [installed,local]
+libsemanage1/now 3.1-1+b2 amd64 [installed,local]
+libsepol1/now 3.1-1 amd64 [installed,local]
+libsmartcols1/now 2.36.1-8+deb11u1 amd64 [installed,local]
+libss2/now 1.46.2-2 amd64 [installed,local]
+libssl1.1/now 1.1.1n-0+deb11u4 amd64 [installed,local]
+libstdc++6/now 10.2.1-6 amd64 [installed,local]
+libsystemd0/now 247.3-7+deb11u2 amd64 [installed,local]
+libtasn1-6/now 4.16.0-2+deb11u1 amd64 [installed,local]
+libtinfo6/now 6.2+20201114-2+deb11u1 amd64 [installed,local]
+libtirpc-common/now 1.3.1-1+deb11u1 all [installed,local]
+libtirpc3/now 1.3.1-1+deb11u1 amd64 [installed,local]
+libudev1/now 247.3-7+deb11u2 amd64 [installed,local]
+libunistring2/now 0.9.10-4 amd64 [installed,local]
+libuuid1/now 2.36.1-8+deb11u1 amd64 [installed,local]
+libxxhash0/now 0.8.0-2 amd64 [installed,local]
+libzstd1/now 1.4.8+dfsg-2.1 amd64 [installed,local]
+login/now 1:4.8.1-1 amd64 [installed,local]
+logsave/now 1.46.2-2 amd64 [installed,local]
+lsb-base/now 11.1.0 all [installed,local]
+mawk/now 1.3.4.20200120-2 amd64 [installed,local]
+mount/now 2.36.1-8+deb11u1 amd64 [installed,local]
+ncurses-base/now 6.2+20201114-2+deb11u1 all [installed,local]
+ncurses-bin/now 6.2+20201114-2+deb11u1 amd64 [installed,local]
+passwd/now 1:4.8.1-1 amd64 [installed,local]
+perl-base/now 5.32.1-4+deb11u2 amd64 [installed,local]
+sed/now 4.7-1 amd64 [installed,local]
+sysvinit-utils/now 2.96-7+deb11u1 amd64 [installed,local]
+tar/now 1.34+dfsg-1 amd64 [installed,local]
+tzdata/now 2021a-1+deb11u10 all [installed,local]
+util-linux/now 2.36.1-8+deb11u1 amd64 [installed,local]
+zlib1g/now 1:1.2.11.dfsg-2+deb11u2 amd64 [installed,local]
+
+</code>
+</pre>
+</details>
+<p>在<code>-it</code>，其实也就是<code>-i -t</code>模式中的体验，很像之前安装ArchLinux时的<code>arch-chroot</code></p>
+<h2 id="简单的自定义">简单的自定义</h2>
+<p>由于接下来我们需要进行一些安装，所以得先去修改一下<code>apt</code>的镜像站地址</p>
+<p>很容易发现，映像为了节约空间，没有安装<code>vi</code>、<code>vim</code>、<code>nano</code>中的任何一个</p>
+<p>无论是为了下载安装它们，或者是为了保留映像的tiny特性而不安装文本编辑器，都需要知道如何在只有基本工具的情况下修改<code>sources.list</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> /etc/apt/sources.list sources.list.bak</span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">"deb http://linux.xidian.edu.cn/mirrors/debian/ bullseye main non-free contrib\ndeb http://linux.xidian.edu.cn/mirrors/debian/ bullseye-updates main non-free contrib"</span> | <span class="built_in">tee</span> /etc/apt/sources.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<p>我使用了西电源，这个源不对外开放，请根据自己的情况修改源</p>
+<p>为了换行方便，我使用了<code>echo -e</code>，在后面使用了<code>\n</code>换行，请适当地予以替换</p>
+<p>这里使用了<code>http</code>而不是<code>https</code>，因为我在学校内网中，并且不想在docker容器中安装<code>apt-transport-https</code>和<code>ca-certificates</code></p>
+<p>如果网络环境不安全的话，还是应该使用TLS加密的</p>
+<p>这里用了一下<code>tee</code>是为了方便在中间做一些动作，如果不需要做额外的动作，或者假如映像中连<code>tee</code>都没有打包的话，应该可以直接省略关于<code>tee</code>的管道命令，用<code>&gt;</code>将内容重定向至<code>/etc/apt/sources.list</code></p>
+<table>
+<thead>
+<tr class="header">
+<th>name</th>
+<th>download size</th>
+<th>install size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>nano</td>
+<td>825KiB</td>
+<td>3087KiB</td>
+</tr>
+<tr class="even">
+<td>vim</td>
+<td>8174KiB</td>
+<td>36.9MiB</td>
+</tr>
+</tbody>
+</table>
+<p>那么，还是安装一个<code>nano</code>吧</p>
+<p>然后去修改一下<code>~/.bashrc</code>，取消有关颜色的注释、<code>alias</code>的注释，修改完之后，还需要在<code>.bashrc</code>文件的最上面上面添加单独一行<code>export SHELL=/bin/bash</code>，因为我们每次是通过在外面直接<code>exec /bin/bash</code>的方式进入容器的，所以这个环境变量目前需要设置在<code>.bashrc</code>中</p>
+<p>之后如果交互的方式有所变化，我们需要更改这行环境变量<code>SHELL</code>修改命令的位置</p>
+<h2 id="退出容器重新进入容器">退出容器，重新进入容器</h2>
+<p>第一次通过<code>docker run -it</code>运行的容器，在容器的交互式界面中，平常地使用用<code>exit</code>就会退出容器</p>
+<p>但是我们不可以再次运行上一个<code>run</code>命令以期望进入刚才的容器，因为创建的容器已经是另一个分支了，如果我们此时再次运行<code>docker run -it debian /bin/bash</code>就会从<code>debian</code>映像上创建另一个全新的容器</p>
+<p>先查询刚才在本地创建的容器叫什么</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker ps -a</span><br><span class="line">CONTAINER ID   IMAGE     COMMAND       CREATED       STATUS                     PORTS     NAMES</span><br><span class="line">da62261bc436   debian    <span class="string">"/bin/bash"</span>   2 hours ago   Exited (0) 3 minutes ago             distracted_shockley</span><br></pre></td></tr></table></figure>
+<p>这里提示容器的状态是“已退出”，如何重新运行容器并获取容器的控制呢？</p>
+<p>先说运行容器，这个非常简单</p>
+<p>通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start distracted_shockley</span><br></pre></td></tr></table></figure> 就会在后台静默启动一个docker容器<code>distracted_shockley</code>，此时我们无法直接和它交互</p>
+<p>但是此时运行<code>docker ps</code>，注意我们并没有附加<code>-a</code>选项，就会发现docker报告有一个容器已经启动了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker ps   </span><br><span class="line">CONTAINER ID   IMAGE     COMMAND       CREATED       STATUS         PORTS     NAMES</span><br><span class="line">da62261bc436   debian    <span class="string">"/bin/bash"</span>   2 hours ago   Up 4 seconds             distracted_shockley</span><br></pre></td></tr></table></figure>
+<p>此时要进入容器，还需要做一些选择</p>
+<h3 id="attach"><code>attach</code></h3>
+<p>对于正在运行中的容器，通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker attach distracted_shockley</span><br></pre></td></tr></table></figure> 交互式地返回正在运行中的容器<code>distracted_shockley</code></p>
+<p>如果此时在容器中的<code>bash</code>里输入命令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure> 并回车，那么容器就会彻底关闭并退出</p>
+<p>在宿主机上运行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure> 只会看到空空如也的界面</p>
+<h3 id="exec"><code>exec</code></h3>
+<p>对于正在运行中的容器，通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it distracted_shockley /bin/bash</span><br></pre></td></tr></table></figure> 就可以打开一个新的<code>bash</code>进入容器</p>
+<p>退出这个<code>bash</code>并不会让整个容器停止运行</p>
+<p>例如屏幕上的这段显示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker <span class="built_in">exec</span> -it distracted_shockley /bin/bash</span><br><span class="line">root@da62261bc436:/<span class="comment"># exit</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line">➜  ~ docker ps</span><br><span class="line">CONTAINER ID   IMAGE     COMMAND       CREATED       STATUS              PORTS     NAMES</span><br><span class="line">da62261bc436   debian    <span class="string">"/bin/bash"</span>   2 hours ago   Up About a minute             distracted_shockley</span><br></pre></td></tr></table></figure></p>
+<p>中间虽然通过<code>exit</code>退出了容器中的<code>bash</code>，但是容器还是运行状态</p>
+<p>不难猜到，容器中还有一个<code>bash</code>正在运行中，只有通过<code>attach</code>的方式才能访问到它</p>
+<p>Docker的初步安装与配置到此结束，不难发现，Docker是一个内部“基本完整”的“操作系统”，因此，在谈论“一个容器”的时候，我们知道，这个“容器”里面一定是有操作系统的，虽然被简化了许多</p>
+<p>接下来将结合Hadoop进行具体功能使用方面的的探索</p>
+<h1 id="hadoop的下载与安装">Hadoop的下载与安装</h1>
+<p><a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/stable/">Apache官方Hadoop稳定版介绍</a></p>
+<p>介绍页面说了，对于初学者，请从单机模式开始学习配置，然后再使用集群模式</p>
+<p>那么这是有关单机模式Hadoop的<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html">Apache官方的手册文件</a></p>
+<p>最后是<a target="_blank" rel="noopener" href="https://hadoop.apache.org/releases.html">Apache官方的下载地址</a>（访问较慢）或者说去访问<a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.cgi/hadoop/common/">镜像</a>，镜像有CDN</p>
+<pre><code>如果彼时的stable还是3.3.5，可以用[这个链接](https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz)</code></pre>
+<p>还有国内的非常方便食用的<a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/hadoop-tutorial.html">Hadoop 教程 | 菜鸟教程</a></p>
+<p>现在(2023.05.22)，最新稳定版本的Hadoop是3.3.5</p>
+<p>先看着文档一步一步来</p>
+<h2 id="前置条件">前置条件</h2>
+<blockquote>
+<p>GNU/Linux is supported as a development and production platform. Hadoop has been demonstrated on GNU/Linux clusters with 2000 nodes.</p>
+</blockquote>
+<p>这没问题，我正在使用LinuxMint，是GNU/Linux</p>
+<blockquote>
+<p>Required software for Linux include:</p>
+<p>Java™ must be installed. Recommended Java versions are described at <a target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions">HadoopJavaVersions</a>.</p>
+<p>ssh must be installed and sshd must be running to use the Hadoop scripts that manage remote Hadoop daemons if the optional start and stop scripts are to be used. Additionally, it is recommmended that pdsh also be installed for better ssh resource management.</p>
+</blockquote>
+<p>需要<code>java</code>的支持和<code>sshd</code>的支持，</p>
+<p>文档中推荐安装pdsh，我这里提一句，Hadoop会自动检测pdsh的安装与否，如果安装了它就会使用pdsh，除非你清楚pdsh如何配置和使用，否则不要安装pdsh</p>
+<p>那就检查一下 <a target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/HADOOP/Hadoop+Java+Versions">HadoopJavaVersions</a></p>
+<blockquote>
+<p>Supported Java Versions</p>
+<p>Apache Hadoop 3.3 and upper supports Java 8 and Java 11 (runtime only)</p>
+<p>Please compile Hadoop with Java 8. Compiling Hadoop with Java 11 is not supported: HADOOP-16795 - Java 11 compile support Open</p>
+<p>Apache Hadoop from 3.0.x to 3.2.x now supports only Java 8</p>
+<p>Apache Hadoop from 2.7.x to 2.10.x support both Java 7 and 8</p>
+</blockquote>
+<p>也就是说只能在openjdk-8编译，对于openjdk-11，只能运行，但不能用于编译</p>
+<p>但是注意到这篇文章的日期最后修改日期是2020年10月19日</p>
+<p>访问 <a target="_blank" rel="noopener" href="https://issues.apache.org/jira/browse/HADOOP-16795">Java 11 compile support</a> ，发现很多issue已经被标记为solved或者resolved</p>
+<p>但是既然说明文档还没有标记openjdk-11已经完全得到支持，这里就采用它的说法，不要强行尝试用OpenJDK-11编译</p>
+<p>因为主机这边已经安装了OpenJDK-11，可能需要再安装一个OpenJDK-8，Linux中的java支持用<code>update-alternatives</code>来切换提供<code>java</code>命令支持的JRE、JDK版本</p>
+<p><a target="_blank" rel="noopener" href="https://nuwancs.medium.com/installing-multiple-java-versions-on-linux-mint-20-df321b08e138">Installing Multiple Java Versions On Linux Mint 20</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.thegeekdiary.com/how-to-work-with-multiple-java-versions-under-linux/">How to work with multiple java versions under Linux</a></p>
+<p>不过目前还不用执行这个方案，我的策略如下</p>
+<ul>
+<li><p>如果获得了Hadoop的二进制文件，那么就在Docker中安装OpenJDK-11，这是为了安全</p></li>
+<li><p>如果只能获取到Hadoop的源码，必须自己编译，那么一个更简单的方案是在Docker中安装OpenJDK-8负责编译和运行工作</p></li>
+<li><p>一个稍稍复杂的方法是在本机安装OpenJDK-8，编译出二进制文件，再使用Docker中的OpenJDK-11来运行它</p></li>
+</ul>
+<p>我的时间不多，只能考虑前两个方案</p>
+<p>打包之前做好的debian镜像，其中包含了我修改过的镜像源配置，以及一个安装好的nano，如果我对JDK的选择有误，那么就回到这一步</p>
+<p>先确保docker的容器关闭</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps</span><br></pre></td></tr></table></figure>
+<p>结果显示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker ps</span><br><span class="line">CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES</span><br><span class="line">➜  ~ </span><br></pre></td></tr></table></figure></p>
+<p>没有容器处在运行状态，好的，准备打包</p>
+<p>执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit distracted_shockley debian_startpoint</span><br></pre></td></tr></table></figure></p>
+<p>运行结果是： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker commit distracted_shockley debian_startpoint</span><br><span class="line">sha256:d11256cddabc2ea308e8e1bb7954de8c4457e7b635fcab53eb5c2627bed08a91</span><br><span class="line">➜  ~ docker images</span><br><span class="line">REPOSITORY          TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">debian_startpoint   latest    d11256cddabc   6 seconds ago   146MB</span><br><span class="line">debian              latest    34b4fa67dc04   2 weeks ago     124MB</span><br><span class="line">hello-world         latest    feb5d9fea6a5   20 months ago   13.3kB</span><br><span class="line">➜  ~ </span><br></pre></td></tr></table></figure></p>
+<p>镜像创建完毕，打开原来的容器，准备安装软件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install openssh-client openssh-server openjdk-11-jre</span><br></pre></td></tr></table></figure>
+<p>提示我需要470MiB的磁盘空间</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install openssh-client openssh-server openjdk-11-jdk</span><br></pre></td></tr></table></figure>
+<p>提示我需要706MiB的磁盘空间</p>
+<p>I think that we just don't have too much choice</p>
+<p>So, JUST DO IT</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install openssh-client openssh-server openjdk-11-jdk</span><br></pre></td></tr></table></figure>
+<p>此外，为了便于管理，还应该安装<code>sudo</code> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install sudo</span><br></pre></td></tr></table></figure></p>
+<p>等待安装完毕，检查 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/<span class="comment"># java -version</span></span><br><span class="line">openjdk version <span class="string">"11.0.18"</span> 2023-01-17</span><br><span class="line">OpenJDK Runtime Environment (build 11.0.18+10-post-Debian-1deb11u1)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 11.0.18+10-post-Debian-1deb11u1, mixed mode, sharing)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/<span class="comment"># sshd -v       </span></span><br><span class="line">unknown option -- v</span><br><span class="line">OpenSSH_8.4p1 Debian-5+deb11u1, OpenSSL 1.1.1n  15 Mar 2022</span><br><span class="line">usage: sshd [-46DdeiqTt] [-C connection_spec] [-c host_cert_file]</span><br><span class="line">            [-E log_file] [-f config_file] [-g login_grace_time]</span><br><span class="line">            [-h host_key_file] [-o option] [-p port] [-u len]</span><br></pre></td></tr></table></figure>
+<p>但是当我尝试运行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/<span class="comment"># systemctl enable ssh &amp;&amp; systemctl start ssh </span></span><br></pre></td></tr></table></figure> 的时候，提示 &gt; Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install. &gt; &gt; Executing: /lib/systemd/systemd-sysv-install enable ssh &gt; &gt; System has not been booted with systemd as init system (PID 1). Can't operate. &gt; &gt; Failed to connect to bus: Host is down</p>
+<p>docker的容器并非由<code>systemd</code>唤起，这好像也不难理解，注意到菜鸟教程创建容器时使用了<code>--privileged</code>参数，这可不太明智</p>
+<p>目前来看，也没必要现在就运行<code>sshd</code>，可以之后用<code>exec</code>运行它，注意，运行<code>sshd</code>需要使用绝对路径，也就是<code>/usr/sbin/sshd</code></p>
+<p>先执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /run/sshd/</span><br></pre></td></tr></table></figure> 创建sshd所需的目录，以便稍后运行<code>sshd</code></p>
+<p>由于不应该允许通过<code>ssh</code>登录<code>root</code>，因此创建一个新用户<code>remoteU</code>用于<code>ssh</code> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useradd -d /home/remoteU -m -s /bin/bash remoteU</span><br></pre></td></tr></table></figure> 其中<code>-m</code>选项新建了用户目录</p>
+<p>修改<code>remoteU</code>的密码 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd remoteU</span><br></pre></td></tr></table></figure></p>
+<p>su进去配置密钥 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su remoteU</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p>一路回车过去，按照默认设置配好 然后，cd进<code>~/.ssh/</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano authorized_keys</span><br></pre></td></tr></table></figure>
+<p>把自己的主机的公钥贴进去，然后应该就完事了</p>
+<h2 id="下载与校验hadoop">下载与校验Hadoop</h2>
+<p>另一边，主机也不用闲着，开始下载hadoop的二进制文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/Downloads/</span><br><span class="line">curl -fSL -O https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz</span><br></pre></td></tr></table></figure>
+<p>查看<a target="_blank" rel="noopener" href="https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz.sha512">sha512</a>为</p>
+<blockquote>
+<p>SHA512 (hadoop-3.3.5.tar.gz) = cc170df24976543a3e961a1353a194225e3ffc5d53d594dd63d71422765e1d816d1ffa877c02bf93f0183fcfbe4c10f4b7739deca69420ed83372a0b1f9d5dc7</p>
+</blockquote>
+<p>核验本地 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">➜  Downloads <span class="built_in">sha512sum</span> hadoop-3.3.5.tar.gz </span><br><span class="line">cc170df24976543a3e961a1353a194225e3ffc5d53d594dd63d71422765e1d816d1ffa877c02bf93f0183fcfbe4c10f4b7739deca69420ed83372a0b1f9d5dc7  hadoop-3.3.5.tar.gz</span><br></pre></td></tr></table></figure></p>
+<h2 id="hadoop的安装">Hadoop的安装</h2>
+<p>这个软件需要手动安装，事实上，它的安装只是需要移动二进制文件到某个看起来很系统级的目录，然后配置几个环境变量</p>
+<p>拷进容器里面 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">cp</span> ~/Downloads/hadoop-3.3.5.tar.gz distracted_shockley:/root/</span><br></pre></td></tr></table></figure></p>
+<p>首先是确保我们能找到hadoop</p>
+<p>在容器用户的<code>~/.bashrc</code>中添加 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:/usr/local/hadoop/bin:/usr/local/hadoop/sbin</span><br></pre></td></tr></table></figure></p>
+<p>以便我输入有关<code>hadoop</code>的命令时，bash都了解如何找到hadoop</p>
+<p>下来是让hadoop自己搞清楚方向，</p>
+<p>修改<code>/usr/local/hadoop/etc/hadoop/hadoop-env.sh</code></p>
+<p>查找<code>JAVA_HOME=</code>，修改为<code>java</code>的路径，例如我通过<code>whereis java</code>查找<code>java</code>的二进制文件，查找它的软链接目标，最后确定路径是<code>/usr/lib/jvm/java-11-openjdk-amd64</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64</span><br></pre></td></tr></table></figure>
+<p>查找<code>HADOOP_HOME=</code>，修改为hadoop的安装位置，例如此时安装在了<code>/usr/local/hadoop</code>，那么就写 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HADOOP_HOME=/usr/local/hadoop</span><br></pre></td></tr></table></figure></p>
+<p>到这一步，hadoop的环境变量就配完了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop version</span><br></pre></td></tr></table></figure>
+<p>可以看到提示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/usr/local/hadoop/etc/hadoop<span class="comment"># hadoop version</span></span><br><span class="line">Hadoop 3.3.5</span><br><span class="line">Source code repository https://github.com/apache/hadoop.git -r 706d88266abcee09ed78fbaa0ad5f74d818ab0e9</span><br><span class="line">Compiled by stevel on 2023-03-15T15:56Z</span><br><span class="line">Compiled with protoc 3.7.1</span><br><span class="line">From <span class="built_in">source</span> with checksum 6bbd9afcf4838a0eb12a5f189e9bd7</span><br><span class="line">This <span class="built_in">command</span> was run using /usr/local/hadoop/share/hadoop/common/hadoop-common-3.3.5.jar</span><br></pre></td></tr></table></figure></p>
+<h2 id="hadoop的配置">Hadoop的配置</h2>
+<p>按照 <a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/SingleCluster.html#Standalone_Operation">Hadoop: Setting up a Single Node Cluster.</a> 的说明</p>
+<p>修改<code>etc/hadoop/core-site.xml</code> <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://localhost:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>修改<code>etc/hadoop/hdfs-site.xml</code> <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>默认配置中，http监视服务运行在<code>http://localhost:9870/</code></p>
+<p>但是我们可能需要从外部访问http监视服务</p>
+<p>因此更改<code>etc/hadoop/hdfs-site.xml</code>，增添 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.http.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>0.0.0.0:9870<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure> 这样，http服务就会绑定在本机上，便于将来从容器外部访问</p>
+<p>此外，不知怎地hadoop一定强调要求我配置好ssh，并且需要达成不通过密码访问本地的sshd的效果，也就是要用公私钥体制，</p>
+<p>之前的说明也只是说脚本里有几个守护进程，依赖什么的</p>
+<p>按照要求的做</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -P <span class="string">''</span> -f ~/.ssh/id_rsa</span><br><span class="line"><span class="built_in">cat</span> ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">chmod</span> 0600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>以防万一，我将两个用户<code>root</code>和<code>remoteU</code>都配了一遍，把自己的公钥加入到自己的ssh允许列表里面</p>
+<p>虽然允许远程登录root很不安全，但这里是容器环境，所以先这样</p>
+<p>容器环境不能够使用systemd的守护进程，所以sshd不会随“开机”自动启动，需要自己手动启动sshd服务器，因此输入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/sshd</span><br></pre></td></tr></table></figure>
+<p>以便在本地启用一个ssh服务器</p>
+<p>测试一下： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/usr/local/hadoop/etc/hadoop<span class="comment"># ssh localhost</span></span><br><span class="line">Linux da62261bc436 5.15.0-72-generic <span class="comment">#79-Ubuntu SMP Wed Apr 19 08:22:18 UTC 2023 x86_64</span></span><br><span class="line"></span><br><span class="line">The programs included with the Debian GNU/Linux system are free software;</span><br><span class="line">the exact distribution terms <span class="keyword">for</span> each program are described <span class="keyword">in</span> the</span><br><span class="line">individual files <span class="keyword">in</span> /usr/share/doc/*/copyright.</span><br><span class="line"></span><br><span class="line">Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent</span><br><span class="line">permitted by applicable law.</span><br><span class="line">root@da62261bc436:~<span class="comment">#   </span></span><br></pre></td></tr></table></figure></p>
+<p>这说明ssh服务器已经按照要求配置完成</p>
+<h2 id="运行hadoop的hdfs">运行Hadoop的HDFS</h2>
+<h3 id="格式化namenode">格式化namenode</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:/usr/local/hadoop/etc/hadoop<span class="comment"># hdfs namenode -format</span></span><br><span class="line">WARNING: /usr/local/hadoop/logs does not exist. Creating.</span><br><span class="line"><span class="comment"># 此处的日志实在太长，故挪到了文章末尾处</span></span><br><span class="line">SHUTDOWN_MSG: Shutting down NameNode at da62261bc436/172.17.0.2</span><br><span class="line">************************************************************/</span><br><span class="line">root@da62261bc436:/usr/local/hadoop/etc/hadoop<span class="comment"># </span></span><br></pre></td></tr></table></figure>
+<p>如此这般，没有报错，格式化应该是完成了</p>
+<h3 id="启动hdfs">启动hdfs</h3>
+<p>运行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br></pre></td></tr></table></figure> 时遇到了问题</p>
+<blockquote>
+<p>but there is no HDFS_NAMENODE_USER defined. Aborting operation.</p>
+</blockquote>
+<p>由于我将容器运行在只有root的模式下，因此在文件中配置指定用户名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SERVICE USER OPTIONS</span></span><br><span class="line"><span class="built_in">export</span> HDFS_NAMENODE_USER=<span class="string">"root"</span></span><br><span class="line"><span class="built_in">export</span> HDFS_DATANODE_USER=<span class="string">"root"</span></span><br><span class="line"><span class="built_in">export</span> HDFS_SECONDARYNAMENODE_USER=<span class="string">"root"</span></span><br><span class="line"><span class="built_in">export</span> YARN_RESOURCEMANAGER_USER=<span class="string">"root"</span></span><br><span class="line"><span class="built_in">export</span> YARN_NODEMANAGER_USER=<span class="string">"root"</span></span><br></pre></td></tr></table></figure>
+<p>由于hadoop会自动检测是否安装<code>pdsh</code>，但如果安装了但是没有配置pdsh,那么就容易得到拒绝连接的提示</p>
+<p>因此应当<code>apt purge pdsh</code>卸载pdsh,</p>
+<p>或者按照 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/48697837">Hadoop : start-dfs.sh Connection refused</a> 的方式处理问题</p>
+<p>无论如何，我得到了提示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:~<span class="comment"># start-dfs.sh </span></span><br><span class="line">Starting namenodes on [localhost]</span><br><span class="line">Starting datanodes</span><br><span class="line">Starting secondary namenodes [da62261bc436]</span><br><span class="line">da62261bc436: Warning: Permanently added <span class="string">'da62261bc436,172.17.0.2'</span> (ECDSA) to the list of known hosts.</span><br></pre></td></tr></table></figure> 看起来相关服务已经运行起来了，用java进程检查器<code>jps</code>看一下有什么java服务正在运行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@da62261bc436:~<span class="comment"># jps</span></span><br><span class="line">3061 Jps</span><br><span class="line">2569 NameNode</span><br><span class="line">2863 SecondaryNameNode</span><br><span class="line">2671 DataNode</span><br></pre></td></tr></table></figure></p>
+<p>我的容器里面没有安装图形界面和浏览器，而且暂时还没有对外暴露端口，因此只能用<code>w3m</code>浏览器稍稍检查一下http服务的情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w3m http://localhost:9870</span><br></pre></td></tr></table></figure>
+<p>虽然终端下的浏览器渲染出来的网页很简陋，但是勉强能看出来，9870端口上有个http服务器正在努力地工作着，并且提供了一个动态的网页，之后只要把这个端口暴露出去，就可以在外面访问它了</p>
+<h3 id="进行文件操作">进行文件操作</h3>
+<p>运行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -<span class="built_in">help</span></span><br></pre></td></tr></table></figure> 会得到一份命令清单</p>
+<p>按照说明，新建一个 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -<span class="built_in">mkdir</span> /helloworld</span><br></pre></td></tr></table></figure></p>
+<p>要查看它，执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -<span class="built_in">ls</span> /</span><br></pre></td></tr></table></figure></p>
+<p>得到提示 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Found 1 items</span><br><span class="line">drwxr-xr-x   - root supergroup          0 2023-05-22 18:13 /helloworld</span><br></pre></td></tr></table></figure></p>
+<p>在本地新建一个示例文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line"><span class="built_in">touch</span> thereisanexample</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -put ./thereisanexample /helloworld/</span><br><span class="line">hdfs dfs -<span class="built_in">ls</span> /helloworld</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -<span class="built_in">mv</span> /helloworld/thereisanexample /helloworld/thereisanotherexample</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -<span class="built_in">ls</span> /helloworld</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -get /helloworld/thereisanotherexample ./</span><br><span class="line">ll</span><br></pre></td></tr></table></figure>
+<p>真是功夫不负有心人，进行到这一步，可以打包一下容器，使之成为映像，准备下一步工作</p>
+<p>关闭服务，退出容器 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">stop-all.sh</span><br><span class="line"><span class="built_in">exit</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit distracted_shockley hadoop_on_debian</span><br></pre></td></tr></table></figure>
+<p>这次打包耗时很久</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ docker images </span><br><span class="line">REPOSITORY          TAG       IMAGE ID       CREATED          SIZE</span><br><span class="line">hadoop_on_debian    latest    f6ddd02c25a0   12 seconds ago   2.96GB</span><br><span class="line">debian_startpoint   latest    d11256cddabc   5 hours ago      146MB</span><br><span class="line">debian              latest    34b4fa67dc04   2 weeks ago      124MB</span><br><span class="line">hello-world         latest    feb5d9fea6a5   20 months ago    13.3kB</span><br></pre></td></tr></table></figure>
+<p>2.96Gi 不能说小</p>
+<h2 id="探索在docker中组建hadoop集群">探索——在docker中组建Hadoop集群</h2>
+<p>先明确一下开机流程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/usr/sbin/sshd</span><br><span class="line">start-dfs.sh</span><br></pre></td></tr></table></figure>
+<p>容器对外开放的端口必须在创建时确定</p>
+<p>哪些端口需要得到调整呢？统计一下</p>
+<table>
+<thead>
+<tr class="header">
+<th>名称</th>
+<th>端口</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sshd</td>
+<td>22</td>
+</tr>
+<tr class="even">
+<td>hdfs</td>
+<td>9000</td>
+</tr>
+<tr class="odd">
+<td>dfs-webUI</td>
+<td>9870</td>
+</tr>
+</tbody>
+</table>
+<h1 id="附录">附录</h1>
+<h2 id="hdfs-namenode--format的日志输出"><code>hdfs namenode -format</code>的日志输出</h2>
+<details>
+<summary>Debian的Docker映像中预装软件包列表</summary>
+<pre>
+<code class="lang-bash">
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">WARNING: /usr/local/hadoop/logs does not exist. Creating.</span><br><span class="line">2023-05-22 17:14:05,595 INFO namenode.NameNode: STARTUP_MSG: </span><br><span class="line">/************************************************************</span><br><span class="line">STARTUP_MSG: Starting NameNode</span><br><span class="line">STARTUP_MSG:   host = da62261bc436/172.17.0.2</span><br><span class="line">STARTUP_MSG:   args = [-format]</span><br><span class="line">STARTUP_MSG:   version = 3.3.5</span><br><span class="line">STARTUP_MSG:   classpath = /usr/local/hadoop/etc/hadoop:/usr/local/hadoop/share/hadoop/common/lib/netty-all-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-servlet-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-simplekdc-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-identity-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-redis-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/kerby-pkix-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-haproxy-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-xml-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jsch-0.1.55.jar:/usr/local/hadoop/share/hadoop/common/lib/snappy-java-1.1.8.2.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-resolver-dns-classes-macos-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jackson-annotations-2.12.7.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-core-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/curator-framework-4.2.0.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-compress-1.21.jar:/usr/local/hadoop/share/hadoop/common/lib/protobuf-java-2.5.0.jar:/usr/local/hadoop/share/hadoop/common/lib/j2objc-annotations-1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-beanutils-1.9.4.jar:/usr/local/hadoop/share/hadoop/common/lib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/usr/local/hadoop/share/hadoop/common/lib/jackson-databind-2.12.7.1.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-logging-1.1.3.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-udt-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/slf4j-reload4j-1.7.36.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-text-1.10.0.jar:/usr/local/hadoop/share/hadoop/common/lib/hadoop-annotations-3.3.5.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-xml-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/slf4j-api-1.7.36.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-memcache-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-native-epoll-4.1.77.Final-linux-aarch_64.jar:/usr/local/hadoop/share/hadoop/common/lib/guava-27.0-jre.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-math3-3.1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-resolver-dns-native-macos-4.1.77.Final-osx-x86_64.jar:/usr/local/hadoop/share/hadoop/common/lib/jaxb-impl-2.2.3-1.jar:/usr/local/hadoop/share/hadoop/common/lib/jul-to-slf4j-1.7.36.jar:/usr/local/hadoop/share/hadoop/common/lib/reload4j-1.2.22.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-collections-3.2.2.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-daemon-1.0.13.jar:/usr/local/hadoop/share/hadoop/common/lib/nimbus-jose-jwt-9.8.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-resolver-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/woodstox-core-5.4.0.jar:/usr/local/hadoop/share/hadoop/common/lib/hadoop-shaded-guava-1.1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jackson-core-asl-1.9.13.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-admin-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jersey-servlet-1.19.4.jar:/usr/local/hadoop/share/hadoop/common/lib/metrics-core-3.2.4.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-configuration2-2.8.0.jar:/usr/local/hadoop/share/hadoop/common/lib/kerby-util-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-3.3.5.jar:/usr/local/hadoop/share/hadoop/common/lib/httpcore-4.4.13.jar:/usr/local/hadoop/share/hadoop/common/lib/animal-sniffer-annotations-1.17.jar:/usr/local/hadoop/share/hadoop/common/lib/jsp-api-2.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-classes-kqueue-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/javax.servlet-api-3.1.0.jar:/usr/local/hadoop/share/hadoop/common/lib/asm-5.0.4.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-stomp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/curator-recipes-4.2.0.jar:/usr/local/hadoop/share/hadoop/common/lib/failureaccess-1.0.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-socks-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/token-provider-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/re2j-1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jersey-json-1.20.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-smtp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/httpclient-4.5.13.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-io-2.8.0.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-http2-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jersey-server-1.19.4.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-webapp-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-resolver-dns-native-macos-4.1.77.Final-osx-aarch_64.jar:/usr/local/hadoop/share/hadoop/common/lib/avro-1.7.7.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-native-epoll-4.1.77.Final-linux-x86_64.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-mqtt-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-cli-1.2.jar:/usr/local/hadoop/share/hadoop/common/lib/gson-2.9.0.jar:/usr/local/hadoop/share/hadoop/common/lib/kerby-config-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/checker-qual-2.5.2.jar:/usr/local/hadoop/share/hadoop/common/lib/jakarta.activation-api-1.2.1.jar:/usr/local/hadoop/share/hadoop/common/lib/kerby-xdr-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-common-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jcip-annotations-1.0-1.jar:/usr/local/hadoop/share/hadoop/common/lib/jsr311-api-1.1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/hadoop-shaded-protobuf_3_7-1.1.1.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-codec-1.15.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-net-3.9.0.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-http-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/commons-lang3-3.12.0.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-native-kqueue-4.1.77.Final-osx-x86_64.jar:/usr/local/hadoop/share/hadoop/common/lib/paranamer-2.3.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-server-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-common-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-codec-dns-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-handler-proxy-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-sctp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-rxtx-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-util-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-security-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-crypto-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-server-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-util-ajax-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-native-kqueue-4.1.77.Final-osx-aarch_64.jar:/usr/local/hadoop/share/hadoop/common/lib/audience-annotations-0.5.0.jar:/usr/local/hadoop/share/hadoop/common/lib/jsr305-3.0.2.jar:/usr/local/hadoop/share/hadoop/common/lib/dnsjava-2.1.7.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-io-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/jersey-core-1.19.4.jar:/usr/local/hadoop/share/hadoop/common/lib/jackson-core-2.12.7.jar:/usr/local/hadoop/share/hadoop/common/lib/jackson-mapper-asl-1.9.13.jar:/usr/local/hadoop/share/hadoop/common/lib/jettison-1.5.3.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-handler-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/zookeeper-3.5.6.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-resolver-dns-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-util-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/zookeeper-jute-3.5.6.jar:/usr/local/hadoop/share/hadoop/common/lib/json-smart-2.4.7.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-buffer-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-classes-epoll-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/lib/jetty-http-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/common/lib/kerby-asn1-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/jaxb-api-2.2.11.jar:/usr/local/hadoop/share/hadoop/common/lib/kerb-client-1.0.1.jar:/usr/local/hadoop/share/hadoop/common/lib/stax2-api-4.2.1.jar:/usr/local/hadoop/share/hadoop/common/lib/curator-client-4.2.0.jar:/usr/local/hadoop/share/hadoop/common/lib/accessors-smart-2.4.7.jar:/usr/local/hadoop/share/hadoop/common/lib/netty-transport-native-unix-common-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/common/hadoop-common-3.3.5.jar:/usr/local/hadoop/share/hadoop/common/hadoop-registry-3.3.5.jar:/usr/local/hadoop/share/hadoop/common/hadoop-common-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/common/hadoop-kms-3.3.5.jar:/usr/local/hadoop/share/hadoop/common/hadoop-nfs-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-all-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-servlet-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-simplekdc-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-identity-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-redis-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerby-pkix-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-haproxy-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-xml-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jsch-0.1.55.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/snappy-java-1.1.8.2.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-resolver-dns-classes-macos-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/json-simple-1.1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jackson-annotations-2.12.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-core-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/curator-framework-4.2.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-compress-1.21.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/protobuf-java-2.5.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/j2objc-annotations-1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-beanutils-1.9.4.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jackson-databind-2.12.7.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-logging-1.1.3.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-udt-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-3.10.6.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-text-1.10.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/hadoop-annotations-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-xml-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-memcache-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-native-epoll-4.1.77.Final-linux-aarch_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/guava-27.0-jre.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-math3-3.1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-resolver-dns-native-macos-4.1.77.Final-osx-x86_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jaxb-impl-2.2.3-1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/reload4j-1.2.22.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-collections-3.2.2.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-daemon-1.0.13.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/nimbus-jose-jwt-9.8.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-resolver-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/woodstox-core-5.4.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/hadoop-shaded-guava-1.1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jackson-core-asl-1.9.13.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-admin-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jersey-servlet-1.19.4.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-configuration2-2.8.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerby-util-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/hadoop-auth-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/httpcore-4.4.13.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/animal-sniffer-annotations-1.17.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/leveldbjni-all-1.8.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-classes-kqueue-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/javax.servlet-api-3.1.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/asm-5.0.4.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-stomp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/curator-recipes-4.2.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/failureaccess-1.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-socks-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/token-provider-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/re2j-1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jersey-json-1.20.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-smtp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/httpclient-4.5.13.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-io-2.8.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-http2-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jersey-server-1.19.4.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-webapp-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-resolver-dns-native-macos-4.1.77.Final-osx-aarch_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/avro-1.7.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kotlin-stdlib-common-1.4.10.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-native-epoll-4.1.77.Final-linux-x86_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-mqtt-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-cli-1.2.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/gson-2.9.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerby-config-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/checker-qual-2.5.2.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jakarta.activation-api-1.2.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerby-xdr-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-common-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jcip-annotations-1.0-1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jsr311-api-1.1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/hadoop-shaded-protobuf_3_7-1.1.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-codec-1.15.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-net-3.9.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-http-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/commons-lang3-3.12.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-native-kqueue-4.1.77.Final-osx-x86_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/paranamer-2.3.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-server-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-common-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kotlin-stdlib-1.4.10.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-codec-dns-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-handler-proxy-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-sctp-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-rxtx-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-util-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-security-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-crypto-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-server-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-util-ajax-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-native-kqueue-4.1.77.Final-osx-aarch_64.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/audience-annotations-0.5.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/okio-2.8.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/okhttp-4.9.3.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jsr305-3.0.2.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/dnsjava-2.1.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-io-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jersey-core-1.19.4.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jackson-core-2.12.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jackson-mapper-asl-1.9.13.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jettison-1.5.3.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-handler-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/zookeeper-3.5.6.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-resolver-dns-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-util-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/zookeeper-jute-3.5.6.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/json-smart-2.4.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-buffer-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-classes-epoll-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jetty-http-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerby-asn1-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/jaxb-api-2.2.11.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/kerb-client-1.0.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/stax2-api-4.2.1.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/curator-client-4.2.0.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/accessors-smart-2.4.7.jar:/usr/local/hadoop/share/hadoop/hdfs/lib/netty-transport-native-unix-common-4.1.77.Final.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-client-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-nfs-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-native-client-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-rbf-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-native-client-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-client-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-httpfs-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-rbf-3.3.5.jar:/usr/local/hadoop/share/hadoop/hdfs/hadoop-hdfs-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-3.3.5-tests.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-shuffle-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-nativetask-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-common-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-hs-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-core-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-uploader-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-app-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-hs-plugins-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.5.jar:/usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn:/usr/local/hadoop/share/hadoop/yarn/lib/HikariCP-java7-2.4.12.jar:/usr/local/hadoop/share/hadoop/yarn/lib/snakeyaml-1.32.jar:/usr/local/hadoop/share/hadoop/yarn/lib/guice-servlet-4.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jackson-module-jaxb-annotations-2.12.7.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jetty-client-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jline-3.9.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/asm-tree-9.3.jar:/usr/local/hadoop/share/hadoop/yarn/lib/javax.websocket-client-api-1.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/websocket-server-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jna-5.2.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/javax.websocket-api-1.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/aopalliance-1.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jakarta.xml.bind-api-2.3.2.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jackson-jaxrs-base-2.12.7.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jersey-guice-1.19.4.jar:/usr/local/hadoop/share/hadoop/yarn/lib/json-io-2.5.1.jar:/usr/local/hadoop/share/hadoop/yarn/lib/metrics-core-3.2.4.jar:/usr/local/hadoop/share/hadoop/yarn/lib/geronimo-jcache_1.0_spec-1.0-alpha-1.jar:/usr/local/hadoop/share/hadoop/yarn/lib/asm-commons-9.3.jar:/usr/local/hadoop/share/hadoop/yarn/lib/websocket-common-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/fst-2.50.jar:/usr/local/hadoop/share/hadoop/yarn/lib/guice-4.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/mssql-jdbc-6.2.1.jre7.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jackson-jaxrs-json-provider-2.12.7.jar:/usr/local/hadoop/share/hadoop/yarn/lib/javax-websocket-server-impl-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/websocket-servlet-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/objenesis-2.6.jar:/usr/local/hadoop/share/hadoop/yarn/lib/websocket-client-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/bcprov-jdk15on-1.68.jar:/usr/local/hadoop/share/hadoop/yarn/lib/javax.inject-1.jar:/usr/local/hadoop/share/hadoop/yarn/lib/ehcache-3.3.1.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jetty-plus-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/asm-analysis-9.3.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jersey-client-1.19.4.jar:/usr/local/hadoop/share/hadoop/yarn/lib/java-util-1.9.0.jar:/usr/local/hadoop/share/hadoop/yarn/lib/websocket-api-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/swagger-annotations-1.5.4.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jetty-annotations-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/javax-websocket-client-impl-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/lib/bcpkix-jdk15on-1.68.jar:/usr/local/hadoop/share/hadoop/yarn/lib/jetty-jndi-9.4.48.v20220622.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-tests-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-api-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-services-api-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-common-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-applicationhistoryservice-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-registry-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-client-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-nodemanager-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-applications-distributedshell-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-resourcemanager-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-sharedcachemanager-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-applications-mawo-core-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-router-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-web-proxy-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-common-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-services-core-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-applications-unmanaged-am-launcher-3.3.5.jar:/usr/local/hadoop/share/hadoop/yarn/hadoop-yarn-server-timeline-pluginstorage-3.3.5.jar</span><br><span class="line">STARTUP_MSG:   build = https://github.com/apache/hadoop.git -r 706d88266abcee09ed78fbaa0ad5f74d818ab0e9; compiled by <span class="string">'stevel'</span> on 2023-03-15T15:56Z</span><br><span class="line">STARTUP_MSG:   java = 11.0.18</span><br><span class="line">************************************************************/</span><br><span class="line">2023-05-22 17:14:05,608 INFO namenode.NameNode: registered UNIX signal handlers <span class="keyword">for</span> [TERM, HUP, INT]</span><br><span class="line">2023-05-22 17:14:05,711 INFO namenode.NameNode: createNameNode [-format]</span><br><span class="line">2023-05-22 17:14:06,455 INFO namenode.NameNode: Formatting using clusterid: CID-a4ea0573-7af8-4f0d-b9e8-ef59910dc155</span><br><span class="line">2023-05-22 17:14:06,547 INFO namenode.FSEditLog: Edit logging is async:<span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:06,610 INFO namenode.FSNamesystem: KeyProvider: null</span><br><span class="line">2023-05-22 17:14:06,611 INFO namenode.FSNamesystem: fsLock is fair: <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:06,612 INFO namenode.FSNamesystem: Detailed lock hold time metrics enabled: <span class="literal">false</span></span><br><span class="line">2023-05-22 17:14:06,673 INFO namenode.FSNamesystem: fsOwner                = root (auth:SIMPLE)</span><br><span class="line">2023-05-22 17:14:06,673 INFO namenode.FSNamesystem: supergroup             = supergroup</span><br><span class="line">2023-05-22 17:14:06,673 INFO namenode.FSNamesystem: isPermissionEnabled    = <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:06,673 INFO namenode.FSNamesystem: isStoragePolicyEnabled = <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:06,674 INFO namenode.FSNamesystem: HA Enabled: <span class="literal">false</span></span><br><span class="line">2023-05-22 17:14:06,783 INFO common.Util: dfs.datanode.fileio.profiling.sampling.percentage <span class="built_in">set</span> to 0. Disabling file IO profiling</span><br><span class="line">2023-05-22 17:14:06,962 INFO blockmanagement.DatanodeManager: dfs.block.invalidate.limit : configured=1000, counted=60, effected=1000</span><br><span class="line">2023-05-22 17:14:06,962 INFO blockmanagement.DatanodeManager: dfs.namenode.datanode.registration.ip-hostname-check=<span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:06,964 INFO blockmanagement.BlockManager: dfs.namenode.startup.delay.block.deletion.sec is <span class="built_in">set</span> to 000:00:00:00.000</span><br><span class="line">2023-05-22 17:14:06,964 INFO blockmanagement.BlockManager: The block deletion will start around 2023 May 22 17:14:06</span><br><span class="line">2023-05-22 17:14:06,965 INFO util.GSet: Computing capacity <span class="keyword">for</span> map BlocksMap</span><br><span class="line">2023-05-22 17:14:06,965 INFO util.GSet: VM <span class="built_in">type</span>       = 64-bit</span><br><span class="line">2023-05-22 17:14:06,978 INFO util.GSet: 2.0% max memory 3.9 GB = 79.7 MB</span><br><span class="line">2023-05-22 17:14:06,978 INFO util.GSet: capacity      = 2^23 = 8388608 entries</span><br><span class="line">2023-05-22 17:14:07,005 INFO blockmanagement.BlockManager: Storage policy satisfier is disabled</span><br><span class="line">2023-05-22 17:14:07,005 INFO blockmanagement.BlockManager: dfs.block.access.token.enable = <span class="literal">false</span></span><br><span class="line">2023-05-22 17:14:07,009 INFO blockmanagement.BlockManagerSafeMode: dfs.namenode.safemode.threshold-pct = 0.999</span><br><span class="line">2023-05-22 17:14:07,009 INFO blockmanagement.BlockManagerSafeMode: dfs.namenode.safemode.min.datanodes = 0</span><br><span class="line">2023-05-22 17:14:07,009 INFO blockmanagement.BlockManagerSafeMode: dfs.namenode.safemode.extension = 30000</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: defaultReplication         = 1</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: maxReplication             = 512</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: minReplication             = 1</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: maxReplicationStreams      = 2</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: redundancyRecheckInterval  = 3000ms</span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: encryptDataTransfer        = <span class="literal">false</span></span><br><span class="line">2023-05-22 17:14:07,010 INFO blockmanagement.BlockManager: maxNumBlocksToLog          = 1000</span><br><span class="line">2023-05-22 17:14:07,106 INFO namenode.FSDirectory: GLOBAL serial map: bits=29 maxEntries=536870911</span><br><span class="line">2023-05-22 17:14:07,107 INFO namenode.FSDirectory: USER serial map: bits=24 maxEntries=16777215</span><br><span class="line">2023-05-22 17:14:07,107 INFO namenode.FSDirectory: GROUP serial map: bits=24 maxEntries=16777215</span><br><span class="line">2023-05-22 17:14:07,107 INFO namenode.FSDirectory: XATTR serial map: bits=24 maxEntries=16777215</span><br><span class="line">2023-05-22 17:14:07,123 INFO util.GSet: Computing capacity <span class="keyword">for</span> map INodeMap</span><br><span class="line">2023-05-22 17:14:07,124 INFO util.GSet: VM <span class="built_in">type</span>       = 64-bit</span><br><span class="line">2023-05-22 17:14:07,124 INFO util.GSet: 1.0% max memory 3.9 GB = 39.8 MB</span><br><span class="line">2023-05-22 17:14:07,124 INFO util.GSet: capacity      = 2^22 = 4194304 entries</span><br><span class="line">2023-05-22 17:14:07,135 INFO namenode.FSDirectory: ACLs enabled? <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:07,135 INFO namenode.FSDirectory: POSIX ACL inheritance enabled? <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:07,135 INFO namenode.FSDirectory: XAttrs enabled? <span class="literal">true</span></span><br><span class="line">2023-05-22 17:14:07,135 INFO namenode.NameNode: Caching file names occurring more than 10 <span class="built_in">times</span></span><br><span class="line">2023-05-22 17:14:07,143 INFO snapshot.SnapshotManager: Loaded config captureOpenFiles: <span class="literal">false</span>, skipCaptureAccessTimeOnlyChange: <span class="literal">false</span>, snapshotDiffAllowSnapRootDescendant: <span class="literal">true</span>, maxSnapshotLimit: 65536</span><br><span class="line">2023-05-22 17:14:07,145 INFO snapshot.SnapshotManager: SkipList is disabled</span><br><span class="line">2023-05-22 17:14:07,150 INFO util.GSet: Computing capacity <span class="keyword">for</span> map cachedBlocks</span><br><span class="line">2023-05-22 17:14:07,150 INFO util.GSet: VM <span class="built_in">type</span>       = 64-bit</span><br><span class="line">2023-05-22 17:14:07,150 INFO util.GSet: 0.25% max memory 3.9 GB = 10.0 MB</span><br><span class="line">2023-05-22 17:14:07,150 INFO util.GSet: capacity      = 2^20 = 1048576 entries</span><br><span class="line">2023-05-22 17:14:07,160 INFO metrics.TopMetrics: NNTop conf: dfs.namenode.top.window.num.buckets = 10</span><br><span class="line">2023-05-22 17:14:07,160 INFO metrics.TopMetrics: NNTop conf: dfs.namenode.top.num.users = 10</span><br><span class="line">2023-05-22 17:14:07,160 INFO metrics.TopMetrics: NNTop conf: dfs.namenode.top.windows.minutes = 1,5,25</span><br><span class="line">2023-05-22 17:14:07,163 INFO namenode.FSNamesystem: Retry cache on namenode is enabled</span><br><span class="line">2023-05-22 17:14:07,163 INFO namenode.FSNamesystem: Retry cache will use 0.03 of total heap and retry cache entry expiry time is 600000 millis</span><br><span class="line">2023-05-22 17:14:07,165 INFO util.GSet: Computing capacity <span class="keyword">for</span> map NameNodeRetryCache</span><br><span class="line">2023-05-22 17:14:07,165 INFO util.GSet: VM <span class="built_in">type</span>       = 64-bit</span><br><span class="line">2023-05-22 17:14:07,165 INFO util.GSet: 0.029999999329447746% max memory 3.9 GB = 1.2 MB</span><br><span class="line">2023-05-22 17:14:07,165 INFO util.GSet: capacity      = 2^17 = 131072 entries</span><br><span class="line">2023-05-22 17:14:07,197 INFO namenode.FSImage: Allocated new BlockPoolId: BP-633437213-172.17.0.2-1684775647175</span><br><span class="line">2023-05-22 17:14:07,340 INFO common.Storage: Storage directory /tmp/hadoop-root/dfs/name has been successfully formatted.</span><br><span class="line">2023-05-22 17:14:07,425 INFO namenode.FSImageFormatProtobuf: Saving image file /tmp/hadoop-root/dfs/name/current/fsimage.ckpt_0000000000000000000 using no compression</span><br><span class="line">2023-05-22 17:14:07,561 INFO namenode.FSImageFormatProtobuf: Image file /tmp/hadoop-root/dfs/name/current/fsimage.ckpt_0000000000000000000 of size 399 bytes saved <span class="keyword">in</span> 0 seconds .</span><br><span class="line">2023-05-22 17:14:07,676 INFO namenode.NNStorageRetentionManager: Going to retain 1 images with txid &gt;= 0</span><br><span class="line">2023-05-22 17:14:07,699 INFO namenode.FSNamesystem: Stopping services started <span class="keyword">for</span> active state</span><br><span class="line">2023-05-22 17:14:07,699 INFO namenode.FSNamesystem: Stopping services started <span class="keyword">for</span> standby state</span><br><span class="line">2023-05-22 17:14:07,702 INFO namenode.FSImage: FSImageSaver clean checkpoint: txid=0 when meet shutdown.</span><br><span class="line">2023-05-22 17:14:07,702 INFO namenode.NameNode: SHUTDOWN_MSG: </span><br><span class="line">/************************************************************</span><br><span class="line">SHUTDOWN_MSG: Shutting down NameNode at da62261bc436/172.17.0.2</span><br><span class="line">************************************************************/</span><br></pre></td></tr></table></figure>
+
+</code>
+</pre>
+</details>
+<p>Knighthana</p>
+<p>2023/05/30</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/2023/" rel="tag">2023</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Docker/" rel="tag">Docker</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Hadoop/" rel="tag">Hadoop</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/LinuxMint/" rel="tag">LinuxMint</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1685454977855"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div>
+</div>
+        <div class="nexmoe-post-right">
+              <div class="nexmoe-fixed">
+                  <div class="nexmoe-tool"> 
+                    
+                      
+                        
+                          
+                          
+                              <button class="mdui-fab catalog" style="overflow:unset;">
+                                  <i class="nexmoefont icon-i-catalog"></i>
+                                  <div class="nexmoe-toc">
+                                      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#docker%E5%85%A5%E9%97%A8%E4%B8%8E%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Docker入门与初步使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E5%85%B6%E4%BB%96%E6%95%99%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">外部链接：其他教程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85docker"><span class="toc-number">1.2.</span> <span class="toc-text">安装Docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%98%A0%E5%83%8F%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%B9%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text">什么是映像，什么是容器？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%98%A0%E5%83%8F"><span class="toc-number">1.4.</span> <span class="toc-text">下载第一个映像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%AE%B9%E5%99%A8%E7%9E%A7%E7%9E%A7%E7%9C%8B%E7%9C%8B"><span class="toc-number">1.5.</span> <span class="toc-text">进容器瞧瞧看看</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="toc-number">1.6.</span> <span class="toc-text">简单的自定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8%E9%87%8D%E6%96%B0%E8%BF%9B%E5%85%A5%E5%AE%B9%E5%99%A8"><span class="toc-number">1.7.</span> <span class="toc-text">退出容器，重新进入容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#attach"><span class="toc-number">1.7.1.</span> <span class="toc-text">attach</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#exec"><span class="toc-number">1.7.2.</span> <span class="toc-text">exec</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hadoop%E7%9A%84%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">Hadoop的下载与安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">前置条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E4%B8%8E%E6%A0%A1%E9%AA%8Chadoop"><span class="toc-number">2.2.</span> <span class="toc-text">下载与校验Hadoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hadoop%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">2.3.</span> <span class="toc-text">Hadoop的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hadoop%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">2.4.</span> <span class="toc-text">Hadoop的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8Chadoop%E7%9A%84hdfs"><span class="toc-number">2.5.</span> <span class="toc-text">运行Hadoop的HDFS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96namenode"><span class="toc-number">2.5.1.</span> <span class="toc-text">格式化namenode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8hdfs"><span class="toc-number">2.5.2.</span> <span class="toc-text">启动hdfs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E8%A1%8C%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">2.5.3.</span> <span class="toc-text">进行文件操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2%E5%9C%A8docker%E4%B8%AD%E7%BB%84%E5%BB%BAhadoop%E9%9B%86%E7%BE%A4"><span class="toc-number">2.6.</span> <span class="toc-text">探索——在docker中组建Hadoop集群</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">3.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hdfs-namenode--format%E7%9A%84%E6%97%A5%E5%BF%97%E8%BE%93%E5%87%BA"><span class="toc-number">3.1.</span> <span class="toc-text">hdfs namenode -format的日志输出</span></a></li></ol></li></ol>
+                                  </div>
+                              </button>
+                          
+                          
+                      
+                    
+                      <a href="#nexmoe-content" class="toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+                  </div>
+              </div>
+            </div>
+    </div>
+    <div id="nexmoe-search-space">
+	<div class="search-container">
+		<div class="search-header">
+			<div class="search-input-container">
+				<input
+					class="search-input"
+					type="text"
+					placeholder="搜索"
+					oninput="sinput();"
+				/>
+			</div>
+			<a class="search-close" onclick="sclose();">×</a>
+		</div>
+		<div class="search-body"></div>
+	</div>
+</div>
+
+    
+    
+</body>
+
+</html>
