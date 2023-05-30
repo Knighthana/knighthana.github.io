@@ -15,6 +15,32 @@ tags:
 curl -fsSL
 ```
 
+含义是静默地下载文件
+
+```bash
+curl -fsSL -O $URL
+```
+
+则是从URL处下载一个原名的文件
+
+那么常用的无外乎两种情况
+
+从国内下载文件时，使用
+
+```bash
+curl -fsSL -O $URL
+```
+
+可以快速且静默地下载完文件
+
+下载国外的文件时，应该使用
+
+```bash
+curl -fSL -O $URL
+```
+
+以便监视是不是下着下着就断线了
+
 -f, --fail
 
 (HTTP) Fail silently (no output at all) on server errors. This is mostly done to enable scripts etc to better deal with failed attempts. In normal cases when an HTTP server fails to deliver a
