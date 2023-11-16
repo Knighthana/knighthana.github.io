@@ -1,6 +1,7 @@
 ---
 title: 利用Linux控制终端代码实现特殊显示
 date: 2021-02-17 00:00:00
+updated: 2023-11-17 01:00:00
 cover: /img/Tux.svg
 categories:
   - Dev-Code
@@ -20,7 +21,7 @@ tags:
 
 首先`\033`这个写法并不是最简洁的写法，最简单好记的写法是`\e`，这实际上是ASCII码中ESC字符的转义写法；
 
-ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数表示八进制数字，因此`\033`就是表示这是个ESC字符；
+ASCII码中ESC为27号字符，八进制为33(O)，C语言中用0开头的整数表示八进制数字，因此`\033`就是表示这是个ESC字符；
 
 后面的`[`则是一个固定要求，需要将`ESC`与`[`组合起来成为`ESC [`，表示控制图像释义(Set Graphics Rendition，SGR abbr.)序列，
 
@@ -147,3 +148,41 @@ ASCII码中ESC为27号字符，八进制为88(O)，C语言中用0开头的整数
 Knighthana
 
 2021年2月17日
+
+## SGR`\e[38;a;b...m`对于终端字符串色彩的控制
+
+上文中提到，30-37是8种前景色，并且提到`38`的作用不完全符合介绍，用途不明，
+
+事实上并非如此，那些介绍适用于小于 Linux 3.16 版本的内核，并非现在广泛使用中的5.x与6.x内核中的用途
+
+根据最新
+```shell
+man console_codes
+```
+的描述：
+
+> Commands 38 and 48 require further arguments:
+>
+> ;5;x
+>
+> 256 color: values 0..15 are IBGR (black,  red,  green,  ...  white),
+>
+> 16..231 a 6x6x6 color cube, 232..255 a grayscale ramp
+>
+> ;2;r;g;b
+>
+> 24-bit color, r/g/b components are in the range 0..255
+
+`38`的含义是“设定前景色”，但它不能单独使用，还需要之后用分号分割的数个数字来辅助确定颜色，同样地，`48`表示“设定背景色”
+
+可以用`5`表示使用256色模式，256色调色板对应的数字可以通过"xterm 256 color code"一类的关键词搜索到
+
+例如这个参考 [256 Colors Cheat Sheet](https://www.ditig.com/256-colors-cheat-sheet)
+
+`\e[38;5;208`可以得到一个非常不错的橙色
+
+还可以通过使用`2`来使用R;G;B方式，这可以获得256×256×256的颜色选择空间
+
+Knighthana
+
+2023年11月17日
