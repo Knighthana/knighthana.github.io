@@ -112,7 +112,7 @@ nvm install 19.9.0
 
 然后就装好了
 
-下一步是给npm还原，找一下，
+下一步是给npm换源，找一下，
 
 ```shell
 npm config get registry
