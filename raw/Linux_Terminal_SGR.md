@@ -153,7 +153,7 @@ Knighthana
 
 上文中提到，30-37是8种前景色，并且提到`38`的作用不完全符合介绍，用途不明，
 
-事实上并非如此，那些介绍适用于小于 Linux 3.16 版本的内核，并非现在广泛使用中的5.x与6.x内核中的用途
+事实上并非如此，那些介绍适用于小于 Linux 3.16 版本的内核，并不适于现在广泛应用中的5.x与6.x内核
 
 根据最新
 ```shell
@@ -163,15 +163,15 @@ man console_codes
 
 > Commands 38 and 48 require further arguments:
 >
-> ;5;x
+> **;5;x**
 >
-> 256 color: values 0..15 are IBGR (black,  red,  green,  ...  white),
+>   256 color: values 0..15 are IBGR (black,  red,  green,  ...  white),
 >
-> 16..231 a 6x6x6 color cube, 232..255 a grayscale ramp
+>   16..231 a 6x6x6 color cube, 232..255 a grayscale ramp
 >
-> ;2;r;g;b
+> **;2;r;g;b**
 >
-> 24-bit color, r/g/b components are in the range 0..255
+>   24-bit color, r/g/b components are in the range 0..255
 
 `38`的含义是“设定前景色”，但它不能单独使用，还需要之后用分号分割的数个数字来辅助确定颜色，同样地，`48`表示“设定背景色”
 
