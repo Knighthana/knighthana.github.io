@@ -364,7 +364,7 @@ Docker的初步安装与配置到此结束，不难发现，Docker是一个内�
 
 最后是[Apache官方的下载地址](https://hadoop.apache.org/releases.html)（访问较慢）或者说去访问[镜像](https://www.apache.org/dyn/closer.cgi/hadoop/common/)，镜像有CDN
 
-    如果彼时的stable还是3.3.5，可以用[这个链接](https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz)
+*如果彼时的stable还是3.3.5，可以用[这个链接](https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz)*
 
 还有国内的非常方便食用的[Hadoop 教程 | 菜鸟教程](https://www.runoob.com/w3cnote/hadoop-tutorial.html)
 
@@ -508,6 +508,7 @@ usage: sshd [-46DdeiqTt] [-C connection_spec] [-c host_cert_file]
 root@da62261bc436:/# systemctl enable ssh && systemctl start ssh 
 ```
 的时候，提示
+
 > Synchronizing state of ssh.service with SysV service script with /lib/systemd/systemd-sysv-install.
 >
 > Executing: /lib/systemd/systemd-sysv-install enable ssh
@@ -516,7 +517,7 @@ root@da62261bc436:/# systemctl enable ssh && systemctl start ssh
 >
 > Failed to connect to bus: Host is down
 
-docker的容器并非由`systemd`唤起，这好像也不难理解，注意到菜鸟教程创建容器时使用了`--privileged`参数，这可不太明智
+docker的容器并非由`systemd`唤起，这好像也不难理解，注意到菜鸟教程创建容器时使用了`--privileged`参数，这会导致容器内的东西泄漏出来，这可不太明智
 
 目前来看，也没必要现在就运行`sshd`，可以之后用`exec`运行它，注意，运行`sshd`需要使用绝对路径，也就是`/usr/sbin/sshd`
 
@@ -566,7 +567,12 @@ curl -fSL -O https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz
 
 查看[sha512](https://dlcdn.apache.org/hadoop/common/stable/hadoop-3.3.5.tar.gz.sha512)为
 
-> SHA512 (hadoop-3.3.5.tar.gz) = cc170df24976543a3e961a1353a194225e3ffc5d53d594dd63d71422765e1d816d1ffa877c02bf93f0183fcfbe4c10f4b7739deca69420ed83372a0b1f9d5dc7
+> SHA512 (hadoop-3.3.5.tar.gz) =
+>
+> cc170df24976543a3e961a1353a19422
+> 5e3ffc5d53d594dd63d71422765e1d81
+> 6d1ffa877c02bf93f0183fcfbe4c10f4
+> b7739deca69420ed83372a0b1f9d5dc7
 
 核验本地
 ```bash
