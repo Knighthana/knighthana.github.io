@@ -41,7 +41,7 @@ tags:
 
 ## 如何找到有关环境变量传递的部分代码？
 
-在`boa.conf`中有一个配置叫做“CGIPath”，跟随这个关键词，我们可以找到，除去`boa.conf`以外，有这么一个代码文件与它有关
+在`boa.conf`中有一个配置叫做“CGIPath”，跟随这个关键词搜索`boa`源代码目录，我们可以找到，除去`boa.conf`以外，有这么一个代码文件与它有关
 
 **`config.c`**
 ```c
@@ -268,7 +268,7 @@ static char *env_gen_extra(const char *key, const char *value,
 
 我来解读一下啊，这里说的是，要是有默认的宏定义`DEFAULT_PATH`，那就用这个默认的，要是`conf`里面有写内容，让`cgi_path`不为空，那就……
 
-把定义贴在这里然后加上等号然后直接传给CGI程序
+把配置文件里面写的东西贴在这里然后加上等号……………………然后直接传给CGI程序
 
 等 等 等 等 等 等 等 等 等 等 等 等 等 等 等 一下！
 
@@ -278,13 +278,13 @@ static char *env_gen_extra(const char *key, const char *value,
 
 全都没有啦！
 
-是的，直接没有了，不仅如此，连我们本来定义的`DEFAULT_PATH`和`DEFAULT_LD_LIBRARY_PATH`都没有顺便传进去
+是的，直接没有了，不仅如此，连我们在宏里本来定义的`DEFAULT_PATH`和`DEFAULT_LD_LIBRARY_PATH`都没有顺便传进去
 
 所以这里注意了……
 
 ## Boa WebServer 的环境变量配置逻辑
 
-Boa的环境变量就是假如配置文件`boa.conf`没写，就传个默认的进去，假如写了，就只传写在`conf`的内容进去
+Boa的环境变量就是假如配置文件`boa.conf`没写，就传个默认的进去，假如写了，就只传写在`conf`里面的内容进去
 
 所以这也解释了为什么我之前有一次CGI拿到的`PATH`变量见了鬼的事件
 
@@ -296,7 +296,7 @@ Boa的环境变量就是假如配置文件`boa.conf`没写，就传个默认的�
 
 这里的提示写的是 **`given to`** 而不是`add to`，所以注意了，
 
-**环境变量要么不写，要么就一定要写全了**
+**`boa.conf`里的环境变量要么不写，要写就一定要写全了**
 
 ## 尾声
 
