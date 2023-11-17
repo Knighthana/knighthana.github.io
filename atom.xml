@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2023-11-16T15:04:24.481Z</updated>
+  <updated>2023-11-17T17:13:50.222Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>为Boa Web Server的CGI增添自定义链接库</title>
+    <link href="https://knighthana.github.io/Dev-Code/%E4%B8%BABoaWebServer%E7%9A%84CGI%E5%A2%9E%E6%B7%BB%E8%87%AA%E5%AE%9A%E4%B9%89%E9%93%BE%E6%8E%A5%E5%BA%93.html"/>
+    <id>https://knighthana.github.io/Dev-Code/%E4%B8%BABoaWebServer%E7%9A%84CGI%E5%A2%9E%E6%B7%BB%E8%87%AA%E5%AE%9A%E4%B9%89%E9%93%BE%E6%8E%A5%E5%BA%93.html</id>
+    <published>2023-11-17T15:16:02.000Z</published>
+    <updated>2023-11-17T17:13:50.222Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;为boa-web-server传递给cgi的环境变量增添自定义内容&quot;&gt;为Boa Web Server传递给CGI的环境变量增添自定义内容&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;请注意，这是一篇草台教程，含有半懂不懂的内容&lt;/strong&gt;&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Code" scheme="https://knighthana.github.io/categories/Dev-Code/"/>
+    
+    
+    <category term="C" scheme="https://knighthana.github.io/tags/C/"/>
+    
+    <category term="草台教程" scheme="https://knighthana.github.io/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/"/>
+    
+    <category term="BoaWebServer" scheme="https://knighthana.github.io/tags/BoaWebServer/"/>
+    
+  </entry>
   
   <entry>
     <title>安装clangd协同vscode工作</title>

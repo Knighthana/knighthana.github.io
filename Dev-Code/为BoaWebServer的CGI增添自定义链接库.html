@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>为Boa Web Server的CGI增添自定义链接库 - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="为Boa Web Server传递给CGI的环境变量增添自定义内容 请注意，这是一篇草台教程，含有半懂不懂的内容 背景介绍 出于工作方面需要，得为Boa Web Server的服务器设置一个环境变量 于是我在不稳定版本0.94.14rc21上开始了工作 （为什么不在0.94.13稳定版本上开工？因为0.94.13版本使用了flex语法分析器辅助生成代码，而flex这个玩意搞出来的一坨东西在我的编译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为Boa Web Server的CGI增添自定义链接库">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Code/%E4%B8%BABoaWebServer%E7%9A%84CGI%E5%A2%9E%E6%B7%BB%E8%87%AA%E5%AE%9A%E4%B9%89%E9%93%BE%E6%8E%A5%E5%BA%93.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="为Boa Web Server传递给CGI的环境变量增添自定义内容 请注意，这是一篇草台教程，含有半懂不懂的内容 背景介绍 出于工作方面需要，得为Boa Web Server的服务器设置一个环境变量 于是我在不稳定版本0.94.14rc21上开始了工作 （为什么不在0.94.13稳定版本上开工？因为0.94.13版本使用了flex语法分析器辅助生成代码，而flex这个玩意搞出来的一坨东西在我的编译">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-17T15:16:02.000Z">
+<meta property="article:modified_time" content="2023-11-17T17:13:50.222Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="草台教程">
+<meta property="article:tag" content="BoaWebServer">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1700241273254">
+
+<link rel="stylesheet" href="/css/style.css?v=1700241273254">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1700241273254"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>93</div>
+        <div><span>标签</span>138</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1700241273254"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">16</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">35</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">24</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 14.44px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.22px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14.44px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 18.89px;">C</a> <a href="/tags/CJK/" style="font-size: 11.11px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 11.11px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11.11px;">GPG</a> <a href="/tags/Git/" style="font-size: 17.78px;">Git</a> <a href="/tags/HTML/" style="font-size: 12.22px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/Jekyll/" style="font-size: 11.11px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11.11px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15.56px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12.22px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11.11px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.11px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11.11px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.33px;">Ubuntu</a> <a href="/tags/VirtualBox/" style="font-size: 11.11px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 16.67px;">WSL</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.67px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11.11px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 12.22px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 14.44px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11.11px;">vim</a> <a href="/tags/vscode/" style="font-size: 11.11px;">vscode</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11.11px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11.11px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11.11px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13.33px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 11.11px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11.11px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 17.78px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11.11px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12.22px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11.11px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(138);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Dev-Code/%E4%B8%BABoaWebServer%E7%9A%84CGI%E5%A2%9E%E6%B7%BB%E8%87%AA%E5%AE%9A%E4%B9%89%E9%93%BE%E6%8E%A5%E5%BA%93.html">为Boa Web Server的CGI增添自定义链接库</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E5%AE%89%E8%A3%85clangd%E5%8D%8F%E5%90%8Cvscode%E5%B7%A5%E4%BD%9C.html">安装clangd协同vscode工作</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B8%80%E4%B9%A6%E5%BC%80%E7%AF%87%E5%B0%B1%E8%A7%A3%E7%AD%94%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%97%AE%E9%A2%98.html">(KM)设计模式一书开篇就解答的两个问题</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%81%94%E5%90%88%E4%BD%93%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93.html">(KM)联合体和结构体</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/Docker%E5%85%A5%E9%97%A8%E4%B8%8EHadoop%E7%9A%84%E9%83%A8%E7%BD%B2.html">Docker入门与Hadoop的部署</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://example.com/" target="_blank" >
+                    <img src="https://www.iana.org/_img/2015.1/iana-logo-homepage.svg" alt="example.com"></img>
+                    <p>example.com</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2023 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="http://www.boa.org/boa_banner.png" alt="为Boa Web Server的CGI增添自定义链接库" loading="lazy">
+            <h1>为Boa Web Server的CGI增添自定义链接库</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2023年11月17日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Code/">Dev-Code</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="为boa-web-server传递给cgi的环境变量增添自定义内容">为Boa Web Server传递给CGI的环境变量增添自定义内容</h1>
+<p><strong>请注意，这是一篇草台教程，含有半懂不懂的内容</strong></p>
+<h2 id="背景介绍">背景介绍</h2>
+<p>出于工作方面需要，得为<a target="_blank" rel="noopener" href="http://www.boa.org/">Boa Web Server</a>的服务器设置一个环境变量</p>
+<p>于是我在不稳定版本<code>0.94.14rc21</code>上开始了工作</p>
+<p>（为什么不在<code>0.94.13</code>稳定版本上开工？因为<code>0.94.13</code>版本使用了<code>flex</code>语法分析器辅助生成代码，而<code>flex</code>这个玩意搞出来的一坨东西在我的编译器上飘得满屏是<code>warning</code>，与之相比，使用了自定义Parser的<code>0.94.14rc21</code>的警告就少得多了，都是一些要求“不得忽略函数返回值”的<code>warning</code>）</p>
+<p>显而易见的是，使用非稳定版肯定会有更多BUG，毕竟还是有很多地方写着<code>fixme</code>或者<code>why</code>一类的注释，不过相比这个快二十年的老项目的其他BUG还有已经广为人知的致命漏洞而言，这点可能会多出来的BUG不痛不痒（预感这句话未来会被打脸）</p>
+<p>其实我个人还是比较敬佩这些写Boa代码的人的，不得不说，二十多年前写出来的这个东西，占用极其小，功能放在当年来说也是很全面的，性能也还不错</p>
+<p>而且从注释里面都很能看出来他们的代码态度，比如<code>0.94.13</code>中的这段注释</p>
+<blockquote>
+<p>We (I, Jon) have declined to support absolute-path parsing because I see it as a major security hole. Location: /etc/passwd or Location: /etc/shadow is not funny.</p>
+<p>Also, the below code is borked. request_uri could contain /cgi-bin/bob/extra_path</p>
+</blockquote>
+<p>我是很喜欢有脾气的人做的活的——前提是脾气得和我对得上，或者换个说法，有人管这种叫“有态度”，反正就是那么一回事</p>
+<p>废话不多说，开始正题</p>
+<h2 id="如何找到有关环境变量传递的部分代码">如何找到有关环境变量传递的部分代码？</h2>
+<p>在<code>boa.conf</code>中有一个配置叫做“CGIPath”，跟随这个关键词搜索<code>boa</code>源代码目录，我们可以找到，除去<code>boa.conf</code>以外，有这么一个代码文件与它有关</p>
+<p><strong><code>config.c</code></strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ccommand</span> <span class="title">clist</span>[] =</span> {</span><br><span class="line">    ......</span><br><span class="line">    {<span class="string">"CGIPath"</span>, S1A, c_set_string, &amp;cgi_path},</span><br><span class="line">    ......</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>即便看不太懂这是什么样的结构体，也能发现这里有个<code>char</code>指针<code>cgi_path</code>和前面的<code>CGIPath</code>对应</p>
+<p><em>（其实稍微解读一下就能发现，这是一个结构体数组，结构体的四个成员分别是一个字符串，一个起枚举作用的宏定义量，一个函数指针，一个<code>char</code>指针）</em></p>
+<p>那么搜索一下<code>cgi_path</code>，除去<code>config.c</code>之外，还有<code>globals.h</code>和<code>cgi.c</code>两个文件与<code>cgi_path</code>有关</p>
+<p><strong><code>globals.h</code></strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> *cgi_path;</span><br></pre></td></tr></table></figure></p>
+<p><strong><code>cgi.c</code></strong> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">common_cgi_env[common_cgi_env_count++] = env_gen_extra(<span class="string">"PATH"</span>,</span><br><span class="line">                                        ((cgi_path !=</span><br><span class="line">                                        <span class="literal">NULL</span>) ? cgi_path :</span><br><span class="line">                                        DEFAULT_PATH), <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>那么不难猜测，我们要修改的文件就是这三个了，就像<a href="/Dev-Code/自己搞一个Linux系统调用的一点记录.html">上次修改Linux系统调用</a>一样</p>
+<p><em>ほんとうですか</em></p>
+<h2 id="增加自定义环境变量分三步走">增加自定义环境变量，分三步走</h2>
+<h3 id="第一步增加声明">第一步，增加声明</h3>
+<p>在<code>globals.h</code>中，传递<code>PATH</code>的那个变量的下面增加我们自己的声明语句</p>
+<p>修改前 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> *cgi_path;</span><br><span class="line"><span class="keyword">extern</span> <span class="type">short</span> common_cgi_env_count;</span><br></pre></td></tr></table></figure></p>
+<p>修改后 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> *cgi_path;</span><br><span class="line"><span class="keyword">extern</span> <span class="type">char</span> *cgi_ld_library_path;</span><br><span class="line"><span class="keyword">extern</span> <span class="type">short</span> common_cgi_env_count;</span><br></pre></td></tr></table></figure></p>
+<h3 id="第二步向结构体数组插入一个结构体">第二步，向结构体数组插入一个结构体</h3>
+<p>在<code>config.c</code>中添加一个类似的东西</p>
+<p>由于我们很清楚，<code>LD_LIBRARY_PATH</code>是一个很类似<code>PATH</code>的东西，因此照抄<code>PATH</code>的结构体</p>
+<p>修改前 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">{<span class="string">"CGIPath"</span>, S1A, c_set_string, &amp;cgi_path},</span><br><span class="line">{<span class="string">"CGIumask"</span>, S1A, c_set_int, &amp;cgi_umask},</span><br></pre></td></tr></table></figure></p>
+<p>修改后 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">{<span class="string">"CGIPath"</span>, S1A, c_set_string, &amp;cgi_path},</span><br><span class="line">{<span class="string">"CGILdLibraryPath"</span>, S1A, c_set_string, &amp;cgi_ld_library_path},</span><br><span class="line">{<span class="string">"CGIumask"</span>, S1A, c_set_int, &amp;cgi_umask},</span><br></pre></td></tr></table></figure></p>
+<h3 id="第三步增加函数">第三步，增加函数</h3>
+<p>照抄<code>PATH</code>的写法，我的写法是这样的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">common_cgi_env[common_cgi_env_count++] = env_gen_extra(<span class="string">"LD_LIBRARY_PATH"</span>,</span><br><span class="line">    ((cgi_ld_library_path != <span class="literal">NULL</span>) ? cgi_ld_library_path : DEFAULT_LD_LIBRARY_PATH),</span><br><span class="line">    <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>当然不做这个三目运算判断也不是不行，但是我觉得万一<code>conf</code>里面忘了写，总不能真地传一个空的<code>LD_LIBRARY_PATH</code>给CGI程序吧，于是也写了这个宏，那就得顺便去头文件那边定义一个字符串宏</p>
+<p>在<code>defines.h</code>里面加一行 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> DEFAULT_LD_LIBRARY_PATH <span class="string">"/the/original/library/path:/my/custom/library/path"</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="第四步增加">第四步，增加</h3>
+<p><em>一共三步的教程里面有四步不是很合理嘛！</em></p>
+<p>如果真的只干了上面三步，兴冲冲地去<code>make</code>的话就会发现<code>make</code>出来的结果不能用 <em>QAQ</em></p>
+<p>反正我是<code>make</code>完了才发现报错</p>
+<blockquote>
+<p>COMMON_CGI_COUNT not high enough.</p>
+</blockquote>
+<p>啊这……</p>
+<p>其实<code>cgi.c</code>的<code>create_common_env</code>的注释写得很明白</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* NOTE NOTE <span class="doctag">NOTE:</span></span></span><br><span class="line"><span class="comment">    If you (the reader) someday modify this chunk of code to</span></span><br><span class="line"><span class="comment">    handle more "common" CGI environment variables, then bump the</span></span><br><span class="line"><span class="comment">    value COMMON_CGI_COUNT in defines.h UP</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    Also, in the case of document_root and server_admin, two variables</span></span><br><span class="line"><span class="comment">    that may or may not be defined depending on the way the server</span></span><br><span class="line"><span class="comment">    is configured, we check for null values and use an empty</span></span><br><span class="line"><span class="comment">    string to denote a NULL value to the environment, as per the</span></span><br><span class="line"><span class="comment">    specification. The quote for which follows:</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    "In all cases, a missing environment variable is</span></span><br><span class="line"><span class="comment">    equivalent to a zero-length (NULL) value, and vice versa."</span></span><br><span class="line"><span class="comment">    */</span></span><br></pre></td></tr></table></figure>
+<p>所以说还有个后备隐藏变量需要我们改一下，也在<code>defines.h</code>里面</p>
+<p>在<code>defines.h</code>里面找到 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> USE_NCSA_CGI_ENV</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COMMON_CGI_COUNT 8</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COMMON_CGI_COUNT 6</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure> 修改成 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> USE_NCSA_CGI_ENV</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COMMON_CGI_COUNT 9</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> COMMON_CGI_COUNT 7</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure> 顺带一提，我数了一下<code>cgi.c</code>里面一共是<code>PATH</code> <code>SERVER_SOFTWARE</code> <code>SERVER_NAME</code> <code>GATEWAY_INTERFACE</code> <code>SERVER_PORT</code> 共5个环境变量，但为什么这里原本写的是<code>6</code>呢？</p>
+<p>在<code>cgi.c</code>的<code>create_common_env</code>函数开头有这么一处 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">create_common_env</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">    common_cgi_env = <span class="built_in">calloc</span>((COMMON_CGI_COUNT + <span class="number">1</span>),<span class="keyword">sizeof</span>(<span class="type">char</span> *));</span><br><span class="line">    common_cgi_env_count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (common_cgi_env == <span class="literal">NULL</span>) {</span><br><span class="line"></span><br><span class="line"><span class="comment">/* ...........blahblah.........</span></span><br><span class="line"><span class="comment"> * ...........blahblah.........</span></span><br><span class="line"><span class="comment"> * ...........blahblah.........</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>里面写道：<strong><code>common_cgi_env = calloc((COMMON_CGI_COUNT + 1),sizeof(char *));</code></strong></p>
+<p>为啥要这么写，咱也不知道，咱也不敢问，也不敢改</p>
+<p>（好奇<code>calloc</code>是什么，查了一下，知道了<code>calloc</code>可以自动把分配的内存清零，顿时感觉写出<code>malloc();memset(0x0)</code>的自己非常地铁憨憨）</p>
+<p>于是收工</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j16</span><br></pre></td></tr></table></figure>
+<h2 id="修改boa.conf">修改boa.conf</h2>
+<p>在<code>boa.conf</code>里面，靠着<code>CGIPath</code>的地方，我们修改一下，弄这么一行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGILdLibraryPath /this/is/my/lovely/library.so/contained/path</span><br></pre></td></tr></table></figure>
+<p>就完事了</p>
+<p>了……吗？</p>
+<p>非也</p>
+<p>注意看……这个代码叫<code>cgi.c</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env_gen_extra(<span class="string">"PATH"</span>,((cgi_path != <span class="literal">NULL</span>) ? cgi_path : DEFAULT_PATH), <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>以及 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Name: env_gen_extra</span></span><br><span class="line"><span class="comment"> *       (and via a not-so-tricky #define, env_gen)</span></span><br><span class="line"><span class="comment"> * This routine calls malloc: please free the memory when you are done</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">char</span> *<span class="title function_">env_gen_extra</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *key, <span class="type">const</span> <span class="type">char</span> *value,</span></span><br><span class="line"><span class="params">                           <span class="type">unsigned</span> <span class="type">int</span> extra)</span></span><br><span class="line">{</span><br><span class="line">    <span class="type">char</span> *result;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> key_len, value_len;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (value == <span class="literal">NULL</span>)          <span class="comment">/* ServerAdmin may not be defined, eg */</span></span><br><span class="line">        value = <span class="string">""</span>;</span><br><span class="line">    key_len = <span class="built_in">strlen</span>(key);</span><br><span class="line">    value_len = <span class="built_in">strlen</span>(value);</span><br><span class="line">    <span class="comment">/* leave room for '=' sign and null terminator */</span></span><br><span class="line">    result = <span class="built_in">malloc</span>(extra + key_len + value_len + <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">if</span> (result) {</span><br><span class="line">        <span class="built_in">memcpy</span>(result + extra, key, key_len);</span><br><span class="line">        *(result + extra + key_len) = <span class="string">'='</span>;</span><br><span class="line">        <span class="built_in">memcpy</span>(result + extra + key_len + <span class="number">1</span>, value, value_len);</span><br><span class="line">        *(result + extra + key_len + value_len + <span class="number">1</span>) = <span class="string">'\0'</span>;</span><br><span class="line">    } <span class="keyword">else</span> {</span><br><span class="line">        log_error_time();</span><br><span class="line">        perror(<span class="string">"malloc"</span>);</span><br><span class="line">        log_error_time();</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"tried to allocate (key=value) extra=%u: %s=%s\n"</span>,</span><br><span class="line">                extra, key, value);</span><br><span class="line">    }</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">}</span><br></pre></td></tr></table></figure></p>
+<p>我来解读一下啊，这里说的是，要是有默认的宏定义<code>DEFAULT_PATH</code>，那就用这个默认的，要是<code>conf</code>里面有写内容，让<code>cgi_path</code>不为空，那就……</p>
+<p>把配置文件里面写的东西贴在这里然后加上等号……………………然后直接传给CGI程序</p>
+<p>等 等 等 等 等 等 等 等 等 等 等 等 等 等 等 一下！</p>
+<p><em>ちょっと待ってください！！！</em></p>
+<p><code>env</code>自带的<code>$PATH</code>呢？<code>$LD_LIBRARY_PATH</code>呢？</p>
+<p>全都没有啦！</p>
+<p>是的，直接没有了，不仅如此，连我们在宏里本来定义的<code>DEFAULT_PATH</code>和<code>DEFAULT_LD_LIBRARY_PATH</code>都没有顺便传进去</p>
+<p>所以这里注意了……</p>
+<h2 id="boa-webserver-的环境变量配置逻辑">Boa WebServer 的环境变量配置逻辑</h2>
+<p>Boa的环境变量就是假如配置文件<code>boa.conf</code>没写，就传个默认的进去，假如写了，就只传写在<code>conf</code>里面的内容进去</p>
+<p>所以这也解释了为什么我之前有一次CGI拿到的<code>PATH</code>变量见了鬼的事件</p>
+<p>实际上人家的逻辑本来就是那样，写得很清楚了(而且看了代码逻辑，感觉换我来写我也这么写)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># CGIPath: The value of the $PATH environment variable given to CGI progs.</span><br></pre></td></tr></table></figure>
+<p>这里的提示写的是 <strong><code>given to</code></strong> 而不是<code>add to</code>，所以注意了，</p>
+<p><strong><code>boa.conf</code>里的环境变量要么不写，要写就一定要写全了</strong></p>
+<h2 id="尾声">尾声</h2>
+<p>于是我打算<code>fork</code>一个<code>boa web server</code>，碰到哪里有啥问题就改一改</p>
+<p><em>等到改不动了就弃坑跑路</em></p>
+<hr>
+<p>Knighthana</p>
+<p>2023/11/17</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/BoaWebServer/" rel="tag">BoaWebServer</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/C/" rel="tag">C</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" rel="tag">草台教程</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1700241273047"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%BAboa-web-server%E4%BC%A0%E9%80%92%E7%BB%99cgi%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%A2%9E%E6%B7%BB%E8%87%AA%E5%AE%9A%E4%B9%89%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">为Boa Web Server传递给CGI的环境变量增添自定义内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">背景介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%89%BE%E5%88%B0%E6%9C%89%E5%85%B3%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%BC%A0%E9%80%92%E7%9A%84%E9%83%A8%E5%88%86%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text">如何找到有关环境变量传递的部分代码？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%88%86%E4%B8%89%E6%AD%A5%E8%B5%B0"><span class="toc-number">1.3.</span> <span class="toc-text">增加自定义环境变量，分三步走</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%E5%A2%9E%E5%8A%A0%E5%A3%B0%E6%98%8E"><span class="toc-number">1.3.1.</span> <span class="toc-text">第一步，增加声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%E5%90%91%E7%BB%93%E6%9E%84%E4%BD%93%E6%95%B0%E7%BB%84%E6%8F%92%E5%85%A5%E4%B8%80%E4%B8%AA%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.3.2.</span> <span class="toc-text">第二步，向结构体数组插入一个结构体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%E5%A2%9E%E5%8A%A0%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.3.</span> <span class="toc-text">第三步，增加函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%E5%A2%9E%E5%8A%A0"><span class="toc-number">1.3.4.</span> <span class="toc-text">第四步，增加</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9boa.conf"><span class="toc-number">1.4.</span> <span class="toc-text">修改boa.conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#boa-webserver-%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE%E9%80%BB%E8%BE%91"><span class="toc-number">1.5.</span> <span class="toc-text">Boa WebServer 的环境变量配置逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%BE%E5%A3%B0"><span class="toc-number">1.6.</span> <span class="toc-text">尾声</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>
