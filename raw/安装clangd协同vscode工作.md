@@ -134,6 +134,41 @@ CompileFlags:
 
 重启vscode,发现语法检查已经跟上了，完事！
 
+# 在交叉编译环境中的准备
+
+在交叉编译环境中配置`clangd`正常工作就必须用到`vscode`的设置文件`.vscode/settings.json`了
+
+事实上我是很抗拒使用`vscode`来进行配置的，因为`vscode`在打开的工作区非单独工程目录时的表现过于蠢笨，它似乎没法理解这种情况
+
+但对于交叉编译环境，使用`settings.json`终归是最简单的办法
+
+例如工程中实际使用的编译器是`/opt/share/arm-blahblahcompany-linux-uclibcgnueabihf/bin/arm-blahblahcompany-linux-uclibcgnueabihf-gcc(g++)`
+
+那么就需要在工作区的顶层目录新建`.vscode`文件夹，新增文件`settings.json`（或向已经存在的文件增添以下内容）
+
+```JSON
+{
+    "clangd.arguments": [
+        "--query-driver=/opt/share/arm-blahblahcompany-linux-uclibcgnueabihf/bin/arm-blahblahcompany-linux-uclibcgnueabihf*"
+    ]
+}
+```
+
+这样的话，通过`vscode`唤起的`clangd`就会使用交叉编译器的环境进行配置
+
+## 查找资料时发现的一点好玩的东西
+
+据说某些版本的`clangd`会因为`gcc`输出了非英语英文的本地化字符而无法识别交叉编译环境，例如[解决clangd设置query-driver后无法解析include路径](https://zhuanlan.zhihu.com/p/616838477)
+
+虽然我没有遇到，但如果发生这样的事情的话，可以考虑向这个方向怀疑
+
+自己检查的办法是，运行
+```shell
+gcc -xc -v -E /dev/null
+```
+查看输出是否为英语英文，若不是，则有可能是发生了[引文](https://zhuanlan.zhihu.com/p/616838477)中的情况
+
+
 Knighthana
 
 2023/11/16
