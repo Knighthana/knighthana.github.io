@@ -1,6 +1,7 @@
 ---
 title: 为Boa Web Server的CGI增添自定义链接库
 date: 2023-11-17 23:16:02
+updated: 2024-01-08 00:43:00
 cover: http://www.boa.org/boa_banner.png
 categories:
   - Dev-Code
@@ -303,6 +304,8 @@ Boa的环境变量就是假如配置文件`boa.conf`没写，就传个默认的�
 于是我打算`fork`一个`boa web server`，碰到哪里有啥问题就改一改
 
 *等到改不动了就弃坑跑路*
+
+已经fork出来了 [Yet Another Boa Webserver Fork](https://github.com/Knighthana/YABWF)
 
 ----------------------------------------------
 
