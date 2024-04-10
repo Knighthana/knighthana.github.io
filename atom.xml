@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2024-01-07T16:43:00.000Z</updated>
+  <updated>2024-04-10T14:46:23.818Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>strtoul()几个参数的含义</title>
+    <link href="https://knighthana.github.io/Dev-Code/strtoul()%E5%87%A0%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89.html"/>
+    <id>https://knighthana.github.io/Dev-Code/strtoul()%E5%87%A0%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84%E5%90%AB%E4%B9%89.html</id>
+    <published>2024-04-10T14:45:00.000Z</published>
+    <updated>2024-04-10T14:46:23.818Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;strtoul-几个参数的含义与使用场合&quot;&gt;strtoul</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Code" scheme="https://knighthana.github.io/categories/Dev-Code/"/>
+    
+    
+    <category term="C" scheme="https://knighthana.github.io/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title>为Boa Web Server的CGI增添自定义链接库</title>
