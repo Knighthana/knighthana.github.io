@@ -1,32 +1,31 @@
 <!doctype html>
 <html lang="zh"><head>
-<title>Windows下编写C语言程序的准备工作 - Knighthana的鸽子巢</title>
+<title>bash脚本的“参数扩展”中双井号与双百分号的妙用 - Knighthana的鸽子巢</title>
 <meta charset="UTF-8">
 <meta name="keywords" content="Blog Linux Student Developer">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
 <link rel="shortcut icon" href="/favicon.png" type="image/png" />
-<meta name="description" content="Windows下编写C语言程序的准备工作 在Windows上安装C编译器  下载并安装[Visual Studio Installer][https:&#x2F;&#x2F;visualstudio.microsoft.com&#x2F;zh-hans&#x2F;thank-you-downloading-visual-studio&#x2F;?sku&#x3D;BuildTools&amp;rel&#x3D;16] 选中这些需要安装的功能: &quot;MSVC&quot; &quot;Win">
+<meta name="description" content="bash脚本的“参数扩展”中双井号与双百分号的妙用 缘起 在某项工作中，需要将一个cfg文件（作用类似ini文件）交给脚本自动化执行， 然而遇到了配置文件的注释问题，体现为以#开头的行会被符合预期地忽略，但是行中从#开始的内容并没有被正确地忽略， 这个cfg的解析是完全通过自写脚本进行的，现有脚本中是怎么处理的这个cfg配置文件的呢？ 12345678while read line; do">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Windows下编写C语言程序的准备工作">
-<meta property="og:url" content="https://knighthana.github.io/Dev-Code/Windows%E4%B8%8B%E7%BC%96%E5%86%99C%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C.html">
+<meta property="og:title" content="bash脚本的“参数扩展”中双井号与双百分号的妙用">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Code/bash%E7%9A%84%E5%8F%82%E6%95%B0%E6%89%A9%E5%B1%95%E4%B8%AD%E5%8F%8C%E4%BA%95%E5%8F%B7%E4%B8%8E%E5%8F%8C%E7%99%BE%E5%88%86%E5%8F%B7%E7%9A%84%E5%A6%99%E7%94%A8.html">
 <meta property="og:site_name" content="Knighthana的鸽子巢">
-<meta property="og:description" content="Windows下编写C语言程序的准备工作 在Windows上安装C编译器  下载并安装[Visual Studio Installer][https:&#x2F;&#x2F;visualstudio.microsoft.com&#x2F;zh-hans&#x2F;thank-you-downloading-visual-studio&#x2F;?sku&#x3D;BuildTools&amp;rel&#x3D;16] 选中这些需要安装的功能: &quot;MSVC&quot; &quot;Win">
+<meta property="og:description" content="bash脚本的“参数扩展”中双井号与双百分号的妙用 缘起 在某项工作中，需要将一个cfg文件（作用类似ini文件）交给脚本自动化执行， 然而遇到了配置文件的注释问题，体现为以#开头的行会被符合预期地忽略，但是行中从#开始的内容并没有被正确地忽略， 这个cfg的解析是完全通过自写脚本进行的，现有脚本中是怎么处理的这个cfg配置文件的呢？ 12345678while read line; do">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-11-05T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-04-20T04:52:35.000Z">
+<meta property="article:published_time" content="2024-04-17T14:43:00.000Z">
+<meta property="article:modified_time" content="2024-04-17T14:51:40.409Z">
 <meta property="article:author" content="Knighthana">
-<meta property="article:tag" content="C">
-<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="shell">
 <meta name="twitter:card" content="summary">
 
 <link rel="stylesheet" href="/lib/fancybox/fancybox.css">
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1713365531473">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1713365531189">
 
-<link rel="stylesheet" href="/css/style.css?v=1713365531473">
+<link rel="stylesheet" href="/css/style.css?v=1713365531189">
 
 
 
@@ -38,7 +37,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1713365531473"></script>
+<script async src="/js/app.js?v=1713365531189"></script>
 
  
 
@@ -211,7 +210,7 @@ mjx-container[display="true"] + br {
 </div>
 
 
-	<script async src="/js/search.js?v=1713365531473"></script>
+	<script async src="/js/search.js?v=1713365531189"></script>
 
 
 
@@ -430,14 +429,14 @@ mjx-container[display="true"] + br {
   <article>
     
         <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
-            <img src="/img/microsoft-logo.png" alt="Windows下编写C语言程序的准备工作" loading="lazy">
-            <h1>Windows下编写C语言程序的准备工作</h1>
+            <img src="/img/Cover-elsecode.jpg" alt="bash脚本的“参数扩展”中双井号与双百分号的妙用" loading="lazy">
+            <h1>bash脚本的“参数扩展”中双井号与双百分号的妙用</h1>
         </div>
     
     
     <div class="nexmoe-post-meta">
     <div class="nexmoe-rainbow">
-        <a class="nexmoefont icon-calendar-fill">2019年11月06日</a>
+        <a class="nexmoefont icon-calendar-fill">2024年04月17日</a>
         
             <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Code/">Dev-Code</a>
         
@@ -450,42 +449,64 @@ mjx-container[display="true"] + br {
     
 </div>
 
-    <h1 id="windows下编写c语言程序的准备工作">Windows下编写C语言程序的准备工作</h1>
-<h2 id="在windows上安装c编译器">在Windows上安装C编译器</h2>
-<ol type="1">
-<li><p>下载并安装[Visual Studio Installer][https://visualstudio.microsoft.com/zh-hans/thank-you-downloading-visual-studio/?sku=BuildTools&amp;rel=16]</p></li>
-<li><p>选中这些需要安装的功能:</p>
-<p>"MSVC" "Windows 10 SDK" "C++/CLI Support"</p></li>
-<li><p>等它装完（需要很长时间）;</p></li>
-<li><p>按super键，输入"developer powershell for vs 2019"就可以打开自动配置好的编译器终端了.</p></li>
-</ol>
-<h2 id="安装git">安装git</h2>
-<p>以前安装过windows的git-scm，但嫌不够优雅后来就没用过，不如直接VSC+WSL一气呵成；</p>
-<p>以前写的英文是这么说的，懒得再写一遍了：</p>
-<ol type="1">
-<li>Since I have installed WSL, I don't need an extra UNIX-like environment, so I only need the git function;</li>
-<li>Search and download git-scm for windows;</li>
-<li>Install only git functions;</li>
-<li>Copy my existing ssh file to (Windows)~/.ssh/id_rsa and exec <code>ssh-add /c/users/myusername/.ssh/id_rsa</code>;</li>
-<li>Exec<code>ssh -T git@github.com</code> to check if ssh functions work well.</li>
-<li>(optional) Go to regedit.exe and check"计算机_CLASSES_ROOT", add a string value "Extended" in key "git-gui" and "git-shell";</li>
-</ol>
-<hr>
-<h2 id="把visual-studio-code调整成顺眼的状况可以不用了因为现在vsc支持登陆ms账号同步设置的功能了">把Visual Studio Code调整成顺眼的状况（可以不用了，因为现在VSC支持登陆MS账号同步设置的功能了）：</h2>
-<p>安装一些有用的组件：</p>
-<ol type="1">
-<li><p>Install Visual Studio Code;</p></li>
-<li><p>Install some useful plug-ins</p>
-<p>"Language pack" by Microsoft</p>
-<p>"Remote-WSL" by Microsoft</p>
-<p>"Settings Sync" by Shan Khan （现在可以不用装了）</p>
-<p>"Git History" by Microsoft</p></li>
-</ol>
-<p>不太喜欢那个紫色的底部，我喜欢淡蓝色的，因此直接在设置的<code>settings.json</code>里面增加如下内容：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">"workbench.colorCustomizations"</span><span class="punctuation">:</span> <span class="punctuation">{</span></span><br><span class="line">       <span class="attr">"statusBar.background"</span> <span class="punctuation">:</span> <span class="string">"#1874CD"</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">"statusBar.noFolderBackground"</span><span class="punctuation">:</span> <span class="string">"#071d77"</span><span class="punctuation">,</span></span><br><span class="line">       <span class="attr">"statusBar.debuggingBackground"</span><span class="punctuation">:</span> <span class="string">"#8b008b"</span></span><br><span class="line">   <span class="punctuation">}</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-<p>Coding Gulog will be pushed later</p>
+    <h1 id="bash脚本的参数扩展中双井号与双百分号的妙用">bash脚本的“参数扩展”中双井号与双百分号的妙用</h1>
+<h2 id="缘起">缘起</h2>
+<p>在某项工作中，需要将一个<code>cfg</code>文件（作用类似<code>ini</code>文件）交给脚本自动化执行，</p>
+<p>然而遇到了配置文件的注释问题，体现为以<code>#</code>开头的行会被符合预期地忽略，但是行中从<code>#</code>开始的内容并没有被正确地忽略，</p>
+<p>这个<code>cfg</code>的解析是完全通过自写脚本进行的，现有脚本中是怎么处理的这个<code>cfg</code>配置文件的呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">while read line; do</span><br><span class="line">    # 处理注释</span><br><span class="line">    if [[ $line == \#* ]]; then</span><br><span class="line">        continue</span><br><span class="line">    fi</span><br><span class="line">    # 执行后面的动作</span><br><span class="line">    blahblah()</span><br><span class="line">done &lt; $filepathname</span><br></pre></td></tr></table></figure>
+<p>很显然这里只做了<code>#</code>开头情况的处理，但是缺少了对<code>#</code>在变量<code>line</code>内的情况进行处理的语句，没关系，设法写一个出来，</p>
+<p>向GPT提问：</p>
+<blockquote>
+<p>now I use shell script <code>read</code> has read a line with <code>read line</code>,</p>
+<p>I wish to get rid of the <code>#</code> and the rest of the line from this line,</p>
+<p>what should the script be?</p>
+</blockquote>
+<p>它很快给出了一个方案：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Read a line from input</span></span><br><span class="line">read -r line</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Remove everything after the first occurrence of <span class="comment">#</span></span></span><br><span class="line">line="${line%%#*}"</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Output the modified line</span></span><br><span class="line">echo "$line"</span><br></pre></td></tr></table></figure>
+<p>于是需求得到了解决，但是问题才刚刚开始，这个句子<code>line="${line%%#*}"</code>到底做了什么？</p>
+<h2 id="探寻">探寻</h2>
+<p>起初，我认为这是某种正则表达式，于是以<code>regular expression</code>为关键词进行了大量的查找，然而大多数答案只是说<code>%%</code>在正则表达式中表示一个字面意义的<code>%</code>，并没有找到满意的答案</p>
+<p>最后还是得靠<code>manpage</code>：<code>man bash</code>，然后用<code>/</code>搜索<code>%</code>，我很快找到了答案，就在“Parameter Expansion”一节中：</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$<span class="comment">{parameter#word}</span></span><br><span class="line">$<span class="comment">{parameter##word}</span></span><br><span class="line">    <span class="keyword">Remove</span> <span class="keyword">matching</span> prefix pattern. The word <span class="keyword">is</span> expanded <span class="keyword">to</span> produce a pattern just <span class="keyword">as</span> <span class="keyword">in</span> pathname expansion. <span class="keyword">If</span> the pattern matches the beginning <span class="keyword">of</span> the value <span class="keyword">of</span> parameter, <span class="keyword">then</span> the <span class="keyword">result</span> <span class="keyword">of</span> the expansion <span class="keyword">is</span> the expanded value <span class="keyword">of</span> parameter <span class="keyword">with</span> the shortest <span class="keyword">matching</span> pattern (the ``#<span class="string">''</span> <span class="keyword">case</span>) <span class="keyword">or</span> the longest <span class="keyword">matching</span> pattern (the ``##<span class="string">''</span> <span class="keyword">case</span>) deleted. <span class="keyword">If</span> parameter <span class="keyword">is</span> @ <span class="keyword">or</span> *, the pattern removal operation <span class="keyword">is</span> applied <span class="keyword">to</span> <span class="keyword">each</span> positional parameter <span class="keyword">in</span> turn, <span class="keyword">and</span> the expansion <span class="keyword">is</span> the resultant list. <span class="keyword">If</span> parameter <span class="keyword">is</span> an <span class="keyword">array</span> variable subscripted <span class="keyword">with</span> @ <span class="keyword">or</span> *, the pattern removal operation <span class="keyword">is</span> applied <span class="keyword">to</span> <span class="keyword">each</span> member <span class="keyword">of</span> the <span class="keyword">array</span> <span class="keyword">in</span> turn, <span class="keyword">and</span> the expansion <span class="keyword">is</span> the resultant list. </span><br><span class="line"></span><br><span class="line">$<span class="comment">{parameter%word}</span></span><br><span class="line">$<span class="comment">{parameter%%word}</span></span><br><span class="line">    <span class="keyword">Remove</span> <span class="keyword">matching</span> suffix pattern. The word <span class="keyword">is</span> expanded <span class="keyword">to</span> produce a pattern just <span class="keyword">as</span> <span class="keyword">in</span> pathname expansion. <span class="keyword">If</span> the pattern matches a trailing portion <span class="keyword">of</span> the expanded value <span class="keyword">of</span> parameter, <span class="keyword">then</span> the <span class="keyword">result</span> <span class="keyword">of</span> the expansion <span class="keyword">is</span> the expanded value <span class="keyword">of</span> parameter <span class="keyword">with</span> the shortest <span class="keyword">matching</span> pattern (the ``%<span class="string">''</span> <span class="keyword">case</span>) <span class="keyword">or</span> the longest <span class="keyword">matching</span> pattern (the ``%%<span class="string">''</span> <span class="keyword">case</span>) deleted. <span class="keyword">If</span> parameter <span class="keyword">is</span> @ <span class="keyword">or</span> *, the pattern removal operation <span class="keyword">is</span> applied <span class="keyword">to</span> <span class="keyword">each</span> positional parameter <span class="keyword">in</span> turn, <span class="keyword">and</span> the expansion <span class="keyword">is</span> the resultant list. <span class="keyword">If</span> parameter <span class="keyword">is</span> an <span class="keyword">array</span> variable subscripted <span class="keyword">with</span> @ <span class="keyword">or</span> *, the pattern removal operation <span class="keyword">is</span> applied <span class="keyword">to</span> <span class="keyword">each</span> member <span class="keyword">of</span> the <span class="keyword">array</span> <span class="keyword">in</span> turn, <span class="keyword">and</span> the expansion <span class="keyword">is</span> the resultant list. </span><br></pre></td></tr></table></figure>
+<p>也就是说，这里的<code>%</code>与<code>#</code>是<code>bash</code>解析脚本时使用的，它们作为<code>bash</code>的参数扩展进行使用；</p>
+<p>其中，<code>##</code>用于清理前缀，<code>%%</code>用于清理后缀，而且允许搭配<code>*</code>来选中任意内容；</p>
+<p>顺便，单井号<code>#</code>和单百分号<code>%</code>也是可以的，但是为了代码的辨识度，还是用双井号与双百分号吧；</p>
+<h2 id="实践">实践</h2>
+<p>作为实验，我们撰写一个shell脚本，命名为<code>syousyuuzai.sh</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Read a line from input</span></span><br><span class="line">read -r line</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Remove everything stinky</span></span><br><span class="line">line="${line%%stink*}"</span><br><span class="line">line="${line##*yajuu}"</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Output the modified line</span></span><br><span class="line">echo "$line"</span><br></pre></td></tr></table></figure>
+<p>然后执行它，随便输入一行字符，可以看到如下的效果： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./syousyuuzai.sh</span><br><span class="line">yajuuasdfghjkl</span><br><span class="line">asdfghjkl</span><br></pre></td></tr></table></figure></p>
+<p>同理： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./syousyuuzai.sh</span><br><span class="line">asdfghjklstink</span><br><span class="line">asdfghjkl</span><br></pre></td></tr></table></figure></p>
+<p>前后同时输入也是可以的： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./syousyuuzai.sh</span><br><span class="line">yajuuasdfghjklstink1919810</span><br><span class="line">asdfghjkl</span><br></pre></td></tr></table></figure></p>
+<h2 id="实验中的两个事件">实验中的两个事件</h2>
+<h3 id="不能把与组合起来写在同一行中">不能把<code>%</code>与<code>#</code>组合起来写在同一行中</h3>
+<p>实验时发现，并不能把<code>%</code>与<code>#</code>组合起来写在同一行中，也就是这样<code>line="${line##*yajuu%%stink*}</code>达到前后同时除臭的效果，如果不信邪的话我们可以写个<code>copy_syousyuuzai.sh</code>出来：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">read -r line</span><br><span class="line">line="${line##*yajuu%%stink*}"</span><br><span class="line">echo "$line"</span><br></pre></td></tr></table></figure>
+<p>这样写脚本的话，运行的时候会变成这样： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./copy_syousyuuzai.sh</span><br><span class="line">yajuuasdfghjklstink</span><br><span class="line">yajuuasdfghjklstink</span><br></pre></td></tr></table></figure></p>
+<p>以及这样： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./copy_syousyuuzai.sh</span><br><span class="line"><span class="meta prompt_">yajuu%</span><span class="language-bash">%stinkasdfghjkl</span></span><br><span class="line">(空荡荡)</span><br></pre></td></tr></table></figure></p>
+<p>所以，如果要对前后缀同时做匹配，只能分次进行；</p>
+<h3 id="做前后缀"><code>*</code>做前后缀</h3>
+<p>另外，相信从上面的文本中不难观察到这样的规律，那就是如果把<code>*</code>作为<code>prefix</code>的后缀，或者把<code>*</code>作为<code>suffix</code>的前缀，都是可以被正常理解并执行的，但是效果是把所有的内容都移除掉了</p>
+<p>比如做一个最简单的实验脚本<code>copy_syousyuuzai,sh</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">read -r line</span><br><span class="line"></span><br><span class="line">line="${line##yajuu*}"</span><br><span class="line"></span><br><span class="line">echo "$line"</span><br></pre></td></tr></table></figure>
+<p>第一次，测试没有直接以恶臭数字开头 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./copy_syousyuuzai.sh</span><br><span class="line">asdfhyajuujklmn</span><br><span class="line">asdfhyajuujklmn</span><br></pre></td></tr></table></figure></p>
+<p>显而易见地，由于没有直接以恶臭数字开头，且没有写通配符，于是没有通过比对，整个字符串不做筛选就输出了，除臭大失败；</p>
+<p>第二次试验，以恶臭数字开头 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./copy_syousyuuzai.sh</span><br><span class="line">yajuuasdfghjkl</span><br><span class="line">(空荡荡)</span><br></pre></td></tr></table></figure></p>
+<p>显而易见地，整个字符串全没了，虽然我们失去了整个字符串，但我们除臭了；</p>
+<p>第三次试验，我们修改了脚本如下： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">read -r line</span><br><span class="line"></span><br><span class="line">line="${line%%*yajuu}"</span><br><span class="line"></span><br><span class="line">echo "$line"</span><br></pre></td></tr></table></figure></p>
+<p>然后进行了这样的输入，获取了这样的输出： <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">➜  ~ ./copy_syousyuuzai.sh</span><br><span class="line">asdfghjklyajuu</span><br><span class="line">(空荡荡)</span><br></pre></td></tr></table></figure></p>
+<p>相信不难从中看出规律</p>
+<p>掌握了这个技巧，就可以轻松地在脚本中除臭杀菌了；</p>
+<p>虽然<code>bash</code>的<code>Parameter Expansion</code>特性有很多，不过这次就只学这些了。</p>
+<h2 id="关于read的-r选项的解释">关于<code>read</code>的<code>-r</code>选项的解释</h2>
+<blockquote>
+<p>-r</p>
+<pre><code>Backslash does not act as an escape character. The backslash is considered to be part of the line. In particular, a backslash-newline pair may not be used as a line continuation. </code></pre>
+</blockquote>
+<p>也就是说，用<code>-r</code>时，<code>read</code>会忽略反斜杠的<code>escape</code>含义也就是转义含义，会把反斜杠作为句子的一部分处理；</p>
+<p>特别地，即便使用了<code>-r</code>选项，每行输入仍然被视为独立的行，而不能使用反斜杠和换行符来试图将它们组合成单个逻辑行。</p>
 <p>Knighthana</p>
-<p>2019年11月06日 于西电</p>
+<p>2024/04/12</p>
 
     
   </article>
@@ -498,12 +519,12 @@ mjx-container[display="true"] + br {
   <div class="nexmoe-post-meta nexmoe-rainbow">
    
     
-        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/C/" rel="tag">C</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Windows/" rel="tag">Windows</a>
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/shell/" rel="tag">shell</a>
     
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1713365531020"></script>
+    <script async src="/js/copy-codeblock.js?v=1713365530977"></script>
   
 
   
@@ -521,7 +542,7 @@ mjx-container[display="true"] + br {
             <button class="mdui-fab catalog" style="overflow:unset;">
                 <i class="nexmoefont icon-i-catalog"></i>
                 <div class="nexmoe-toc">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#windows%E4%B8%8B%E7%BC%96%E5%86%99c%E8%AF%AD%E8%A8%80%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">Windows下编写C语言程序的准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8windows%E4%B8%8A%E5%AE%89%E8%A3%85c%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-number">1.1.</span> <span class="toc-text">在Windows上安装C编译器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85git"><span class="toc-number">1.2.</span> <span class="toc-text">安装git</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8Avisual-studio-code%E8%B0%83%E6%95%B4%E6%88%90%E9%A1%BA%E7%9C%BC%E7%9A%84%E7%8A%B6%E5%86%B5%E5%8F%AF%E4%BB%A5%E4%B8%8D%E7%94%A8%E4%BA%86%E5%9B%A0%E4%B8%BA%E7%8E%B0%E5%9C%A8vsc%E6%94%AF%E6%8C%81%E7%99%BB%E9%99%86ms%E8%B4%A6%E5%8F%B7%E5%90%8C%E6%AD%A5%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E4%BA%86"><span class="toc-number">1.3.</span> <span class="toc-text">把Visual Studio Code调整成顺眼的状况（可以不用了，因为现在VSC支持登陆MS账号同步设置的功能了）：</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#bash%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8F%82%E6%95%B0%E6%89%A9%E5%B1%95%E4%B8%AD%E5%8F%8C%E4%BA%95%E5%8F%B7%E4%B8%8E%E5%8F%8C%E7%99%BE%E5%88%86%E5%8F%B7%E7%9A%84%E5%A6%99%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">bash脚本的“参数扩展”中双井号与双百分号的妙用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%98%E8%B5%B7"><span class="toc-number">1.1.</span> <span class="toc-text">缘起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E5%AF%BB"><span class="toc-number">1.2.</span> <span class="toc-text">探寻</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%B8%AD%E7%9A%84%E4%B8%A4%E4%B8%AA%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.4.</span> <span class="toc-text">实验中的两个事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%83%BD%E6%8A%8A%E4%B8%8E%E7%BB%84%E5%90%88%E8%B5%B7%E6%9D%A5%E5%86%99%E5%9C%A8%E5%90%8C%E4%B8%80%E8%A1%8C%E4%B8%AD"><span class="toc-number">1.4.1.</span> <span class="toc-text">不能把%与#组合起来写在同一行中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E5%89%8D%E5%90%8E%E7%BC%80"><span class="toc-number">1.4.2.</span> <span class="toc-text">*做前后缀</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8Eread%E7%9A%84-r%E9%80%89%E9%A1%B9%E7%9A%84%E8%A7%A3%E9%87%8A"><span class="toc-number">1.5.</span> <span class="toc-text">关于read的-r选项的解释</span></a></li></ol></li></ol>
                 </div>
             </button>
             
