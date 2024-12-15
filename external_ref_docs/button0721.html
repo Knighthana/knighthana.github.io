@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="zh_CN">
+<head>
+    <title>把你变成柚子厨</title>
+</head>
+<script>
+function open_newTab() {
+    window.alert('Ciallo～(∠・ω< )⌒☆');
+    let newTab = window.open('', '_blank');
+    newTab.document.write('<!DOCTYPE html><html><head><title>这是哪来的柚子厨？</title>');
+    newTab.document.write('<style>a:link{color:rgb(45, 45, 45);text-decoration: none;}a:visited{color:rgb(33, 33, 33);}a:visited{color:rgb(33, 33, 33);}a:hover{color:rgb(0, 140, 255);}</style>');
+    newTab.document.write('</head><body>');
+    let script = newTab.document.createElement('script');
+    script.text = 'fetch("https://api64.ipify.org?format=json") .then(response => response.json()) .then(data => {document.getElementById("ip-address").textContent = data.ip;}) .catch(error => console.error("Error:", error))';
+    newTab.document.body.appendChild(script);
+    newTab.document.write('<h1>这是哪来的柚子厨？</h1>');
+    newTab.document.write('<p>IP地址:</p><p id="ip-address"><br/></p>');
+    newTab.document.write('<p>注意：虽然你的IP地址对服务器来说是明了的，但是不要随便透露给其他人哦</p>');
+    newTab.document.write('<p><a href="https://www.yuzu-soft.com/" target="_blank">请，好好地看着我0721 ❤️</a></p>');
+    newTab.document.write('</body></html>');
+}
+function get_clientIP() {
+    let clientIP = 'Unknown';
+    fetch('https://api64.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        clientIP = data.ip.toString();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        clientIP = "error";
+    });
+    return clientIP;
+}
+</script>
+<body>
+<h1>
+    变柚子厨喷雾
+</h1>
+<button onclick="open_newTab()">哪来的柚子厨</button>
+</body>
+</html>
