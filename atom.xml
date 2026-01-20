@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2024-12-15T17:56:43.943Z</updated>
+  <updated>2026-01-20T13:02:51.183Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安装GoLang环境</title>
+    <link href="https://knighthana.github.io/Dev-Env/%E5%AE%89%E8%A3%85GoLang%E7%8E%AF%E5%A2%83.html"/>
+    <id>https://knighthana.github.io/Dev-Env/%E5%AE%89%E8%A3%85GoLang%E7%8E%AF%E5%A2%83.html</id>
+    <published>2025-01-16T16:00:00.000Z</published>
+    <updated>2026-01-20T13:02:51.183Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;安装golang环境&quot;&gt;安装GoLang环境&lt;/h1&gt;
+&lt;h2 id=&quot;安装版本管理器&quot;&gt;安装版本管理器&lt;/h2&gt;
+&lt;p&gt;稍微查阅了一下，目前比较常用的GoLang版本管理器是&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Env" scheme="https://knighthana.github.io/categories/Dev-Env/"/>
+    
+    
+    <category term="Linux" scheme="https://knighthana.github.io/tags/Linux/"/>
+    
+    <category term="GoLang" scheme="https://knighthana.github.io/tags/GoLang/"/>
+    
+  </entry>
   
   <entry>
     <title>前端小打闹</title>
@@ -1364,7 +1393,7 @@
     <link href="https://knighthana.github.io/Dev-Env/%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98%E5%8F%8A%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7%E7%9A%84%E9%97%AE%E9%A2%98%E9%9B%86.html"/>
     <id>https://knighthana.github.io/Dev-Env/%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98%E5%8F%8A%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E5%B7%A5%E5%85%B7%E7%9A%84%E9%97%AE%E9%A2%98%E9%9B%86.html</id>
     <published>2023-01-13T16:00:00.000Z</published>
-    <updated>2023-05-02T08:18:00.000Z</updated>
+    <updated>2026-01-20T08:18:00.000Z</updated>
     
     
       
