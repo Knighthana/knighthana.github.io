@@ -29,7 +29,7 @@ rm -rf /home/username/.gvm
 
 ## GVM做了什么？
 
-跟踪安装脚本，可以发现它在执行/home/username/.gvm/scripts/gvm-default的脚本
+跟踪安装脚本，可以发现它在执行`/home/username/.gvm/scripts/gvm-default`的脚本
 
 ```shell
 unset GOROOT
