@@ -16,7 +16,7 @@ tags:
   - NVIDIA
   - Blog
   - fcitx5
-  - font
+  - Font
   - vscode
   - LinuxMint
 ---
