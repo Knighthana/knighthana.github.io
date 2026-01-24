@@ -1,5 +1,5 @@
 ---
-title: 奇加偶减-容斥原理
+title: (KM)奇加偶减-容斥原理
 date: 2023-05-06 22:50:00
 updated: 2023-05-06 22:50:01
 cover: /img/Cover-knowledge-mark.svg

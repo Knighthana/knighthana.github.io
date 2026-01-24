@@ -1,5 +1,5 @@
 ---
-title: 从光电鼠标到光流法
+title: (KM)从光电鼠标到光流法
 date: 2023-05-06 22:00:00
 updated: 2023-05-06 22:50:00
 cover: /img/Cover-knowledge-mark.svg
@@ -47,19 +47,20 @@ tags:
 ### 离散
 
 对于离散函数
-$fi$
+$f_{i}$
 和
-$gi$
+$g_{i}$
 来说，互相关定义为
+
 $$
-(f \star g)_i \equiv \sum _j f^*_j g_{i+j}
+(f \star g)_i \equiv \sum _{j} f^{*}_{j} g_{i+j}
 $$
 
-其中和在整个可能的整数 j 区域取和，星号表示复共轭。
+其中和在整个可能的整数 $j$ 区域取和，星号表示复共轭。
 
 ### 连续
 
-对于连续信号 f(x) 和 g(x) 来说，互相关定义为
+对于连续信号 $f(x)$ 和 $g(x)$ 来说，互相关定义为
 $$
 (f \star g, x) \equiv \int f*(t) g(x+t) dt
 $$
@@ -87,7 +88,7 @@ $$
 假设该移动很小，那么可以根据泰勒级数得出：
 
 $$
-I(x+ \Delta x, y + \Delta y, t + \Delta t)=I(x,y,t)+ \frac{\partial I}{\partial x} \Delta x +  \frac{\partial I}{\partial y} \Delta y + \frac{\partial I}{\partial t} \Delta t + HOTs
+I(x+ \Delta x, y + \Delta y, t + \Delta t)=I(x,y,t)+ \frac{\partial I}{\partial x} \Delta x +  \frac{\partial I}{\partial y} \Delta y + \frac{\partial I}{\partial t} \Delta t + \text{HOTs}
 $$
 
 HOTs: Higher-order terms
