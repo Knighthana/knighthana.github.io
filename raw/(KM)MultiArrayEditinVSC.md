@@ -5,7 +5,7 @@ cover: /img/Cover-knowledge-mark.svg
 categories:
   - KnowledgeMark
 tags:
-  - vscode
+  - VSCode
   - code edit
 ---
 
