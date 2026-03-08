@@ -17,7 +17,7 @@ tags:
   - Blog
   - fcitx5
   - Font
-  - vscode
+  - VSCode
   - LinuxMint
 ---
 
