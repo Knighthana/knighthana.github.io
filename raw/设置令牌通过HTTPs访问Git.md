@@ -324,6 +324,69 @@ path=username/projectname.git" | git-credential-manager.exe erase
 
 基本上来说，凭据助手不会记录有效性，它只会完成非常基本、重复性、机械性的工作。
 
+### WSL突然无法调用Windows应用程序的问题
+
+在迁移工作完成的几天后，我遇到了新的问题，在执行`git`操作的时候，它无法调用到GCM了，提示：
+
+> /mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe get: 1: /mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe: Exec format error
+
+这个问题可能是WSL突然丢失了执行`exe`能力导致的，通过下面的方法检查：
+```bash
+cat /proc/sys/fs/binfmt_misc/WSLInterop
+```
+
+如果结果中有`enabled`，那么问题可能就不在这里；
+
+如果结果中有`disabled`，那么可以执行`sudo sh -c 'echo 1 > /proc/sys/fs/binfmt_misc/WSLInterop'`恢复；
+
+而我遇到了更加离奇的问题，`cat`提示我：
+
+> cat: /proc/sys/fs/binfmt_misc/WSLInterop: No such file or directory
+
+屋檐了，我也不知道发生了什么导致它变成这样的，难道我的虚拟机趁我不在偷偷跑去玩了XX……？不过还好对于家用的计算机来说解决起来不算太难，保存好工作，通过PowerShell的WSL管理器重启WSL即可。
+
+之后:
+```bash
+➜ ~ cat /proc/sys/fs/binfmt_misc/WSLInterop
+enabled
+interpreter /init
+flags: PF
+offset 0
+magic 4d5a
+➜ ~ "/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe" --version
+2.7.0+d1dd8a4ded75a2b1faae653157ac1699609442ad
+```
+
+可以看到问题已经解决了。
+
+顺便，为了`git`以后的福祉，我顺便给GCM做了个软连接。
+```bash
+sudo ln -s "/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe" /usr/local/bin/gcm_win.exe
+```
+
+现在`git`的配置可以写得更简单一点了。
+```bash
+git config --global --unset-all credential.helper
+git config --global credential.helper /usr/local/bin/gcm_win.exe
+```
+
+### 有关`WSLInterop`
+
+关于指令
+```bash
+sudo sh -c 'echo 1 > /proc/sys/fs/binfmt_misc/WSLInterop'
+```
+
+`binfmt_misc`是一个Linux内核功能"Binary Format Miscellaneous"，类似一张可以用来查询的表，它会让Linux将无法识别的二进制格式交给指定的解释器处理。
+
+`WSLInterop`是WSL2中的一个来自微软的解释器。
+
+WSL2在查阅`binfmt_misc`表之后，会发现`exe`对应的是`/init`，于是`exe`被传给`/init`，而`/init`会将这个请求转发给Windows宿主。
+
+`echo 1`代表“启用”。`echo 1 > /proc/sys/fs/binfmt_misc/WSLInterop`就是将“启动信号”写入核心控制文件。
+
+另外这个过程也可以通过`echo 1 | sudo tee /proc/sys/fs/binfmt_misc/WSLInterop`完成。
+
 ------------------------------
 
 Knighthana
