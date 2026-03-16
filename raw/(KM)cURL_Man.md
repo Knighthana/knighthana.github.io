@@ -26,7 +26,6 @@ curl -fsSL -O $URL
 那么常用的无外乎两种情况
 
 从国内下载文件时，使用
-
 ```bash
 curl -fsSL -O $URL
 ```
@@ -34,7 +33,6 @@ curl -fsSL -O $URL
 可以快速且静默地下载完文件
 
 下载国外的文件时，应该使用
-
 ```bash
 curl -fSL -O $URL
 ```
