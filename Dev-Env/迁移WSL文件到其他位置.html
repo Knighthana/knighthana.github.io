@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>迁移WSL文件到其他位置 - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="迁移WSL文件到其他位置 其实迁移WSL的事情咱已经干了好几遍了，不过呢，这事确实不经常干，等到要用的时候又手生。 几次之后，我决定还是记录一下迁移WSL的前前后后。 用WSL2而不是WSL1 由于WSL1和WSL2虽然文件存在形式不同，但在迁移方面的操作都是通过WSL管理器完成的， 很早之前在单位的Win11电脑上通过WSL2装了个Debian，工作起来还是很舒畅的，因此对WSL2改观不少， 另">
+<meta property="og:type" content="article">
+<meta property="og:title" content="迁移WSL文件到其他位置">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/%E8%BF%81%E7%A7%BBWSL%E6%96%87%E4%BB%B6%E5%88%B0%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="迁移WSL文件到其他位置 其实迁移WSL的事情咱已经干了好几遍了，不过呢，这事确实不经常干，等到要用的时候又手生。 几次之后，我决定还是记录一下迁移WSL的前前后后。 用WSL2而不是WSL1 由于WSL1和WSL2虽然文件存在形式不同，但在迁移方面的操作都是通过WSL管理器完成的， 很早之前在单位的Win11电脑上通过WSL2装了个Debian，工作起来还是很舒畅的，因此对WSL2改观不少， 另">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://knighthana.github.io/img/2026-03-10_213711_There_isnt_Debian_in_WSL_Manager.png">
+<meta property="og:image" content="https://knighthana.github.io/img/2026-03-10_213739_Debian_appears_in_StartMenu.png">
+<meta property="article:published_time" content="2026-03-10T15:27:00.000Z">
+<meta property="article:modified_time" content="2026-03-10T15:59:59.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="WSL">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="WSL2">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://knighthana.github.io/img/2026-03-10_213711_There_isnt_Debian_in_WSL_Manager.png">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1773853799854">
+
+<link rel="stylesheet" href="/css/style.css?v=1773853799854">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1773853799854"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>100</div>
+        <div><span>标签</span>140</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1773853799854"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">19</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">39</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">24</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 14px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 19px;">C</a> <a href="/tags/CJK/" style="font-size: 11px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 11px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 11px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11px;">GPG</a> <a href="/tags/Git/" style="font-size: 18px;">Git</a> <a href="/tags/GoLang/" style="font-size: 10px;">GoLang</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Jekyll/" style="font-size: 11px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 12px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 14px;">Ubuntu</a> <a href="/tags/VSCode/" style="font-size: 11px;">VSCode</a> <a href="/tags/VirtualBox/" style="font-size: 11px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 17px;">WSL</a> <a href="/tags/WSL2/" style="font-size: 11px;">WSL2</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 12px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11px;">vim</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 11px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(140);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Dev-Env/%E8%BF%81%E7%A7%BBWSL%E6%96%87%E4%BB%B6%E5%88%B0%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE.html">迁移WSL文件到其他位置</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%AE%BE%E7%BD%AE%E4%BB%A4%E7%89%8C%E9%80%9A%E8%BF%87HTTPs%E8%AE%BF%E9%97%AEGit.html">设置令牌通过HTTPs访问Git</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%A7%A3%E5%86%B3WSL2%E5%86%85%E7%8E%AF%E5%A2%83%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87localhost%E8%AF%BB%E5%8F%96%E5%88%B0Windows%E7%9A%84localhost%E7%9A%84%E9%97%AE%E9%A2%98.html">解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E5%AE%89%E8%A3%85GoLang%E7%8E%AF%E5%A2%83.html">安装GoLang环境</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Code/%E5%89%8D%E7%AB%AF%E5%B0%8F%E6%8A%80%E5%B7%A7.html">前端小打闹</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://knighthana.github.com" target="_blank" >
+                    <img src="https://knighthana.github.com/favicon.png" alt="This site"></img>
+                    <p>This site</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2026 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="迁移WSL文件到其他位置" loading="lazy">
+            <h1>迁移WSL文件到其他位置</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2026年03月10日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="迁移wsl文件到其他位置">迁移WSL文件到其他位置</h1>
+<p>其实迁移WSL的事情咱已经干了好几遍了，不过呢，这事确实不经常干，等到要用的时候又手生。</p>
+<p>几次之后，我决定还是记录一下迁移WSL的前前后后。</p>
+<h2 id="用wsl2而不是wsl1">用WSL2而不是WSL1</h2>
+<p>由于WSL1和WSL2虽然文件存在形式不同，但在迁移方面的操作都是通过WSL管理器完成的，</p>
+<p>很早之前在单位的Win11电脑上通过WSL2装了个Debian，工作起来还是很舒畅的，因此对WSL2改观不少，</p>
+<p>另一方面，我在WSL1上遇到过一些奇奇怪怪的问题，这些问题也有一部分是WSL1特殊的形制导致的；</p>
+<p>所以后面迁移家里的WSL的时候也就没那么抵触情绪了；</p>
+<p>虽然我很欣赏WSL1处理Win与Lin系统关系“融合”的风格，但是务实一点地说，在WSL1被放弃支持的现在，用WSL2做事更合适一些，所以以后主要还是在WSL2上工作。</p>
+<p>通过 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--set-default-version</span> <span class="number">2</span></span><br></pre></td></tr></table></figure>
+将WSL管理器设置为默认操作WSL2，这样从商店下载安装新的WSL时，会变成WSL2</p>
+<p>通过 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--set-version</span> Ubuntu <span class="number">2</span></span><br></pre></td></tr></table></figure>
+（这里用<code>Ubuntu</code>举例，事实上这里要把名字换成WSL管理器内<code>wsl -l -v</code>看到的名字），可以将特定的WSL换成指定的版本</p>
+<h3 id="清理wsl2的硬盘">清理WSL2的硬盘</h3>
+<p>对了，WSL2的虚拟硬盘机制导致其对物理硬盘光进不吐很讨厌，比起WSL1实在是吃相难看，这里顺便记录一下怎么整理硬盘，安全起见最好是备份后再这么干。</p>
+<ol type="1">
+<li><p>在WSL的内部执行<code>sudo fstrim /</code>，这原本是用于对SSD进行Trim的命令，不过对于WSL2来说，是让它把用不到的地方腾开的意思；这一步其实可以展开说说，WSL的Linux内核会将TRIM信号传给Hyper-V虚拟化层，Hyper-V会负责对虚拟磁盘文件内块的标记工作；</p></li>
+<li><p>退出WSL虚拟机，并在powershell中执行<code>wsl --shutdown</code>通过WSL管理器关闭正在运行的WSL；</p></li>
+<li><p>继续在powershell中运行<code>diskpart</code>，如果powershell不是管理员身份打开的，这一步会请求管理员权限，输入账号密码之后会打开一个新的cmd窗口容纳<code>diskpart</code>；</p></li>
+<li><p>执行<code>select vdisk file="&lt;vhdx文件\的\路径&gt;"</code></p></li>
+<li><p>执行<code>attach vdisk readonly</code></p></li>
+<li><p>执行<code>compact vdisk</code>，这一步需要很长的时间；</p></li>
+<li><p>执行<code>detach vdisk</code>，随后<code>exit</code></p></li>
+</ol>
+<p>另一个方案是使用<code>Optimize-VHD</code>，部分系统上可能没有这个指令，那就只能用上面的<code>diskpart</code>，</p>
+<p>不过我查询了一下我的系统上有，用<code>Optimize-VHD</code>的方法是（需要管理员权限）
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Optimize-VHD</span> <span class="literal">-Path</span> <span class="string">"&lt;vhdx文件\的\路径&gt;"</span> <span class="literal">-Mode</span> Full</span><br></pre></td></tr></table></figure></p>
+<p>默认情况下，Debian的磁盘位置在<code>%appdata%/../Local/Packages/TheDebianProject.DebianGNULinux_76v4gfsz19hv4/LocalState</code></p>
+<p>所以是 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Optimize-VHD</span> <span class="literal">-Path</span> C:\Users\Knighthana\AppData\Local\Packages\TheDebianProject.DebianGNULinux_76v4gfsz19hv4\LocalState\ext4.vhdx <span class="literal">-Mode</span> Full</span><br></pre></td></tr></table></figure></p>
+<p>不过这玩意需要关掉WSL才能使用，反正我遇到的情况是这样的。</p>
+<h2 id="wsl的分步安装">WSL的分步安装</h2>
+<p>我不喜欢22.04以后的Ubuntu，就因为它把Firefox迁移到Snap体系中，而我不喜欢Snap这个概念和推广它的形式。</p>
+<p>因此尽管我保留了老的Ubuntu虚拟机并会不断地升级它以保证软件包正常工作，但宁愿转移以后的工作到其他发行版上去。</p>
+<p>之前其他博客提到过，我在物理硬盘上选择了LinuxMint，它拥有许多优点，是离开Ubuntu之后的一个好去处。</p>
+<p>不过对于WSL虚拟机，由于省去了很多图形界面方面的问题，因此直接上Debian会很简单省事。</p>
+<p>这次是用一个全新的Debian WSL进行测试的。</p>
+<p>在从商店下载了Debian之后，我注意到一个很有趣的现象，那就是，Debian出现在了开始菜单中，却没有出现在WSL管理器中。</p>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/2026-03-10_213711_There_isnt_Debian_in_WSL_Manager.png" alt="ThereisntDebianinWSLManager" data-caption="ThereisntDebianinWSLManager" loading="lazy">
+<figcaption aria-hidden="true">ThereisntDebianinWSLManager</figcaption>
+</figure>
+<figure>
+<img onerror="imgOnError(this);" data-fancybox="gallery" src="/img/2026-03-10_213739_Debian_appears_in_StartMenu.png" alt="DebianappearsinStartMenu" data-caption="DebianappearsinStartMenu" loading="lazy">
+<figcaption aria-hidden="true">DebianappearsinStartMenu</figcaption>
+</figure>
+<p>这样<a target="_blank" rel="noopener" href="https://github.com/microsoft/WSL/issues/10646">wsl
+--install --no-launch does not install the
+distro</a>的问题也有人遇到过，很巧的是他的想法和我差不多，我们都想搞一个“封包提起来就走”的WSL，我是想在安装前就给它迁移到D盘去，不过WSL的机制似乎并没有被设计为允许这么干。</p>
+<p>那还是老老实实先等它安装到C盘，然后我们再迁移吧。</p>
+<p>点击开始菜单中的<code>Debian</code>，这会启动<code>Debian/WSL</code>的自动安装过程。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Installing, this may take a few minutes...</span><br><span class="line">Please create a default UNIX user account. The username does not need to match your Windows username.</span><br><span class="line">For more information visit: https://aka.ms/wslusers</span><br><span class="line">Enter new UNIX username: Knighthana</span><br><span class="line">New password:</span><br><span class="line">Retype new password:</span><br><span class="line">passwd: password updated successfully</span><br><span class="line">usermod: no changes</span><br><span class="line">Installation successful!</span><br><span class="line">User account already exists, skipping creation</span><br><span class="line">Knighthana@KNIGHTHANA-DESKTOP:~$</span><br></pre></td></tr></table></figure>
+<p>安装大功告成！不过由于WSL的一些特性，需要提前做一些准备：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">"[user]\ndefault=&lt;用户名&gt;"</span> | sudo <span class="built_in">tee</span> -a /etc/wsl.conf</span><br></pre></td></tr></table></figure>
+比如：<code>echo -e "[user]\ndefault=Knighthana" | sudo tee -a /etc/wsl.conf</code></p>
+<p>另外，如果要改镜像源的话也最好现在做完，虽然默认官方源用的是<code>http</code>，但考虑到信息安全问题，还需要安装对<code>https</code>镜像源的支持。
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install apt-transport-https ca-certificates</span><br></pre></td></tr></table></figure></p>
+<p>然后切换到国内的镜像源，最好更新一下，不再赘述。顺便一提，<code>debian</code>可以在日常的<code>upgrade</code>过程中完成小版本更新，不用做额外的设置。</p>
+<p>一切完成后，Ctrl-D关掉<code>Debian/WSL</code>以便开始迁移工作。</p>
+<p>打开PowerShell，首先用<code>wsl -l -v</code>确认各虚拟机工作状态，如果需要迁移的Debian虚拟机还没关机，则用
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--terminate</span> <span class="string">"&lt;发行版名称&gt;"</span></span><br></pre></td></tr></table></figure> 以关闭它，比如<code>wsl --terminate Debian</code></p>
+<h2 id="导出">导出</h2>
+<p>WSL管理器带有导出WSL虚拟机的功能，只需要通过 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> <span class="string">"&lt;发行版名称&gt;"</span> <span class="string">"&lt;导出/文件/路径.tar&gt;"</span></span><br></pre></td></tr></table></figure>
+就可以进行导出工作，比如<code>wsl --export Debian D:\backup\WSL\Debian_wsl_202603102327_backup.tar</code></p>
+<p>导出的Debian只有 <em>296MiB</em>
+453MiB，可以说很精简了。（我就跑了一个<code>sudo apt update &amp;&amp; sudo apt dist-upgrade &amp;&amp; sudo apt autoremove</code>，明明提示占用空间变小了，鬼知道为什么打包之后变大了，介意的就别更新了直接打包吧）</p>
+<p>注意，进行导出操作期间，WSL中某些机制可能会修改<strong>全体</strong>运行中的WSL虚拟机的部分<code>/proc</code>信息，所以其他正在工作中的虚拟机内可能出现奇怪的问题；</p>
+<p>待到<code>tar</code>文件创建完成后，虚拟机算是安全了，只要这个备份在手，就能随时还原。</p>
+<h2 id="注销">注销</h2>
+<p>导出操作更像是备份，原本的虚拟机还在工作，如果是为了快照，那么这一步就足够了。</p>
+<p>不过我们的工作是迁移，所以需要继续，下一步是注销，既是为了腾出地方，也是为了留出名字的空间，WSL是不允许注册重名的虚拟机的。</p>
+<p>注销操作会彻底删除掉当前虚拟机的一切，如果没有备份的话，这一步会从计算机上彻底抹除掉任何原来虚拟机的痕迹。</p>
+<p>通过 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> <span class="string">"&lt;发行版名称&gt;"</span></span><br></pre></td></tr></table></figure> 来注销虚拟机。</p>
+<p>验证一下，<code>C:\Users\Knighthana\AppData\Local\Packages\TheDebianProject.DebianGNULinux_76v4gfsz19hv4</code>目录只有40KiB大小了。</p>
+<h2 id="导入">导入</h2>
+<p>导入这一步，可以自定义虚拟机的名称、位置、版本。可以说是很自由了。</p>
+<p>通过 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--import</span> <span class="string">"&lt;虚拟机命名&gt;"</span> <span class="string">"&lt;指定\虚拟\硬盘\存放\位置&gt;"</span> <span class="string">"&lt;先前\导出\备份\路径&gt;"</span> <span class="literal">--version</span> <span class="string">"&lt;版本号&gt;"</span></span><br></pre></td></tr></table></figure></p>
+<p>而我需要用的是<code>wsl --import Debian D:\SoftwareData\DebianWSL D:\backup\wsl\Debian_wsl_202603102327_backup.tar --version 2</code></p>
+<p>等待虚拟机导入。</p>
+<h2 id="大功告成">大功告成</h2>
+<p>通过系统菜单进入刚刚创建的<code>Debian</code>虚拟机，可以发现一切如旧，完成！撒花！</p>
+<h2 id="附录">附录</h2>
+<h3 id="关于deb822">关于DEB822</h3>
+<p>“<strong><code>DEB822</code></strong>”是Debian系在较新系统上推出的标准，也是正在发展的方向。我之前在LinuxMint上就已经在使用这个<code>DEB822</code>了，不过当时并没有意识到它其实是一个新标准。</p>
+<p>这个标准并不复杂，简单来说就是将源从原来的<code>/etc/apt/sources.list</code>迁移到<code>/etc/apt/sources.list.d</code>，当然文件内容也有所变动，一般来说镜像源网站会提供本镜像源所需的<code>debian.sources</code>文件；</p>
+<p>如果没有提供的话，离线情况下可以在<code>/usr/share/doc/apt/examples/debian.sources</code>找到参考文件，照猫画虎即可，镜像源也是从官方源拖的文件，因此<code>Signed-By</code>什么的都基本不用修改。</p>
+<p>如果系统提供了自动化脚本<code>apt modernize-sources</code>，那么可以直接将传统的<code>sources.list</code>转换为DEB822的<code>debian.sources</code>；</p>
+<p>如果系统没有提供，那么这一步也可以手动操作，不必担心弄坏东西，只需要删掉旧的<code>list</code>文件，添加新的<code>sources</code>文件就可以了；</p>
+<p>而且，<code>apt</code>允许传统方式与<code>DEB822</code>方式两者的文件同时存在，<code>apt</code>每次运行的时候都会扫描这些涉及到的目录；另外，由于<code>apt</code>工作的方式是把所有配置文件内容汇总后一起处理，因此无法预测源的先后顺序，不要在这里放冲突的配置条目；</p>
+<h3 id="关于导入后用户变成了root">关于导入后用户变成了<code>root</code></h3>
+<p>上面说过……</p>
+<blockquote>
+<p>安装大功告成！不过由于WSL的一些特性，需要提前做一些准备：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">"[user]\ndefault=&lt;用户名&gt;"</span> | sudo <span class="built_in">tee</span> -a /etc/wsl.conf</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>比如：<code>echo -e "[user]\ndefault=Knighthana" | sudo tee -a /etc/wsl.conf</code></p>
+</blockquote>
+<p>WSL导出导入之后就是会有这样的问题，究其原因，是第一次打开WSL创建用户时，有很多注册表里面的操作系统代为完成了，</p>
+<p>注销时这些信息被删掉了，而再次导入时系统不会代劳这些事，</p>
+<p>因此需要用这个补丁——<code>/etc/wsl.conf</code>中的<code>[user]</code>，来解决问题；</p>
+<p>虽然我觉得这办法也挺好的，以后再次导出导入的时候也不用再处理这些登录用户设定之类的问题了，一劳永逸；</p>
+<p>如果嫌丑，可以这么做：</p>
+<h4 id="确定linux用户的uid">确定Linux用户的UID</h4>
+<p>打开需要操作的WSL系统，用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">id</span> -u &lt;用户名&gt;</span><br></pre></td></tr></table></figure>
+或是翻找<code>/etc/passwd</code>来确认自己的<code>uid</code></p>
+<p>一般来说创建的第一个普通用户的<code>uid</code>都是<code>1000</code></p>
+<h4 id="确定发行版的注册名称">确定发行版的注册名称</h4>
+<p>在Win中执行 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">-l</span> <span class="literal">-v</span></span><br></pre></td></tr></table></figure></p>
+<p>记住对应的发行版虚拟机在WSL中注册的名称</p>
+<h4 id="寻找注册表键值">寻找注册表键值</h4>
+<p>在Windows注册表中寻找 <figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">计算机\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lxss\</span><br></pre></td></tr></table></figure></p>
+<p>里的条目，翻找所有名字为<code>{GUID}</code>的条目，通过每个条目的<code>DistributionName</code>找到对应发行版的条目，</p>
+<p>定位其中的<code>DefaultUid</code>键，如果没有这个键，以<code>DWORD(32位)</code>格式创建名称为<code>DefaultUid</code>的键；</p>
+<h4 id="修改">修改</h4>
+<p>将Linux中找到的<code>uid</code>填入Windows注册表中的<code>DefaultUid</code>键。</p>
+<p>重启对应的WSL虚拟机</p>
+<p><code>wsl --terminate Debian</code>关闭</p>
+<p>再启动；</p>
+<hr>
+<p>Knighthana</p>
+<p>2026/03/11</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/WSL/" rel="tag">WSL</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/WSL2/" rel="tag">WSL2</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Windows/" rel="tag">Windows</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1773853799828"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%81%E7%A7%BBwsl%E6%96%87%E4%BB%B6%E5%88%B0%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">迁移WSL文件到其他位置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8wsl2%E8%80%8C%E4%B8%8D%E6%98%AFwsl1"><span class="toc-number">1.1.</span> <span class="toc-text">用WSL2而不是WSL1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%90%86wsl2%E7%9A%84%E7%A1%AC%E7%9B%98"><span class="toc-number">1.1.1.</span> <span class="toc-text">清理WSL2的硬盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wsl%E7%9A%84%E5%88%86%E6%AD%A5%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">WSL的分步安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA"><span class="toc-number">1.3.</span> <span class="toc-text">导出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%94%80"><span class="toc-number">1.4.</span> <span class="toc-text">注销</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5"><span class="toc-number">1.5.</span> <span class="toc-text">导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%8A%9F%E5%91%8A%E6%88%90"><span class="toc-number">1.6.</span> <span class="toc-text">大功告成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">1.7.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8Edeb822"><span class="toc-number">1.7.1.</span> <span class="toc-text">关于DEB822</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%AF%BC%E5%85%A5%E5%90%8E%E7%94%A8%E6%88%B7%E5%8F%98%E6%88%90%E4%BA%86root"><span class="toc-number">1.7.2.</span> <span class="toc-text">关于导入后用户变成了root</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9Alinux%E7%94%A8%E6%88%B7%E7%9A%84uid"><span class="toc-number">1.7.2.1.</span> <span class="toc-text">确定Linux用户的UID</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A1%AE%E5%AE%9A%E5%8F%91%E8%A1%8C%E7%89%88%E7%9A%84%E6%B3%A8%E5%86%8C%E5%90%8D%E7%A7%B0"><span class="toc-number">1.7.2.2.</span> <span class="toc-text">确定发行版的注册名称</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%BB%E6%89%BE%E6%B3%A8%E5%86%8C%E8%A1%A8%E9%94%AE%E5%80%BC"><span class="toc-number">1.7.2.3.</span> <span class="toc-text">寻找注册表键值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-number">1.7.2.4.</span> <span class="toc-text">修改</span></a></li></ol></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>

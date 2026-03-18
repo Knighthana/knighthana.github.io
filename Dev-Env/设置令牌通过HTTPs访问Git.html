@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>设置令牌通过HTTPs访问Git - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="设置令牌通过HTTPs访问Git 通常访问git的方式是ssh，基于公私钥的身份验证与基于对称加密的数据传输已经足够安全了。 不过有些仓库会使用HTTPs，默认情况下通过HTTPs访问的仓库，git会要求用账号密码登录； 不过账号密码毕竟拥有本账号最高级别的权限，平常同步个仓库用不上不说，一旦泄露了麻烦可就大了；另外一遍遍输入账号密码确实挺麻烦，像现在账号密码都是pwgen -yB 16甚至32，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设置令牌通过HTTPs访问Git">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/%E8%AE%BE%E7%BD%AE%E4%BB%A4%E7%89%8C%E9%80%9A%E8%BF%87HTTPs%E8%AE%BF%E9%97%AEGit.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="设置令牌通过HTTPs访问Git 通常访问git的方式是ssh，基于公私钥的身份验证与基于对称加密的数据传输已经足够安全了。 不过有些仓库会使用HTTPs，默认情况下通过HTTPs访问的仓库，git会要求用账号密码登录； 不过账号密码毕竟拥有本账号最高级别的权限，平常同步个仓库用不上不说，一旦泄露了麻烦可就大了；另外一遍遍输入账号密码确实挺麻烦，像现在账号密码都是pwgen -yB 16甚至32，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-08T21:31:00.000Z">
+<meta property="article:modified_time" content="2026-03-08T22:00:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="WSL">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1773853799870">
+
+<link rel="stylesheet" href="/css/style.css?v=1773853799870">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1773853799871"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>100</div>
+        <div><span>标签</span>140</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1773853799871"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">19</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">39</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">24</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 14px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 19px;">C</a> <a href="/tags/CJK/" style="font-size: 11px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 11px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 11px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11px;">GPG</a> <a href="/tags/Git/" style="font-size: 18px;">Git</a> <a href="/tags/GoLang/" style="font-size: 10px;">GoLang</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Jekyll/" style="font-size: 11px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 12px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 14px;">Ubuntu</a> <a href="/tags/VSCode/" style="font-size: 11px;">VSCode</a> <a href="/tags/VirtualBox/" style="font-size: 11px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 17px;">WSL</a> <a href="/tags/WSL2/" style="font-size: 11px;">WSL2</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 12px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11px;">vim</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 11px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(140);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Dev-Env/%E8%BF%81%E7%A7%BBWSL%E6%96%87%E4%BB%B6%E5%88%B0%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE.html">迁移WSL文件到其他位置</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%AE%BE%E7%BD%AE%E4%BB%A4%E7%89%8C%E9%80%9A%E8%BF%87HTTPs%E8%AE%BF%E9%97%AEGit.html">设置令牌通过HTTPs访问Git</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%A7%A3%E5%86%B3WSL2%E5%86%85%E7%8E%AF%E5%A2%83%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87localhost%E8%AF%BB%E5%8F%96%E5%88%B0Windows%E7%9A%84localhost%E7%9A%84%E9%97%AE%E9%A2%98.html">解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E5%AE%89%E8%A3%85GoLang%E7%8E%AF%E5%A2%83.html">安装GoLang环境</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Code/%E5%89%8D%E7%AB%AF%E5%B0%8F%E6%8A%80%E5%B7%A7.html">前端小打闹</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://knighthana.github.com" target="_blank" >
+                    <img src="https://knighthana.github.com/favicon.png" alt="This site"></img>
+                    <p>This site</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2026 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="设置令牌通过HTTPs访问Git" loading="lazy">
+            <h1>设置令牌通过HTTPs访问Git</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2026年03月09日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="设置令牌通过https访问git">设置令牌通过HTTPs访问Git</h1>
+<p>通常访问<code>git</code>的方式是<code>ssh</code>，基于公私钥的身份验证与基于对称加密的数据传输已经足够安全了。</p>
+<p>不过有些仓库会使用<code>HTTPs</code>，默认情况下通过<code>HTTPs</code>访问的仓库，<code>git</code>会要求用账号密码登录；</p>
+<p>不过账号密码毕竟拥有本账号最高级别的权限，平常同步个仓库用不上不说，一旦泄露了麻烦可就大了；另外一遍遍输入账号密码确实挺麻烦，像现在账号密码都是<code>pwgen -yB 16</code>甚至<code>32</code>，或者用浏览器直接生成的，哪记得过来；</p>
+<p>部分<code>git</code>服务器提供了令牌机制，先看看怎么配。</p>
+<h2 id="令牌是什么">令牌是什么？</h2>
+<p>在使用令牌之前，我也不知道这是个什么玩意，看起来很麻烦，以至于我一直没配置。</p>
+<p>实际上我们可以这么理解“令牌”，它就是“密码”，它是一个由远程Git服务器为你的账户保管的一对多密码之一，而在本地Git客户端中，它就是被作为“密码”进行处理的；</p>
+<p>只不过，远程存储的多个“密码”中，“密码A”只能做某些事，“密码B”只能做其它的事情，“密码C”也有自己能做的和不能做的；</p>
+<p>在某些场合，远程服务器会禁止通过账户的真正密码进行git操作，此时只能通过这些令牌，也就是“密码A”、“密码B”、“密码C”来进行操作，相比我们平常使用的密码，这些令牌会在过期后报废。</p>
+<p>本地的<code>git</code>客户端会通过一个助手协助进行这样的工作：在你通过<code>HTTPs</code>访问<code>git</code>的时候，通过“某种方式”在本地（加密）存储了你的用户名和“密码”——也就是令牌；</p>
+<p>之后，每当你对同一个<code>remote</code>进行同步操作时，<code>git</code>会联系助手解密还原账号“密码”之后<strong>代填写</strong>；不过前面也提到了，这里的“密码”其实是令牌；</p>
+<p>希望读者能够通过这样的方式理解令牌来降低对未知的恐惧。</p>
+<h2 id="生成令牌">生成令牌</h2>
+<p>这一步基本只能在浏览器里面操作，按照提示设定好令牌之后，会获取到一段只能在浏览器中看见这一次的字符串，把它保存好。</p>
+<p>对了，注意令牌的有效期，将来它过期之后，还得再来一次这样的操作。</p>
+<h2 id="存储令牌">存储令牌</h2>
+<p>对于令牌字符串，数字保存或者抄写保存都可以，现在谈谈怎么为<code>git</code>存储这个令牌，</p>
+<p><code>git</code>使用一个助手<code>credential.helper</code>辅助处理令牌，有许多方式存储令牌，常用的是<code>cache模式</code>、<code>store模式</code>、<code>由安全应用协助保管</code>：</p>
+<ul>
+<li><p><code>cache模式</code>将令牌存储在内存中，易失但安全拉满了，我也不知道啥项目需要这么干；</p></li>
+<li><p><code>store模式</code>是将令牌明文存储成文件；类似ssh私钥的存储方式，区别在于ssh私钥可以指定口令进行加密，而<code>git/HTTPs</code>令牌仅仅由文件系统访问权限保护；</p></li>
+<li><p><code>由安全应用协助保管</code>是将令牌用系统提供的加密API进行存储的方式，类似放在系统提供的保险箱中；这是一类方案的统称，具体对于Windows、macOS、Linux而言各有各的不同方案；</p></li>
+</ul>
+<h3 id="本地明文存储方式store">本地明文存储方式<code>store</code></h3>
+<p>明文存储方式会将本账户所有被<code>git config</code>设定为需要进行存储的<code>git/HTTPs</code>令牌存入<code>~/.git-credentials</code>（默认，但可以通过<code>git config credential.helper 'store --file=/path/to/file'</code>手动指定，为每个仓库或是全局）中；</p>
+<p>要全局使用这种方式，输入： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper store</span><br></pre></td></tr></table></figure></p>
+<p>或者在单独的仓库中不带<code>--global</code>地使用来为个别仓库启用
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config credential.helper store</span><br></pre></td></tr></table></figure></p>
+<p>之后进行<code>push</code>或者<code>pull</code>操作，输入用户名，</p>
+<p>但是，</p>
+<p>在输入密码这一步输入之前浏览器上获取的令牌字符串；</p>
+<p>这样就完成了令牌的设定；</p>
+<p>另一个方式也很明文，那就是将令牌通过<code>https://用户名:令牌字符串@example.com/user/repo.git</code>的方式硬编码进<code>.git/config</code>文件中，</p>
+<p>虽然<code>.git/config</code>会一直留在本地所以没有暴露在网络中的风险，</p>
+<p>不过本地的环境到底安不安全就自行斟酌了。</p>
+<h3 id="借用其它安全应用通常是系统提供的密钥存储api存储令牌">借用其它安全应用，通常是系统提供的密钥存储API存储令牌</h3>
+<p>系统的保险箱，比如<code>macOS</code>称之为钥匙串，是一类加密代管API，正好用来保存密码、令牌这些敏感数据。</p>
+<p>这是一类方案的统称：</p>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>系统</th>
+<th>凭据助手配置</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Windows</td>
+<td>git config --global credential.helper manager-core</td>
+<td>存储在 Windows 凭据管理器，UI 管理</td>
+</tr>
+<tr class="even">
+<td>macOS</td>
+<td>git config --global credential.helper osxkeychain</td>
+<td>存储在钥匙串，安全</td>
+</tr>
+<tr class="odd">
+<td>Linux</td>
+<td>git config --global credential.helper libsecret</td>
+<td>需要 libsecret，存储在密钥环</td>
+</tr>
+</tbody>
+</table>
+<p>这里只说Linux；</p>
+<p>启用这种方式（全局，不想全局的取消掉<code>--global</code>）：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper libsecret</span><br></pre></td></tr></table></figure></p>
+<p>之后只要触发一次输入账号密码的操作，在密码环节输入令牌就可以了。</p>
+<h2 id="在wsl2中配置令牌真正的挑战">在<code>WSL2</code>中配置令牌——真正的挑战</h2>
+<h3 id="wsl2中通用git令牌存储方案的问题"><code>WSL2</code>中，通用<code>git</code>令牌存储方案的问题</h3>
+<p>然而对于我正在使用的<code>Ubuntu 24.04 WSL2</code>来说，存在这么几个问题：</p>
+<ol type="1">
+<li>莫得二进制，需要自己编：</li>
+</ol>
+<blockquote>
+<p>在 Ubuntu 24.04 (WSL2) 中，Git 预设不直接包含已编译好的 libsecret
+协助程式执行档。</p>
+<p>在 Debian/Ubuntu 系系统中，Git
+通常将该工具的原始码放在文件目录下，使用者需要手动编译后才能使用。</p>
+</blockquote>
+<ol start="2" type="1">
+<li>服务缺失：</li>
+</ol>
+<blockquote>
+<p>在 WSL2 环境下使用 libsecret 存在一个核心限制：</p>
+<p>需要 Secret Service 执行个体：libsecret
+依赖于系统的「金钥环服务」（如 gnome-keyring）。</p>
+<p>WSL2 预设是纯文字模式（headless），通常没有启动这些服务。</p>
+</blockquote>
+<p>抄一段AI对此问题有多麻烦的描述：</p>
+<blockquote>
+<p><strong>为什么它在 WSL2 中难以直接使用？</strong></p>
+<p>缺少 D-Bus 会话：libsecret 需要通过 D-Bus 与后台服务通信。WSL2
+默认不启动图形界面的用户会话 D-Bus，导致工具找不到通信管道。</p>
+<p>服务未自动启动：在普通桌面版 Ubuntu
+中，钥匙环服务（gnome-keyring-daemon）会在登录时通过 PAM
+模块自动启动并解锁。但 WSL2 采用的是直接进入 Shell
+的方式，跳过了这个自动过程。</p>
+<p>交互式解锁难题：即便你手动启动了服务，它也需要你输入密码来「解锁」钥匙环。在没有
+GUI 弹窗的情况下，这在命令行中操作非常繁琐。</p>
+<p><strong>带来的后果</strong></p>
+<p>如果你执意在 WSL2 中配置 libsecret
+但不解决钥匙环服务问题，你会发现：</p>
+<p>无法持久化存储：Git 每次 push/pull 仍然会提示输入密码，因为 libsecret
+存不进「关闭着」的仓库。</p>
+<p>报错信息：可能会看到 Error calling StartServiceByName 或 No such
+interface 等令人困惑的 D-Bus 错误。</p>
+</blockquote>
+<h3 id="来自微软的推荐方案">来自微软的“推荐方案”</h3>
+<p>对于WSL2来说，<a target="_blank" rel="noopener" href="https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/wsl.md">推荐的做法</a>是<a target="_blank" rel="noopener" href="https://github.com/git-ecosystem/git-credential-manager">Git
+Credential Manager</a>； <em>源于Microsoft之前的<a target="_blank" rel="noopener" href="https://github.com/Microsoft/Git-Credential-Manager-for-Windows">Git
+Credential Manager for Windows</a></em></p>
+<p>并不是在WSL2中安装<code>GCM for Linux</code>，那会带来一大滩不想看到的东西，这包括WSLg、一整套.NET框架，并且需要手动配置“凭据存储后端”后才能使用。虽然<a target="_blank" rel="noopener" href="https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/wsl.md#can-i-install-git-credential-manager-directly-inside-of-wsl">并不是不能这么做</a>。</p>
+<p>这里需要<a target="_blank" rel="noopener" href="https://github.com/git-for-windows/git">Git for
+Windows</a>。</p>
+<p>好消息：我也不知道到底是哪年装过了<code>Git for Windows</code>，总之我的PC上面有个<code>Git for Windows</code></p>
+<p>坏消息：这个Git的版本是<code>Git for Windows 2.38.0.windows.1</code>，里面根本没有<code>Git Credential Manager</code>；</p>
+<p>更坏的消息：我顺手在<code>powershell</code>里敲了个<code>git update-git-for-windows</code>而不是用浏览器下载安装包，于是只能等它下载完；</p>
+<p>跟<a target="_blank" rel="noopener" href="https://github.com/git-ecosystem/git-credential-manager/blob/release/docs/wsl.md#can-i-install-git-credential-manager-directly-inside-of-wsl">网站上</a>那不知道哪年开始就一直没有修改的文档不太一样，Git现在是64位的，所以它在<code>C:\Program Files\Git\mingw64\bin</code>也就是<code>/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe</code>而不是<code>/mnt/c/Program\ Files\ \(x86\)/Git\ Credential\ Manager/git-credential-manager.exe</code>里。</p>
+<p>因此我应该如此配置WSL2中的<code>git</code>： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config credential.helper <span class="string">"/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"</span></span><br></pre></td></tr></table></figure></p>
+<p>不过考虑到目前的情况，大概率所有的仓库验证都要通过GCM进行了
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper <span class="string">"/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe"</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="凭据助手credential.helper的多值特性">凭据助手<code>credential.helper</code>的多值特性</h3>
+<p>还需要注意的一个问题是<code>git config credential.helper</code>是一个累加的多值配置项目，对同一个仓库多次执行会不断添加新的helper，叠加上按顺序的<code>/etc/gitconfig</code>、<code>~/.gitconfig</code>、<code>repo/.git/config</code>，一不留神将会制造很多个helper出来；</p>
+<p>用 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --show-origin --get-all credential.helper</span><br></pre></td></tr></table></figure>
+检查当前项目中有多少个<code>helper</code>正在发挥作用；</p>
+<p>如果多于一个，或者其中存在不正常的条目，执行： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --unset-all credential.helper</span><br><span class="line">git config --global --unset-all credential.helper</span><br></pre></td></tr></table></figure>
+将其全部清除。</p>
+<p>由于凭据助手的这个奇妙特性，基本建议使用<code>global</code>进行配置，不然每个项目最后的汇总会让人戴上痛苦面具。</p>
+<h3 id="避免oauth猜测流程">避免OAuth猜测流程</h3>
+<p>GCM会探测远端的Git仓库是一个什么类型的仓库，并尝试发起OAuth流程，甚至可能会超时弹<code>warning: auto-detection of host provider took too long (&gt;2000ms)</code>错误；</p>
+<p>已知远程的服务器是一个GitLab服务，因此我将其修改为：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.https://git.example.com.provider gitlab</span><br></pre></td></tr></table></figure></p>
+<p>这时出现了报告： &gt;warning: auto-detection of host provider took
+too long (&gt;2000ms) &gt; &gt;warning: see
+https://aka.ms/gcm/autodetect for more information.</p>
+<p>想到自搭的Git服务器不需要OAuth这种东西，我们只需要最基本的密码输入框，所以将GCM的Provider设置为<code>generic</code>：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.https://example.com.provider generic</span><br></pre></td></tr></table></figure></p>
+<p>然而GCM还是在贩冰，不断地报告说： &gt; warning: auto-detection of
+host provider took too long (&gt;2000ms) &gt; &gt; warning: see
+https://aka.ms/gcm/autodetect for more information. &gt; &gt; Already up
+to date.</p>
+<p>那我也只能对这个autodetect痛下撒手了： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global gcm.autoDetect <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<p>然而看到这样的画面我没招了 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">➜  toolset_usewhilelearn git:(master) git config --global gcm.autoDetect <span class="literal">false</span></span><br><span class="line">➜  toolset_usewhilelearn git:(master) git pull</span><br><span class="line">warning: auto-detection of host provider took too long (&gt;2000ms)</span><br><span class="line">warning: see https://aka.ms/gcm/autodetect <span class="keyword">for</span> more information.</span><br><span class="line">Already up to <span class="built_in">date</span>.</span><br></pre></td></tr></table></figure> 说明问题不在这里。</p>
+<p>回忆一下过去在<code>MSYS2</code>上调用Windows原生程序传<code>git</code>能传进<code>WSL1</code>的离谱经历（当时硬盘上Windows的环境变量里面并没有存储WSL1的路径，这问题并没有看上去那么简单），我们可以做出假设：“此处调用的Windows原生程序仍然在使用一个莫名其妙的配置文件和环境变量”</p>
+<p>现在提问：<code>/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe</code>的Windows原生程序，会认为自己的配置文件在哪？</p>
+<p>不猜了，揭晓答案，<code>/mnt/c/Program\ Files/Git/mingw64/bin/git-credential-manager.exe</code>当然会认为自己的配置文件是
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/mnt/c/Program\ Files/Git/etc/gitconfig</span><br><span class="line">/mnt/c/Users/用户名/.gitconfig</span><br></pre></td></tr></table></figure> 呀？</p>
+<p>这不是<code>git</code>运行在<code>windows</code>上的<strong>默认行为</strong>吗，哪里不对吗？</p>
+<p>好了，把刀放下。</p>
+<p>现在打开<code>powershell</code>，或者<code>git-bash-for-windows</code>，输入
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.https://git.example.com.provider gitlab</span><br></pre></td></tr></table></figure> 于是问题“神奇地”解决了。</p>
+<p>给我气笑了 😡😅</p>
+<blockquote>
+<p>Haha. Look familiar?</p>
+<p>Scenes like these are happening all over the cross-environment
+development in galaxy right now.</p>
+<p>You could be next.</p>
+</blockquote>
+<h3 id="造轮子的方案">造轮子的方案</h3>
+<p>另外，对于缺少<code>gnome-keyring</code>的WSL2来说，还有一个<code>GPG</code>搭配<code>pass</code>的纯文本方案，这里有他人辛勤工作的项目做了实现。查看<a target="_blank" rel="noopener" href="https://github.com/carlzhc/git-credential-pass">carlzhc
+git-credential-pass</a>与<a target="_blank" rel="noopener" href="https://github.com/Xgames123/git-credential-pass">Xgames123
+git-credential-pass</a>的两个项目。</p>
+<h2 id="注销令牌">注销令牌</h2>
+<p>令牌最长的有效期是365天，总之令牌是会失效的；</p>
+<p>对于Linux下的标准<code>git</code>+<code>libsecret</code>来说，可以用<code>secret-tool</code>或者<code>git credential reject</code>进行管理。</p>
+<p>对于<code>git</code>会去对接Windows上<code>GCM</code>的人来说，在Windows中按下Win键，输入<code>credentialmanager</code>会打开凭据管理器，在<code>Windows凭据</code>中寻找名为<code>git:https://</code>
+的项目，进行管理即可；</p>
+<p>虽然<code>GCM</code>提供了<code>erase</code>方法： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将path to替换为实际路径</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"protocol=https</span></span><br><span class="line"><span class="string">host=github.com"</span> | /mnt/path/to/git-credential-manager.exe erase</span><br></pre></td></tr></table></figure></p>
+<h2 id="附录">附录</h2>
+<h3 id="检查方案">检查方案</h3>
+<p>如果git的表现实在很奇怪而不知道如何排查，可以执行： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --list --show-origin</span><br></pre></td></tr></table></figure>
+检查是不是有奇怪的配置条目混进去了</p>
+<h3 id="针对路径而不是host进行crendential管理">针对路径而不是host进行crendential管理</h3>
+<p>（不建议）</p>
+<p>在<code>git</code>中启用<code>credential.useHttpPath</code>后</p>
+<p>例如<code>GCM</code>就可以通过 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"protocol=https</span></span><br><span class="line"><span class="string">host=github.com</span></span><br><span class="line"><span class="string">path=username/projectname.git"</span> | git-credential-manager.exe erase</span><br></pre></td></tr></table></figure>
+对单个项目进行管理。</p>
+<p>不过一般来说更多地会把令牌绑在网站上而不是具体的项目中，因此这是可以实现的，但不是建议的。</p>
+<h3 id="输入了错误的令牌怎么办">输入了错误的令牌怎么办？</h3>
+<p><em>凉拌。</em></p>
+<p>看上一个小节，用凭据助手的<code>reject</code>或是<code>erase</code>方法移除错误的令牌。</p>
+<p>不过我更好奇的是，如果我输入一个错误令牌，凭据助手会纠正，直到我输入正确的令牌，还是持续报错？</p>
+<p><a target="_blank" rel="noopener" href="https://ask.csdn.net/questions/9272115">GitHub HTTPS
+认证失败</a></p>
+<blockquote>
+<p>排查发现本地 Git 配置中 <code>credential.helper</code> 已启用（如
+macOS Keychain / Windows Credential Manager），</p>
+<p>且缓存的凭据仍为已失效的密码或已被 GitHub 废弃的账户密码（自 2021 年
+8 月起 GitHub 已全面禁用密码认证）。</p>
+<p>此外，若曾使用过过期 PAT（Personal Access Token），而新生成的 token
+未同步更新至凭据管理器，</p>
+<p>也会触发此错误——Git 会静默复用缓存凭证，而非提示重新登录。</p>
+<p>该问题在 macOS 和 Windows 上高频出现，Linux 用户则常因未配置
+<code>git-credential-libsecret</code> 或凭据未刷新导致相同报错。</p>
+</blockquote>
+<p>基本上来说，凭据助手不会记录有效性，它只会完成非常基本、重复性、机械性的工作。</p>
+<h3 id="wsl突然无法调用windows应用程序的问题">WSL突然无法调用Windows应用程序的问题</h3>
+<p>在迁移工作完成的几天后，我遇到了新的问题，在执行<code>git</code>操作的时候，它无法调用到GCM了，提示：</p>
+<blockquote>
+<p>/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe get:
+1: /mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe: Exec
+format error</p>
+</blockquote>
+<p>这个问题可能是WSL突然丢失了执行<code>exe</code>能力导致的，通过下面的方法检查：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/sys/fs/binfmt_misc/WSLInterop</span><br></pre></td></tr></table></figure></p>
+<p>如果结果中有<code>enabled</code>，那么问题可能就不在这里；</p>
+<p>如果结果中有<code>disabled</code>，那么可以执行<code>sudo sh -c 'echo 1 &gt; /proc/sys/fs/binfmt_misc/WSLInterop'</code>恢复；</p>
+<p>而我遇到了更加离奇的问题，<code>cat</code>提示我：</p>
+<blockquote>
+<p>cat: /proc/sys/fs/binfmt_misc/WSLInterop: No such file or
+directory</p>
+</blockquote>
+<p>屋檐了，我也不知道发生了什么导致它变成这样的，难道我的虚拟机趁我不在偷偷跑去玩了XX……？不过还好对于家用的计算机来说解决起来不算太难，保存好工作，通过PowerShell的WSL管理器重启WSL即可。</p>
+<p>之后: <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜ ~ <span class="built_in">cat</span> /proc/sys/fs/binfmt_misc/WSLInterop</span><br><span class="line">enabled</span><br><span class="line">interpreter /init</span><br><span class="line">flags: PF</span><br><span class="line">offset 0</span><br><span class="line">magic 4d5a</span><br><span class="line">➜ ~ <span class="string">"/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"</span> --version</span><br><span class="line">2.7.0+d1dd8a4ded75a2b1faae653157ac1699609442ad</span><br></pre></td></tr></table></figure></p>
+<p>可以看到问题已经解决了。</p>
+<p>顺便，为了<code>git</code>以后的福祉，我顺便给GCM做了个软连接。
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">ln</span> -s <span class="string">"/mnt/c/Program Files/Git/mingw64/bin/git-credential-manager.exe"</span> /usr/local/bin/gcm_win.exe</span><br></pre></td></tr></table></figure></p>
+<p>现在<code>git</code>的配置可以写得更简单一点了。 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --unset-all credential.helper</span><br><span class="line">git config --global credential.helper /usr/local/bin/gcm_win.exe</span><br></pre></td></tr></table></figure></p>
+<h3 id="有关wslinterop">有关<code>WSLInterop</code></h3>
+<p>关于指令 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c <span class="string">'echo 1 &gt; /proc/sys/fs/binfmt_misc/WSLInterop'</span></span><br></pre></td></tr></table></figure></p>
+<p><code>binfmt_misc</code>是一个Linux内核功能"Binary Format
+Miscellaneous"，类似一张可以用来查询的表，它会让Linux将无法识别的二进制格式交给指定的解释器处理。</p>
+<p><code>WSLInterop</code>是WSL2中的一个来自微软的解释器。</p>
+<p>WSL2在查阅<code>binfmt_misc</code>表之后，会发现<code>exe</code>对应的是<code>/init</code>，于是<code>exe</code>被传给<code>/init</code>，而<code>/init</code>会将这个请求转发给Windows宿主。</p>
+<p><code>echo 1</code>代表“启用”。<code>echo 1 &gt; /proc/sys/fs/binfmt_misc/WSLInterop</code>就是将“启动信号”写入核心控制文件。</p>
+<p>另外这个过程也可以通过<code>echo 1 | sudo tee /proc/sys/fs/binfmt_misc/WSLInterop</code>完成。</p>
+<hr>
+<p>Knighthana</p>
+<p>2026/03/09</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Git/" rel="tag">Git</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/WSL/" rel="tag">WSL</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1773853799830"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%BB%A4%E7%89%8C%E9%80%9A%E8%BF%87https%E8%AE%BF%E9%97%AEgit"><span class="toc-number">1.</span> <span class="toc-text">设置令牌通过HTTPs访问Git</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A4%E7%89%8C%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.1.</span> <span class="toc-text">令牌是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E4%BB%A4%E7%89%8C"><span class="toc-number">1.2.</span> <span class="toc-text">生成令牌</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E4%BB%A4%E7%89%8C"><span class="toc-number">1.3.</span> <span class="toc-text">存储令牌</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%98%8E%E6%96%87%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8Fstore"><span class="toc-number">1.3.1.</span> <span class="toc-text">本地明文存储方式store</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%9F%E7%94%A8%E5%85%B6%E5%AE%83%E5%AE%89%E5%85%A8%E5%BA%94%E7%94%A8%E9%80%9A%E5%B8%B8%E6%98%AF%E7%B3%BB%E7%BB%9F%E6%8F%90%E4%BE%9B%E7%9A%84%E5%AF%86%E9%92%A5%E5%AD%98%E5%82%A8api%E5%AD%98%E5%82%A8%E4%BB%A4%E7%89%8C"><span class="toc-number">1.3.2.</span> <span class="toc-text">借用其它安全应用，通常是系统提供的密钥存储API存储令牌</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8wsl2%E4%B8%AD%E9%85%8D%E7%BD%AE%E4%BB%A4%E7%89%8C%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%8C%91%E6%88%98"><span class="toc-number">1.4.</span> <span class="toc-text">在WSL2中配置令牌——真正的挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#wsl2%E4%B8%AD%E9%80%9A%E7%94%A8git%E4%BB%A4%E7%89%8C%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.1.</span> <span class="toc-text">WSL2中，通用git令牌存储方案的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9D%A5%E8%87%AA%E5%BE%AE%E8%BD%AF%E7%9A%84%E6%8E%A8%E8%8D%90%E6%96%B9%E6%A1%88"><span class="toc-number">1.4.2.</span> <span class="toc-text">来自微软的“推荐方案”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%AD%E6%8D%AE%E5%8A%A9%E6%89%8Bcredential.helper%E7%9A%84%E5%A4%9A%E5%80%BC%E7%89%B9%E6%80%A7"><span class="toc-number">1.4.3.</span> <span class="toc-text">凭据助手credential.helper的多值特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%BF%E5%85%8Doauth%E7%8C%9C%E6%B5%8B%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.4.</span> <span class="toc-text">避免OAuth猜测流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%A0%E8%BD%AE%E5%AD%90%E7%9A%84%E6%96%B9%E6%A1%88"><span class="toc-number">1.4.5.</span> <span class="toc-text">造轮子的方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%94%80%E4%BB%A4%E7%89%8C"><span class="toc-number">1.5.</span> <span class="toc-text">注销令牌</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">1.6.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%96%B9%E6%A1%88"><span class="toc-number">1.6.1.</span> <span class="toc-text">检查方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E8%B7%AF%E5%BE%84%E8%80%8C%E4%B8%8D%E6%98%AFhost%E8%BF%9B%E8%A1%8Ccrendential%E7%AE%A1%E7%90%86"><span class="toc-number">1.6.2.</span> <span class="toc-text">针对路径而不是host进行crendential管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E4%BA%86%E9%94%99%E8%AF%AF%E7%9A%84%E4%BB%A4%E7%89%8C%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="toc-number">1.6.3.</span> <span class="toc-text">输入了错误的令牌怎么办？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wsl%E7%AA%81%E7%84%B6%E6%97%A0%E6%B3%95%E8%B0%83%E7%94%A8windows%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.4.</span> <span class="toc-text">WSL突然无法调用Windows应用程序的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%85%B3wslinterop"><span class="toc-number">1.6.5.</span> <span class="toc-text">有关WSLInterop</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>

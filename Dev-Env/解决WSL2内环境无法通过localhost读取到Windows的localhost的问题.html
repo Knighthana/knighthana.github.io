@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>解决WSL2内环境无法通过localhost读取到Windows的localhost的问题 - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="解决WSL2内环境无法通过localhost读取到Windows的localhost的问题 在WSL1屡屡吃瘪之后，我终于还是很不情愿地换到了WSL2上。 （没事别玩什么WSL1还有MSYS了，会被两个系统上各种交叉问题和“默认假设”坑死的） 关于怎么迁移不同的WSL，之后有兴趣的话写一篇博客（挖坑），目前先来说说迁移到WSL2之后遇到的问题吧。 简单来说，WSL2比起WSL1“更加虚拟机”了，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决WSL2内环境无法通过localhost读取到Windows的localhost的问题">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/%E8%A7%A3%E5%86%B3WSL2%E5%86%85%E7%8E%AF%E5%A2%83%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87localhost%E8%AF%BB%E5%8F%96%E5%88%B0Windows%E7%9A%84localhost%E7%9A%84%E9%97%AE%E9%A2%98.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="解决WSL2内环境无法通过localhost读取到Windows的localhost的问题 在WSL1屡屡吃瘪之后，我终于还是很不情愿地换到了WSL2上。 （没事别玩什么WSL1还有MSYS了，会被两个系统上各种交叉问题和“默认假设”坑死的） 关于怎么迁移不同的WSL，之后有兴趣的话写一篇博客（挖坑），目前先来说说迁移到WSL2之后遇到的问题吧。 简单来说，WSL2比起WSL1“更加虚拟机”了，这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-08T17:54:00.000Z">
+<meta property="article:modified_time" content="2026-03-08T17:55:00.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="WSL">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="Ubuntu">
+<meta property="article:tag" content="Proxy">
+<meta property="article:tag" content="WSL2">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1773853799862">
+
+<link rel="stylesheet" href="/css/style.css?v=1773853799862">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1773853799862"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>100</div>
+        <div><span>标签</span>140</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1773853799862"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Blog-Maintenance/">Blog Maintenance</a>
+          <span class="category-list-count">5</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Book-Mark/">Book Mark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">19</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">39</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">24</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/2023/" style="font-size: 14px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 19px;">C</a> <a href="/tags/CJK/" style="font-size: 11px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Docker/" style="font-size: 11px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 11px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 11px;">GPG</a> <a href="/tags/Git/" style="font-size: 18px;">Git</a> <a href="/tags/GoLang/" style="font-size: 10px;">GoLang</a> <a href="/tags/HTML/" style="font-size: 13px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Jekyll/" style="font-size: 11px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 11px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 15px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 12px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 11px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 12px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 11px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 14px;">Ubuntu</a> <a href="/tags/VSCode/" style="font-size: 11px;">VSCode</a> <a href="/tags/VirtualBox/" style="font-size: 11px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 17px;">WSL</a> <a href="/tags/WSL2/" style="font-size: 11px;">WSL2</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 11px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 12px;">career</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 11px;">vim</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 11px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 11px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 11px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 13px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 11px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 11px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 11px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 12px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 11px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(140);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Dev-Env/%E8%BF%81%E7%A7%BBWSL%E6%96%87%E4%BB%B6%E5%88%B0%E5%85%B6%E4%BB%96%E4%BD%8D%E7%BD%AE.html">迁移WSL文件到其他位置</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%AE%BE%E7%BD%AE%E4%BB%A4%E7%89%8C%E9%80%9A%E8%BF%87HTTPs%E8%AE%BF%E9%97%AEGit.html">设置令牌通过HTTPs访问Git</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E8%A7%A3%E5%86%B3WSL2%E5%86%85%E7%8E%AF%E5%A2%83%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87localhost%E8%AF%BB%E5%8F%96%E5%88%B0Windows%E7%9A%84localhost%E7%9A%84%E9%97%AE%E9%A2%98.html">解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E5%AE%89%E8%A3%85GoLang%E7%8E%AF%E5%A2%83.html">安装GoLang环境</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Code/%E5%89%8D%E7%AB%AF%E5%B0%8F%E6%8A%80%E5%B7%A7.html">前端小打闹</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://knighthana.github.com" target="_blank" >
+                    <img src="https://knighthana.github.com/favicon.png" alt="This site"></img>
+                    <p>This site</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2026 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="解决WSL2内环境无法通过localhost读取到Windows的localhost的问题" loading="lazy">
+            <h1>解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2026年03月09日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="解决wsl2内环境无法通过localhost读取到windows的localhost的问题">解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</h1>
+<p>在WSL1屡屡吃瘪之后，我终于还是很不情愿地换到了WSL2上。</p>
+<p>（没事别玩什么WSL1<em>还有MSYS</em>了，会被两个系统上各种交叉问题和“默认假设”坑死的）</p>
+<p>关于怎么迁移不同的WSL，之后有兴趣的话写一篇博客（挖坑），目前先来说说迁移到WSL2之后遇到的问题吧。</p>
+<p>简单来说，WSL2比起WSL1“更加虚拟机”了，这也导致了一个问题，WSL2默认用NAT转发的方式处理它和主机之间的网络问题。</p>
+<p>大概微软还知道自己搞得这玩意有多难看，于是修补了一下，至少我们能够通过Windows的<code>localhost</code>也就是<code>127.0.0.1</code>访问到Linux内部跑在<code>0.0.0.0</code>上的程序。</p>
+<p>然而对于WSL2内的Linux来说，它却无法像WSL1一样通过<code>localhost</code>也就是<code>127.0.0.1</code>直接访问到Windows。</p>
+<p>这看起来或许“不是什么大问题”，但用WSL的初衷是什么，除了不用重启计算机以外，就是看重它能够很便捷地与Windows上的应用“实时”沟通。</p>
+<p>微软大概也知道这点，因此为WSL2提供了一个<strong><code>Mirrored</code></strong>模式，方便互相沟通。</p>
+<p>很不巧，Windows10作为版本弃子，目前并没有被允许支持这项功能。如果你在Windows10的WSL2中修改<code>/etc/wsl.conf</code>为这样</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[wsl2]</span></span><br><span class="line"><span class="attr">networkingMode</span>=mirrored</span><br><span class="line"><span class="attr">dnsTunneling</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">firewall</span>=<span class="literal">true</span></span><br><span class="line"><span class="attr">autoProxy</span>=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>那么就会喜提 &gt; wsl: Hyper-V 防火墙不受支持 &gt; &gt; wsl:
+不支持镜像网络模式： Windows 版本 19045。6466 没有所需的功能。 &gt; &gt;
+正在回退到 NAT 网络。 &gt; &gt; wsl: DNS 隧道不受支持</p>
+<p>由于无法进行双向通信，当我被要求只能通过特定的服务器访问公司内部资源的时候，我在WSL2中的<code>proxychains</code>就无法像在WSL1中那样地正常工作了</p>
+<h2 id="思考">思考</h2>
+<p>首先推理一下，我们遇到了什么问题？</p>
+<p>WSL不能在<code>localhost</code>上通信？不是，只是不能“双向通信”；</p>
+<p>那么是哪一方向出了问题？WSL内的服务器能够监听到外面的请求，但是Windows不能从<code>localhost</code>监听到WSL的请求。</p>
+<p>Windows能够监听到WSL吗？是的，虽然用了NAT方案导致内外无法通过<code>localhost</code>互相监听，然而二者在同一个局域网内。</p>
+<p>我有办法获取到这个局域网内Windows的IP地址吗？是的，WSL2提供了一个方案，未特别修改<code>wsl.conf</code>中<code>generateResolvConf</code>的情况下，<code>/etc/resolv.conf</code>中记录有当前Windows主机的IP地址。</p>
+<p>那么都可以通过什么方式解决呢？</p>
+<ol type="1">
+<li><p>配置一个自动脚本，每次开虚拟机时自动修改<code>~/.proxychains/proxychains.conf</code>中<code>[ProxyList]</code>的内容，将<code>/etc/resolv.conf</code>中的<code>nameserver</code>的IP地址填写在此处；</p></li>
+<li><p>在WSL中设置一个开机启动的自动转发服务，使之监听<code>localhost</code>上的通信，并原样转发到Windows；</p></li>
+</ol>
+<p>如何选择？</p>
+<p>方案1虽然快，但是这个路径只对<code>proxychains</code>有效，对其他服务无法复用，不一定每次都恰好有这么个能填写IP的配置文件给我用，由于我以后基本上都只能用WSL2且不打算更换Win10为Win11，也无法指望<strong>M$</strong>将<code>mirrored</code>模式适配给Win10，这种套兼容层的方案虽然会降低效率，但是基本能做到对应用层不可见，也就是能够稳定复用，以后其他应用也出毛病了的话，照猫画虎就能解决问题。</p>
+<p>如何转发呢？本想用C之类的写个简单的转发程序，不过这种事还是不要造轮子为妙，虽然任务很简单，但是“符合标准”很难。正好Linux下有个很好用的小东西叫<code>socat</code>，这只小猫很好地胜任转发TCP的任务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取 Windows IP</span></span><br><span class="line">WIN_IP=$(awk <span class="string">'/nameserver/ {print $2}'</span> /etc/resolv.conf)</span><br><span class="line"><span class="comment"># 将本地 1080 端口转发到 Windows 的 1080 端口</span></span><br><span class="line">socat TCP-LISTEN:1080,fork,reuseaddr TCP:<span class="variable">$WIN_IP</span>:1080</span><br></pre></td></tr></table></figure>
+<p>接下来，找个什么方案让它开机自动执行就好，“这很简单，只要它是脚本”，我当时这么想。</p>
+<h2 id="在虚拟机中开机启动但是systemd不可用">在虚拟机中“开机启动”？但是<code>systemd</code>不可用</h2>
+<p>很快我就发觉问题不太简单了。</p>
+<p>虽然我们知道Linux中有<code>~/.bashrc</code>（<code>~/.zshrc</code>）、<code>~/.profile</code>（<code>~/.zprofile</code>）以及<code>/etc/profile</code>和它引出<code>/etc/profile.d</code>下的每一个文件（<code>/etc/zsh/zprofile</code>、<code>/etc/zsh/zlogin</code>、<code>/etc/zsh/zlogout</code>、<code>/etc/zsh/zshenv</code>、<code>/etc/zsh/zshrc</code>），对于<code>oh-my-zsh</code>还有<code>~/.oh-my-zsh/custom/plugins/</code>；</p>
+<p>首先排除<code>~/.zshrc</code>，不可能每打开一个<code>zsh</code>就执行一次，要卡死了；</p>
+<p>然而如果我把脚本的启动触发放在<code>~/.zprofile</code>中的话，还是涉及到了“重复尝试创建进程拖慢速度”、“会卡关键系统资源比如端口号”的问题；</p>
+<p>如果在Linux中，可以寻求<code>systemd</code>的帮助解决问题，它可以管理这样的“守护进程”；</p>
+<p>然而对于WSL来说，它的<code>systemd</code>的PID不为<code>1</code>，因此不要指望任何与<code>systemd</code>沾边的方案；</p>
+<h2 id="通过supervisor进行用户级别的守护进程管理">通过<code>supervisor</code>进行用户级别的守护进程管理</h2>
+<h3 id="supervisor概况"><code>supervisor</code>概况</h3>
+<p><code>supervisor</code>是一个用<code>python</code>写的应用，可以实现用户级别的守护进程管理，和我需要的方案非常契合；</p>
+<p><code>supervisor</code>的配置文件在<code>/etc/supervisor/supervisord.conf</code>中，不过其中有这样一行
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[include]</span></span><br><span class="line"><span class="attr">files</span> = /etc/supervisor/conf.d/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>因此类似<code>systemd</code>的<code>/etc/systemd/system/*.service</code>，去<code>/etc/supervisor/conf.d/</code>管理其中的<code>*.conf</code>即可实现各种管理，这样对于<code>systemd</code>的认知也可以迁移过来灵活使用。</p>
+<h3 id="创建supervisor的配置文件">创建<code>supervisor</code>的配置文件</h3>
+<p>创建一个配置文件 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/supervisor/conf.d/portwinproxy-forward.conf</span><br></pre></td></tr></table></figure></p>
+<p>填写以下内容 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[program:portwinproxy-forward]</span><br><span class="line">; 获取最新的 Windows IP</span><br><span class="line">command=/bin/bash -c 'WIN_IP=$(awk '\''/nameserver/ {print $2}'\'' /etc/resolv.conf) &amp;&amp; exec /usr/bin/socat TCP-LISTEN:1080,fork,reuseaddr TCP:$WIN_IP:1080'</span><br><span class="line">; 指定工作目录</span><br><span class="line">directory=/tmp</span><br><span class="line">; 以普通用户身份运行（替换为实际使用的用户名）</span><br><span class="line">user=WSL中的普通用户名</span><br><span class="line">; 是否随着 supervisord 启动而自动启动</span><br><span class="line">autostart=true</span><br><span class="line">; 如果进程意外退出，自动重启</span><br><span class="line">autorestart=true</span><br><span class="line">; 启动失败重试次数</span><br><span class="line">startretries=3</span><br><span class="line">; 把标准错误重定向到标准输出</span><br><span class="line">redirect_stderr=true</span><br><span class="line">; 日志文件位置和大小</span><br><span class="line">stdout_logfile=/var/log/port-forward.log</span><br><span class="line">stdout_logfile_maxbytes=10MB</span><br><span class="line">stdout_logfile_backups=3</span><br><span class="line">; 环境变量（如果需要可以在这里设置）</span><br><span class="line">environment=PYTHONUNBUFFERED=1</span><br></pre></td></tr></table></figure></p>
+<h3 id="测试supervisor的配置文件">测试<code>supervisor</code>的配置文件</h3>
+<p>撰写完毕之后，先手动测试这个配置文件是否正常</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure>
+<p>如果一切正常，应该能够看到<code>portwinproxy-forward</code>相关的提示。</p>
+<p>用<code>ctrl-c</code>关闭这个进程；</p>
+<h3 id="测试supervisor是否能够在后台正常工作">测试<code>supervisor</code>是否能够在后台正常工作</h3>
+<p>首先检查<code>supervisor</code>是否已经完全退出； <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisorctl status</span><br></pre></td></tr></table></figure></p>
+<p>如果它按照预期那样退出，此时应该会产生一条关于“文件不存在”的报错；</p>
+<p>以后台方式，也就是默认方式启动<code>supervisor</code>，这次不需要带<code>-n</code>参数
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /usr/bin/supervisord -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>执行 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisorctl status</span><br></pre></td></tr></table></figure> 以检查正在运行的自定义守护进程；</p>
+<p>如果一切正常，那么应该能看到</p>
+<blockquote>
+<p>portwinproxy-forward RUNNING pid 12346, uptime 0:00:10</p>
+</blockquote>
+<p>在Windows侧正确配置公司的软件，确保它能够通过局域网访问之后，回到WSL；</p>
+<p>通过如下命令测试网络是否正常接通 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -ILvx http://127.0.0.1:1080 https://example.com</span><br></pre></td></tr></table></figure></p>
+<p>也可以在本地的Git仓库中尝试 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains git pull</span><br></pre></td></tr></table></figure></p>
+<p>一切顺利！</p>
+<h3 id="将supervisor设置为开机启动">将<code>supervisor</code>设置为开机启动</h3>
+<p>由于这是WSL，之前说过与<code>systemd</code>沾边的任何方案都“基本上”无法使用，不过对于WSL可以另辟蹊径，这也是WSL2提供的优雅机制：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/wsl.conf</span><br></pre></td></tr></table></figure></p>
+<p>添加或插入如下内容： <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[boot]</span></span><br><span class="line"><span class="attr">command</span> = /usr/bin/supervisord -c /etc/supervisor/supervisord.conf</span><br></pre></td></tr></table></figure></p>
+<p>保存并退出。</p>
+<p>切换到Windows的PowerShell，运行 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--shutdown</span></span><br></pre></td></tr></table></figure></p>
+<p>再次打开WSL2，检查 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo supervisorctl status</span><br></pre></td></tr></table></figure></p>
+<p>如果一切正常，那么现在就可以通过WSL2内部的<code>127.0.0.1:1080</code>访问到Windows系统上<code>localhost:1080</code>里的服务啦！</p>
+<h2 id="分支问题">分支问题</h2>
+<h3 id="supervisor的command健壮包装"><code>supervisor</code>的<code>command</code>健壮包装</h3>
+<p>如果<code>/etc/resolv.conf</code>缺失或者文件中<code>nameserver</code>行缺失，或者别的什么问题，<code>awk</code>解析了一个古神出来塞给<code>socat</code>，最好的情况是<code>socat</code>报错退出，最坏的情况则在古神管辖的范畴；</p>
+<p>如果需要增强健壮性，可以修改命令为： <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">command</span>=/bin/bash -c <span class="string">'WIN_IP=$(awk '</span>\<span class="string">''</span>/nameserver/ {print <span class="variable">$2</span>}<span class="string">'\''</span> /etc/resolv.conf <span class="number">2</span>&gt;/dev/null)<span class="comment">; if [ -z "$WIN_IP" ]; then echo "ERROR: Cannot get Windows IP from /etc/resolv.conf" &gt;&amp;2; exit 1; fi; exec /usr/bin/socat TCP-LISTEN:1080,fork,reuseaddr TCP:$WIN_IP:1080'</span></span><br></pre></td></tr></table></figure></p>
+<p>根据AI老师的说法：
+如果进程在<code>startsecs</code>（默认为1，也就是1秒钟）内退出，算作启动失败，归<code>startretries</code>管辖；
+如果进程已经运行过<code>startsecs</code>的时长，那么<code>supervisor</code>认为它已经进入过<code>RUNNING</code>状态，算作中途退出，归<code>autorestart</code>管辖；</p>
+<p>反正我跑的是虚拟机，我没这么写，相信<code>awk</code>和<code>socat</code>！</p>
+<h3 id="整个方案只能针对端口进行一对一绑定">整个方案只能针对端口进行一对一绑定</h3>
+<p>是的，这是一个问题，但目前只是一些用户级应用开发，需要管理的端口不多，之后其他应用遇到类似问题，再开一个<code>socat</code>转发就是了；</p>
+<p>一般来说服务器端都不会乱绑端口，而WSL2是可以正常处理虚拟机内部的<code>listen</code>绑定请求与Windows的关系的（或者说WSL2会帮忙转发Windows上的访问请求到虚拟机里面的Linux上，取决于WSL2的团队怎么实现，但我可以不用关心这个），而，虽然客户端会瞎吉尔绑端口，但是只要正常的转发程序都知道需要处理来自客户端的端口映射问题；</p>
+<p>因此，基本可以满足日常使用的需求。</p>
+<h3 id="wsl2的开机服务已经找到了">WSL2的“开机服务”已经找到了</h3>
+<p>之前说过WSL2的<code>systemd</code>“不能指望”，不过这个<code>/etc/wsl.conf</code>倒是可以指望的，</p>
+<p>既然WSL2的开机服务已经找到了，那么不用<code>supervisor</code>可不可以呢？一半一半。</p>
+<p>如果我愿意，可以把为启动<code>socat</code>写个脚本文件，然后把执行脚本的命令放在<code>/etc/wsl.conf</code>，不过需要自己处理进程重复启动的问题，只有一个进程的时候还能用<code>ps -aux | grep socat</code>判断进程有没有运行，但……俺也不知道需要绑两个不同的<code>socat</code>的时候该怎么办……</p>
+<h3 id="supervisor明明是个用户级程序为毛那么多sudo"><code>supervisor</code>明明是个用户级程序，为毛那么多<code>sudo</code></h3>
+<p>众所周知，在Linux中<code>sudo</code>是一个“能不用就别用”的玩意，那么为什么上面有这么多的<code>sudo</code>呢？</p>
+<p>因为通过系统包管理器，比如我的<code>apt install supervisor</code>安装的<code>supervisor</code>，其配置文件在<code>/etc/supervisor/</code>中，其日志在<code>/var/log</code>中，</p>
+<p>还有最重要的……<code>/var/run/supervisor.sock</code>这个<code>supervisorctl</code>与<code>supervisord</code>之间通讯要用的socket，默认情况下只有<code>supervisor</code>和无所不能的<code>root</code>有权限访问；</p>
+<p>不过有些时候，我们拿不到<code>sudo</code>权限，该怎么办呢；</p>
+<p>配置文件的问题好解决，<code>-c</code>可以重新指定；只不过还要做一些其他准备；</p>
+<p>建好文件和目录： <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/.etc/supervisor/supervisord.conf</span><br><span class="line">~/.var/log/</span><br><span class="line">~/.run/</span><br></pre></td></tr></table></figure></p>
+<p>对于<code>~/.etc/supervisor/supervisord.conf</code>，指定其内容为
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[unix_http_server]</span></span><br><span class="line"><span class="attr">file</span>=/home/用户名/.run/supervisor.sock</span><br><span class="line"><span class="comment">; 不设置权限限制，只让当前用户可读写</span></span><br><span class="line"><span class="attr">chmod</span>=<span class="number">0700</span></span><br><span class="line"></span><br><span class="line"><span class="section">[supervisord]</span></span><br><span class="line"><span class="attr">logfile</span>=/home/用户名/.var/log/supervisord.log</span><br><span class="line"><span class="attr">pidfile</span>=/home/用户名/.run/supervisord.pid</span><br><span class="line"><span class="comment">; 以后台模式运行</span></span><br><span class="line"><span class="attr">nodaemon</span>=<span class="literal">false</span></span><br><span class="line"><span class="comment">; 用户自己运行，不需要切换用户</span></span><br><span class="line"><span class="attr">user</span>=用户名</span><br><span class="line"></span><br><span class="line"><span class="section">[rpcinterface:supervisor]</span></span><br><span class="line"><span class="attr">supervisor.rpcinterface_factory</span> = supervisor.rpcinterface:make_main_rpcinterface</span><br><span class="line"></span><br><span class="line"><span class="section">[supervisorctl]</span></span><br><span class="line"><span class="attr">serverurl</span>=unix:///home/用户名/.run/supervisor.sock</span><br><span class="line"></span><br><span class="line"><span class="section">[include]</span></span><br><span class="line"><span class="attr">files</span> = /home/用户名/.etc/supervisor/conf.d/*.conf</span><br></pre></td></tr></table></figure></p>
+<p>创建此次任务的<code>~/.etc/supervisor/conf.d/portwinproxy-forward.conf</code>配置文件：
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[program:portwinproxy-forward]</span></span><br><span class="line"><span class="attr">command</span>=/bin/bash -c <span class="string">'WIN_IP=$(awk '</span>\<span class="string">''</span>/nameserver/ {print <span class="variable">$2</span>}<span class="string">'\''</span> /etc/resolv.conf) &amp;&amp; exec /usr/bin/socat TCP-LISTEN:<span class="number">1080</span>,fork,reuseaddr TCP:<span class="variable">$WIN_IP</span>:<span class="number">1080</span><span class="string">'</span></span><br><span class="line"><span class="string">directory=/tmp</span></span><br><span class="line"><span class="string">; 不需要指定 user，因为 supervisord 已经以用户身份运行</span></span><br><span class="line"><span class="string">autostart=true</span></span><br><span class="line"><span class="string">autorestart=true</span></span><br><span class="line"><span class="string">startretries=3</span></span><br><span class="line"><span class="string">redirect_stderr=true</span></span><br><span class="line"><span class="string">stdout_logfile=/home/用户名/.var/log/supervisord.log</span></span><br><span class="line"><span class="string">stdout_logfile_maxbytes=10MB</span></span><br><span class="line"><span class="string">stdout_logfile_backups=3</span></span><br></pre></td></tr></table></figure></p>
+<p>当以普通用户身份检查属于自己的supervisord时，可以这样做
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl -c ~/.etc/supervisor/supervisord.conf status</span><br></pre></td></tr></table></figure></p>
+<p>如果觉得带有<code>-c</code>的命令太长，可以在<code>~/.zprofile</code>中添加：
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> myctl=<span class="string">'supervisorctl -c ~/.etc/supervisor/supervisord.conf'</span></span><br></pre></td></tr></table></figure></p>
+<p>直接 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">myctl status</span><br></pre></td></tr></table></figure> 即可</p>
+<p>此时还需要设置开虚拟机自启，不过还是离不开<code>/etc/wsl.conf</code>文件，增加或插入：
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[boot]</span><br><span class="line">command = su - 用户名 -c '/usr/bin/supervisord -c /home/用户名/.etc/supervisor/supervisord.conf'</span><br></pre></td></tr></table></figure></p>
+<p>之后重启WSL即可完成配置。</p>
+<h3 id="supervisor支持按序唤醒但不保证按序运行"><code>supervisor</code>支持按序唤醒但不保证按序运行</h3>
+<p><code>supervisor</code>可以用<code>conf</code>中<code>[program:app-name]</code>下的<code>priority=num</code>（越小越优先）来设定唤醒顺序，不过它不会保证服务就绪的顺序；</p>
+<p>因此如果打算依序唤醒一个<code>db-sever</code>和一个<code>db-app</code>，那么也许<code>db-app</code>会因为访问不到<code>db-server</code>而无法启动。</p>
+<p>不过这不是目前需要考虑的问题。</p>
+<h2 id="附录">附录</h2>
+<h3 id="wsl2的localhost与windows网络通信问题">WSL2的localhost与Windows网络通信问题</h3>
+<p>上面说“取决于WSL2的团队怎么实现，但我可以不用关心这个”，我还是查了一下；</p>
+<blockquote>
+<p>WSL2
+在默认的NAT网络模式下，Linux子系统运行在一个轻量级虚拟机中，拥有自己独立的虚拟网卡和IP地址（通常以172开头）。为了让从Windows访问WSL服务变得像访问本地服务一样简单（即通过localhost），WSL2
+实现了一个名为“localhost转发”的特性，这个特性默认是开启的。</p>
+<p>这个特性的工作流程是这样的：</p>
+<ol type="1">
+<li>监听与捕获：在WSL2 Linux内部，有一个名为 localhost
+的进程在运行。它的核心工作是监控Linux中所有尝试绑定（bind）到网络端口的程序。</li>
+<li>通知与协商：当你在WSL2里启动一个服务（比如用Python在端口8080启动一个HTTP服务器），这个localhost进程会立即捕获到这个bind()调用，并通过虚拟化通道与Windows上的
+wslrelay.exe 进程通信。</li>
+<li>端口占用检查：wslrelay.exe
+会检查Windows主机上的8080端口是否已被其他程序占用。</li>
+<li>建立“管道”：如果Windows的8080端口是空闲的，wslrelay.exe
+就会在Windows上开始监听这个端口。现在，一个“管道”就建立起来了：所有发送到Windows
+localhost:8080的流量，都会被wslrelay.exe接收，然后通过内部通道无缝地传递给WSL2里的localhost进程，最终再由它转交给真正的服务程序。</li>
+</ol>
+<p>所以，整个过程不是简单的端口共享，而是一个由WSL2系统组件负责的、自动化的、透明的端口转发。</p>
+</blockquote>
+<p>不过，镜像网络模式<code>mirrored</code>能用Windows内核对流量进行路由，比起这种在小小的<code>localhost</code>上绑呀绑呀的方案不知道高到哪里去了，可惜Win10没有这样的内核功能来跟WSL2里面Linux的BFP谈笑风生，那就没有办法了。</p>
+<h3 id="所以最终方案还是套兼容层">所以最终方案还是套兼容层</h3>
+<p>可以看到，为了“兼容性”“无感知”，很多解决方案只能是反复地套兼容层。</p>
+<p>但是这样会不会降低运行效率呢？</p>
+<p>感觉真是硬件方案搞出多少余量，拖沓的软件方案就能吃掉多少。不过用于设计构建方案的时间的确大大减少了。</p>
+<hr>
+<p>Knighthana</p>
+<p>2026/03/09</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Linux/" rel="tag">Linux</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Network/" rel="tag">Network</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Proxy/" rel="tag">Proxy</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/WSL/" rel="tag">WSL</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/WSL2/" rel="tag">WSL2</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/Windows/" rel="tag">Windows</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1773853799829"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3wsl2%E5%86%85%E7%8E%AF%E5%A2%83%E6%97%A0%E6%B3%95%E9%80%9A%E8%BF%87localhost%E8%AF%BB%E5%8F%96%E5%88%B0windows%E7%9A%84localhost%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">解决WSL2内环境无法通过localhost读取到Windows的localhost的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">1.1.</span> <span class="toc-text">思考</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%AD%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E4%BD%86%E6%98%AFsystemd%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">在虚拟机中“开机启动”？但是systemd不可用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87supervisor%E8%BF%9B%E8%A1%8C%E7%94%A8%E6%88%B7%E7%BA%A7%E5%88%AB%E7%9A%84%E5%AE%88%E6%8A%A4%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">通过supervisor进行用户级别的守护进程管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supervisor%E6%A6%82%E5%86%B5"><span class="toc-number">1.3.1.</span> <span class="toc-text">supervisor概况</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAsupervisor%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">创建supervisor的配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95supervisor%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">测试supervisor的配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95supervisor%E6%98%AF%E5%90%A6%E8%83%BD%E5%A4%9F%E5%9C%A8%E5%90%8E%E5%8F%B0%E6%AD%A3%E5%B8%B8%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.3.4.</span> <span class="toc-text">测试supervisor是否能够在后台正常工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86supervisor%E8%AE%BE%E7%BD%AE%E4%B8%BA%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="toc-number">1.3.5.</span> <span class="toc-text">将supervisor设置为开机启动</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">分支问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#supervisor%E7%9A%84command%E5%81%A5%E5%A3%AE%E5%8C%85%E8%A3%85"><span class="toc-number">1.4.1.</span> <span class="toc-text">supervisor的command健壮包装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%B8%AA%E6%96%B9%E6%A1%88%E5%8F%AA%E8%83%BD%E9%92%88%E5%AF%B9%E7%AB%AF%E5%8F%A3%E8%BF%9B%E8%A1%8C%E4%B8%80%E5%AF%B9%E4%B8%80%E7%BB%91%E5%AE%9A"><span class="toc-number">1.4.2.</span> <span class="toc-text">整个方案只能针对端口进行一对一绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#wsl2%E7%9A%84%E5%BC%80%E6%9C%BA%E6%9C%8D%E5%8A%A1%E5%B7%B2%E7%BB%8F%E6%89%BE%E5%88%B0%E4%BA%86"><span class="toc-number">1.4.3.</span> <span class="toc-text">WSL2的“开机服务”已经找到了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#supervisor%E6%98%8E%E6%98%8E%E6%98%AF%E4%B8%AA%E7%94%A8%E6%88%B7%E7%BA%A7%E7%A8%8B%E5%BA%8F%E4%B8%BA%E6%AF%9B%E9%82%A3%E4%B9%88%E5%A4%9Asudo"><span class="toc-number">1.4.4.</span> <span class="toc-text">supervisor明明是个用户级程序，为毛那么多sudo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#supervisor%E6%94%AF%E6%8C%81%E6%8C%89%E5%BA%8F%E5%94%A4%E9%86%92%E4%BD%86%E4%B8%8D%E4%BF%9D%E8%AF%81%E6%8C%89%E5%BA%8F%E8%BF%90%E8%A1%8C"><span class="toc-number">1.4.5.</span> <span class="toc-text">supervisor支持按序唤醒但不保证按序运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">1.5.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#wsl2%E7%9A%84localhost%E4%B8%8Ewindows%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.1.</span> <span class="toc-text">WSL2的localhost与Windows网络通信问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%80%E4%BB%A5%E6%9C%80%E7%BB%88%E6%96%B9%E6%A1%88%E8%BF%98%E6%98%AF%E5%A5%97%E5%85%BC%E5%AE%B9%E5%B1%82"><span class="toc-number">1.5.2.</span> <span class="toc-text">所以最终方案还是套兼容层</span></a></li></ol></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>
