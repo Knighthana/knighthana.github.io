@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2026-03-10T15:59:59.000Z</updated>
+  <updated>2026-03-18T17:18:53.943Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,61 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>(KM)测试网络通不通的cURL</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E9%80%9A%E4%B8%8D%E9%80%9A%E7%9A%84cURL.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E6%B5%8B%E8%AF%95%E7%BD%91%E7%BB%9C%E9%80%9A%E4%B8%8D%E9%80%9A%E7%9A%84cURL.html</id>
+    <published>2026-03-16T22:48:49.000Z</published>
+    <updated>2026-03-18T17:18:53.943Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;测试网络通不通的curl&quot;&gt;测试网络通不通的cURL&lt;/h1&gt;
+&lt;p&gt;如果只是需要测试网络通不通，用 &lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="-cURL" scheme="https://knighthana.github.io/tags/cURL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>对apt源设置加速代理</title>
+    <link href="https://knighthana.github.io/Dev-Env/%E5%AF%B9apt%E6%BA%90%E8%AE%BE%E7%BD%AE%E5%8A%A0%E9%80%9F%E4%BB%A3%E7%90%86.html"/>
+    <id>https://knighthana.github.io/Dev-Env/%E5%AF%B9apt%E6%BA%90%E8%AE%BE%E7%BD%AE%E5%8A%A0%E9%80%9F%E4%BB%A3%E7%90%86.html</id>
+    <published>2026-03-16T22:14:36.000Z</published>
+    <updated>2026-03-18T17:18:53.943Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="Dev-Env" scheme="https://knighthana.github.io/categories/Dev-Env/"/>
+    
+    
+    <category term="Linux" scheme="https://knighthana.github.io/tags/Linux/"/>
+    
+    <category term="APT" scheme="https://knighthana.github.io/tags/APT/"/>
+    
+    <category term="Debian" scheme="https://knighthana.github.io/tags/Debian/"/>
+    
+  </entry>
   
   <entry>
     <title>迁移WSL文件到其他位置</title>
@@ -825,10 +880,10 @@
   
   <entry>
     <title>(KM)Manual page of cURL</title>
-    <link href="https://knighthana.github.io/KnowledgeMark/(KM)Man_cURL.html"/>
-    <id>https://knighthana.github.io/KnowledgeMark/(KM)Man_cURL.html</id>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)cURL_Man.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)cURL_Man.html</id>
     <published>2023-04-15T16:00:00.000Z</published>
-    <updated>2023-05-22T14:06:51.119Z</updated>
+    <updated>2026-03-18T17:18:53.943Z</updated>
     
     
       
