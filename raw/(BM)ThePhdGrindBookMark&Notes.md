@@ -4,7 +4,7 @@ date: 2023-05-14 00:00:00
 updated: 2023-05-14 23:50:00
 cover: /img/bookmark.svg
 categories:
-  - Book Mark
+  - BookMark
 tags:
   - career
 ---

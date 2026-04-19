@@ -3,7 +3,7 @@ title: 停电，然后失去git文件
 date: 2022-12-06 00:00:00
 cover: /img/Cover-Blog-Maintenance.jpg
 categories:
-  - Blog Maintenance
+  - BlogMaintenance
 tags:
   - Blog
   - WSL
@@ -16,7 +16,7 @@ tags:
 
 本来以为积极保存代码能躲过一劫，事实上代码确实没问题，而且commit的时候也没有遇到问题；
 
-然而最终发现，基于WSL内文件系统的git文件损坏了；例如进行远程push的时候，抛出了一大堆问题，例如`inflate: data stream error (unknown compression method)` `unable to unpack 4f51a0a09060036272c441837705d2bd64156f61 header`；
+然而最终发现，基于WSL内文件系统的git文件损坏了；进行远程push的时候，抛出了一大堆问题，例如`inflate: data stream error (unknown compression method)` `unable to unpack 4f51a0a09060036272c441837705d2bd64156f61 header`；
 
 有人提到过这样的问题，[Git error: inflate: data stream error (unknown compression method)](https://stackoverflow.com/questions/41741683/git-error-inflate-data-stream-error-unknown-compression-method)
 
