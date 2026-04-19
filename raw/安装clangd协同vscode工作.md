@@ -7,6 +7,7 @@ categories:
   - Dev-Env
 tags:
   - C
+  - clangd
 ---
 
 # 安装Clangd

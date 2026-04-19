@@ -3,7 +3,7 @@ title: 2023年4月折腾Hexo和Node
 date: 2023-04-19 21:04:00
 cover: /img/hexo-logo.svg
 categories:
-  - Blog Maintenance
+  - BlogMaintenance
 tags: 
   - LinuxMint
   - Hexo
