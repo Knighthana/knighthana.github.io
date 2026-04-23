@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>clangd到底要咋配.md - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="clangd到底要咋配 clangd很好用，毋庸置疑； 但每当在一个新的环境上部署了clangd、或者在一个新的代码仓库中打开clangd，或者手里有几套交叉的编译环境的时候， clangd对环境的纠结可以促使人快速从平静变成愤怒然后再变成平静；当看到clangd把一个C Header当做Objective C++来猜的时候，就应该知道，该请高人了； 以前提过clangd的配置文件，但是干活的时候">
+<meta property="og:type" content="article">
+<meta property="og:title" content="clangd到底要咋配.md">
+<meta property="og:url" content="https://knighthana.github.io/Dev-Env/clangd%E5%88%B0%E5%BA%95%E8%A6%81%E5%92%8B%E9%85%8D.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="clangd到底要咋配 clangd很好用，毋庸置疑； 但每当在一个新的环境上部署了clangd、或者在一个新的代码仓库中打开clangd，或者手里有几套交叉的编译环境的时候， clangd对环境的纠结可以促使人快速从平静变成愤怒然后再变成平静；当看到clangd把一个C Header当做Objective C++来猜的时候，就应该知道，该请高人了； 以前提过clangd的配置文件，但是干活的时候">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-18T22:39:56.000Z">
+<meta property="article:modified_time" content="2026-04-18T22:39:56.000Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="C">
+<meta property="article:tag" content="clangd">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1776973370874">
+
+<link rel="stylesheet" href="/css/style.css?v=1776973370874">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1776973370874"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>108</div>
+        <div><span>标签</span>144</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1776973370874"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/BlogMaintenance/">BlogMaintenance</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/BookMark/">BookMark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">19</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">43</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">27</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/cURL/" style="font-size: 10px;">-cURL</a> <a href="/tags/2023/" style="font-size: 13.64px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.73px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14.55px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 19.09px;">C</a> <a href="/tags/CJK/" style="font-size: 10.91px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Datetime/" style="font-size: 10px;">Datetime</a> <a href="/tags/Debian/" style="font-size: 10px;">Debian</a> <a href="/tags/Docker/" style="font-size: 10.91px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10.91px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 10.91px;">GPG</a> <a href="/tags/Git/" style="font-size: 18.18px;">Git</a> <a href="/tags/GoLang/" style="font-size: 10px;">GoLang</a> <a href="/tags/HTML/" style="font-size: 12.73px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10.91px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Jekyll/" style="font-size: 10.91px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 10.91px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 14.55px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 11.82px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 10.91px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.82px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 10.91px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.64px;">Ubuntu</a> <a href="/tags/VSCode/" style="font-size: 10.91px;">VSCode</a> <a href="/tags/VirtualBox/" style="font-size: 10.91px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 17.27px;">WSL</a> <a href="/tags/WSL2/" style="font-size: 10.91px;">WSL2</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.36px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 10.91px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 11.82px;">career</a> <a href="/tags/clangd/" style="font-size: 10.91px;">clangd</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15.45px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/vim/" style="font-size: 10.91px;">vim</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 10.91px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 10.91px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 10.91px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 12.73px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10.91px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 10.91px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16.36px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 10.91px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 11.82px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10.91px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(144);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/Dev-Env/%E6%98%AF%E8%B0%81%E5%90%9E%E6%8E%89%E4%BA%86Terminal%E7%9A%84Ctrl-Enter.html">是谁吞掉了Terminal的Ctrl+Enter</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)shell%E4%B8%AD%E7%9A%84%E5%8D%95%E5%8F%8C%E5%BC%95%E5%8F%B7.html">(KM)Shell中的单双引号</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E8%A7%84%E5%AE%9A%E6%A0%BC%E5%BC%8F%E6%97%B6%E9%97%B4%E6%97%A5%E6%9C%9F.html">(KM)快速获取规定格式时间日期</a>
+          </li>
+        
+          <li>
+            <a href="/BlogMaintenance/hexo%E8%BF%99%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99.html">hexo这个模板的大小写</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/clangd%E5%88%B0%E5%BA%95%E8%A6%81%E5%92%8B%E9%85%8D.html">clangd到底要咋配.md</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://knighthana.github.io" target="_blank" >
+                    <img src="https://knighthana.github.io/favicon.png" alt="This site"></img>
+                    <p>This site</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2026 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-Dev-Env.jpg" alt="clangd到底要咋配.md" loading="lazy">
+            <h1>clangd到底要咋配.md</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2026年04月19日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/Dev-Env/">Dev-Env</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="clangd到底要咋配"><code>clangd</code>到底要咋配</h1>
+<p><code>clangd</code>很好用，毋庸置疑；</p>
+<p>但每当在一个新的环境上部署了<code>clangd</code>、或者在一个新的代码仓库中打开<code>clangd</code>，或者手里有几套交叉的编译环境的时候，</p>
+<p><code>clangd</code>对环境的纠结可以促使人快速从平静变成愤怒然后再变成平静；当看到<code>clangd</code>把一个<code>C Header</code>当做<code>Objective C++</code>来猜的时候，就应该知道，该请高人了；</p>
+<p>以前提过<code>clangd</code>的配置文件，但是干活的时候还是经常“俺寻思这样能行”，现在的话，决定整理一套方案，来汇总这些零零散散的配置文件。</p>
+<h1 id="说的是哪个clangd">说的是哪个<code>clangd</code></h1>
+<p>首先，虽然<code>clangd</code>只有一个，那就是<a target="_blank" rel="noopener" href="https://clangd.llvm.org/">What is clangd?</a>，也就是作为<a target="_blank" rel="noopener" href="https://llvm.org/">LLVM</a>项目一部分的Language Server(<em>LSP
+Server</em>)。</p>
+<p>不过一般不直接用<code>clangd</code>，而是通过编辑器调用，最常用的编辑器是<a target="_blank" rel="noopener" href="https://code.visualstudio.com/">VSCode</a>，我们一般通过插件功能调用<a target="_blank" rel="noopener" href="https://github.com/clangd/vscode-clangd">clangd</a><a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd">插件</a>。</p>
+<h1 id="文件配置顺序">文件？配置？顺序？</h1>
+<h2 id="clangd的配置"><code>clangd</code>的配置</h2>
+<p>优先级：从(最高1)到(最低4)，越靠近启动指令，优先级越高</p>
+<table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>配置来源</th>
+<th>存储位置</th>
+<th>生效范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>命令行参数</td>
+<td>编辑器配置(VSCode - <code>clangd.arguments</code>)</td>
+<td>仅当前编辑器实例</td>
+</tr>
+<tr>
+<td>2</td>
+<td>项目配置文件</td>
+<td>项目根目录的 <code>.clangd</code></td>
+<td>仅当前项目文件夹</td>
+</tr>
+<tr>
+<td>3</td>
+<td>用户全局配置</td>
+<td><code>config.yaml</code> (系统路径下)</td>
+<td>当前用户的所有项目</td>
+</tr>
+<tr>
+<td>4</td>
+<td>默认行为</td>
+<td><code>clangd</code> 程序内建逻辑</td>
+<td>全局</td>
+</tr>
+</tbody>
+</table>
+<p>系统路径： - Linux类环境 <code>~/.config/clangd/config.yaml</code> -
+Windows环境 <code>%LocalAppData%\clangd\config.yaml</code>
+(<code>Roaming</code>)</p>
+<p>关键规则： - 覆盖关系：对于单一值的配置（如
+<code>CompilationDatabase</code>），高优先级直接覆盖低优先级。 -
+追加关系：对于列表值的配置（如 <code>CompileFlags: Add</code> 或
+<code>QueryDriver</code>），高优先级通常会追加在低优先级之后，<code>clangd</code>会尝试匹配列表里的每一项。</p>
+<h3 id="compilation-database">Compilation Database：</h3>
+<p>Compilation
+Database协议本质上是一个JSON格式的文件，惯例上命名为<code>compile_commands.json</code>，其顶层是一个“命令对象”的数组。每个对象代表一个源文件（即“翻译单元”）的编译配置。<code>clangd</code>正是通过解析这些信息来理解工程的。</p>
+<p>所以整个协议都围绕着一个JSON文件，<em>这是否也是一种单例模式</em>。</p>
+<p><code>clangd</code>遵循协议的标准方式，自动查找并解析<code>compile_commands.json</code>文件，从中提取编译所需的信息。它的核心逻辑如下：
+1.
+智能查找：<code>clangd</code>启动后，会寻找<code>compile_commands.json</code>文件，查找顺序通常是：
+- 通过<code>--compile-commands-dir=&lt;路径&gt;</code>命令指定的目录。 -
+当前工作目录。 - 当前工作目录的父目录。 -
+待分析的源文件所在目录及其父目录。 2.
+精确匹配：找到文件后，<code>clangd</code>会解析其内容，并使用<code>file</code>字段作为索引，为当前打开的源文件匹配对应的“命令对象”。
+3.
+提取核心编译参数：<code>clangd</code>主要从匹配到的“命令对象”中提取<code>arguments</code>或<code>command</code>字段里的信息。它利用这些信息来构建编译环境，从而理解代码，提供准确的代码补全、跳转和诊断等功能。</p>
+<h3 id="生成compile_commands.json的方法">生成<code>compile_commands.json</code>的方法</h3>
+<p>这个文件可以自动生成，常见的方法有：</p>
+<p><strong>CMake</strong>：在运行CMake配置时，添加<code>-DCMAKE_EXPORT_COMPILE_COMMANDS=ON</code>选项即可。</p>
+<p><strong>Bear</strong>：一个通用的工具，通过拦截<code>make</code>或其他构建命令的编译器调用来生成数据库。</p>
+<p><strong>Clang</strong>
+自身：编译时使用<code>-MJ</code>参数可以为每个源文件生成一个JSON片段，再将它们合并起来。</p>
+<p><strong>Bazel</strong>：需使用第三方工具，如<code>hedronvision/bazel-compile-commands-extractor</code>。</p>
+<p>一般来说，最常用的是CMake，而且这厮还带了一个效率贼高的Ninja-Build，所以就它了。</p>
+<h2 id="vscode的clangd插件的配置">vscode的clangd插件的配置</h2>
+<p>VSCode的<code>clangd</code>插件是在启动进程时，通过<strong>命令行参数（CLI
+Arguments）</strong>将配置传递给<code>clangd</code>服务： - 过程：VSCode
+启动时，会读取<code>settings.json</code>中的<code>clangd.arguments</code>数组。
+-
+执行：它在后台拉起<code>clangd.exe</code>（或Linux下的<code>clangd</code>）时，实际执行的命令类似：
+<code>clangd --compile-commands-dir=build/msys2-to-win --query-driver=/usr/bin/gcc ...</code>
+- 这种方式的本质：是实时注入，不改动磁盘上的任何配置文件。</p>
+<h1 id="所以该怎么排布这些文件">所以该怎么排布这些文件</h1>
+<p>从开发者的角度看，工程是多变的，环境是迟钝的；</p>
+<p>从工程的角度来看，对环境的需求是不变的；</p>
+<table>
+<colgroup>
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 36%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr>
+<th>文件</th>
+<th>位置</th>
+<th>远程/本地</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config.yaml</code></td>
+<td><code>%LocalAppData%</code>或<code>~/.config</code></td>
+<td>本地</td>
+<td>设定基础的警告习惯、最常用的编译器</td>
+</tr>
+<tr>
+<td><code>.clangd</code></td>
+<td>项目根目录</td>
+<td>远程</td>
+<td>配置仅与项目密切相关且与本地无关的编译情景</td>
+</tr>
+<tr>
+<td><code>settings.json</code></td>
+<td>项目<code>.vscode/</code></td>
+<td>本地</td>
+<td>配置项目中与本地密切相关的场景</td>
+</tr>
+<tr>
+<td><code>CMakePresets.json</code></td>
+<td>项目根目录</td>
+<td>远程</td>
+<td>一般来说是配置场景</td>
+</tr>
+<tr>
+<td><code>CMakeUserPresets.json</code></td>
+<td>项目根目录</td>
+<td>本地</td>
+<td><code>inhert</code>Preset之后，主要是本地的build环境</td>
+</tr>
+<tr>
+<td><code>compile_commands.json</code></td>
+<td>项目<code>build*</code></td>
+<td>本地</td>
+<td>CMake生成的对<code>clangd</code>最好消化的配置文件</td>
+</tr>
+</tbody>
+</table>
+<h1 id="附录">附录</h1>
+<h2 id="clangd这个tag为什么全小写"><code>clangd</code>这个tag为什么全小写</h2>
+<p>查阅了<a target="_blank" rel="noopener" href="https://clangd.llvm.org/">clangd的网站</a>，没有任何迹象表明创作者希望<code>clangd</code>首字母大写，尤其是：</p>
+<blockquote>
+<p>clangd is based on the Clang C++ compiler, and is part of the LLVM
+project.</p>
+</blockquote>
+<p>当<code>clangd</code>与<code>Clang</code>同行出现时，前者不大写而后者大写；</p>
+<p>根据“名从主人”原则，<code>clangd</code>的<code>c</code>不应该大写。</p>
+<hr>
+<p>Knighthana</p>
+<p>2026/04/20</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/C/" rel="tag">C</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/clangd/" rel="tag">clangd</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1776973370639"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#clangd%E5%88%B0%E5%BA%95%E8%A6%81%E5%92%8B%E9%85%8D"><span class="toc-number">1.</span> <span class="toc-text">clangd到底要咋配</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%B4%E7%9A%84%E6%98%AF%E5%93%AA%E4%B8%AAclangd"><span class="toc-number">2.</span> <span class="toc-text">说的是哪个clangd</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE%E9%A1%BA%E5%BA%8F"><span class="toc-number">3.</span> <span class="toc-text">文件？配置？顺序？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#clangd%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">3.1.</span> <span class="toc-text">clangd的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#compilation-database"><span class="toc-number">3.1.1.</span> <span class="toc-text">Compilation Database：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90compile_commands.json%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.1.2.</span> <span class="toc-text">生成compile_commands.json的方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vscode%E7%9A%84clangd%E6%8F%92%E4%BB%B6%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">3.2.</span> <span class="toc-text">vscode的clangd插件的配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%80%E4%BB%A5%E8%AF%A5%E6%80%8E%E4%B9%88%E6%8E%92%E5%B8%83%E8%BF%99%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">所以该怎么排布这些文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">5.</span> <span class="toc-text">附录</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#clangd%E8%BF%99%E4%B8%AAtag%E4%B8%BA%E4%BB%80%E4%B9%88%E5%85%A8%E5%B0%8F%E5%86%99"><span class="toc-number">5.1.</span> <span class="toc-text">clangd这个tag为什么全小写</span></a></li></ol></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>
