@@ -6,7 +6,7 @@
   <link href="https://knighthana.github.io/atom.xml" rel="self"/>
   
   <link href="https://knighthana.github.io/"/>
-  <updated>2026-04-19T08:11:05.000Z</updated>
+  <updated>2026-04-25T14:22:18.529Z</updated>
   <id>https://knighthana.github.io/</id>
   
   <author>
@@ -15,6 +15,41 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>(KM)让shell像资源管理器一样便捷</title>
+    <link href="https://knighthana.github.io/KnowledgeMark/(KM)%E8%AE%A9shell%E5%83%8F%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%E4%BE%BF%E6%8D%B7.html"/>
+    <id>https://knighthana.github.io/KnowledgeMark/(KM)%E8%AE%A9shell%E5%83%8F%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%E4%BE%BF%E6%8D%B7.html</id>
+    <published>2026-04-25T13:59:12.000Z</published>
+    <updated>2026-04-25T14:22:18.529Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="KnowledgeMark" scheme="https://knighthana.github.io/categories/KnowledgeMark/"/>
+    
+    
+    <category term="ls" scheme="https://knighthana.github.io/tags/ls/"/>
+    
+    <category term="shell" scheme="https://knighthana.github.io/tags/shell/"/>
+    
+    <category term="cd" scheme="https://knighthana.github.io/tags/cd/"/>
+    
+    <category term="tree" scheme="https://knighthana.github.io/tags/tree/"/>
+    
+    <category term="popd" scheme="https://knighthana.github.io/tags/popd/"/>
+    
+    <category term="pushd" scheme="https://knighthana.github.io/tags/pushd/"/>
+    
+  </entry>
   
   <entry>
     <title>是谁吞掉了Terminal的Ctrl+Enter</title>
