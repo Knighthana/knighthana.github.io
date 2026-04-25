@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="zh"><head>
+<title>(KM)让shell像资源管理器一样便捷 - Knighthana的鸽子巢</title>
+<meta charset="UTF-8">
+<meta name="keywords" content="Blog Linux Student Developer">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+
+<link rel="shortcut icon" href="/favicon.png" type="image/png" />
+<meta name="description" content="让shell像资源管理器一样便捷 在传统入门级的shell操作中，主要靠ls和cd实现展示、转移工作目录的操作； 如何在shell中，尽可能用“原生”的方式让目录操作方便快捷？ tree tree可以得到目录树，但是不便捷的地方在于tree默认展示全部目录反而会失去重点， 因此如果获取限制方法，可以让tree更好用； tree的组合命令顺序是tree [选项] [路径]； 排除指定名称 通过-I选">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(KM)让shell像资源管理器一样便捷">
+<meta property="og:url" content="https://knighthana.github.io/KnowledgeMark/(KM)%E8%AE%A9shell%E5%83%8F%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%E4%BE%BF%E6%8D%B7.html">
+<meta property="og:site_name" content="Knighthana的鸽子巢">
+<meta property="og:description" content="让shell像资源管理器一样便捷 在传统入门级的shell操作中，主要靠ls和cd实现展示、转移工作目录的操作； 如何在shell中，尽可能用“原生”的方式让目录操作方便快捷？ tree tree可以得到目录树，但是不便捷的地方在于tree默认展示全部目录反而会失去重点， 因此如果获取限制方法，可以让tree更好用； tree的组合命令顺序是tree [选项] [路径]； 排除指定名称 通过-I选">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-25T13:59:12.000Z">
+<meta property="article:modified_time" content="2026-04-25T14:22:18.529Z">
+<meta property="article:author" content="Knighthana">
+<meta property="article:tag" content="cd">
+<meta property="article:tag" content="ls">
+<meta property="article:tag" content="popd">
+<meta property="article:tag" content="pushd">
+<meta property="article:tag" content="shell">
+<meta property="article:tag" content="tree">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.css">
+<link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
+
+
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1777126991077">
+
+<link rel="stylesheet" href="/css/style.css?v=1777126991077">
+
+
+
+
+
+
+<script src="/lib/mdui_043tiny/mdui.js" async></script>
+<script src="/lib/fancybox/fancybox.umd.js" async></script>
+<script src="/lib/lax.min.js" async></script>
+
+
+<script async src="/js/app.js?v=1777126991077"></script>
+
+ 
+
+
+
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+<meta name="generator" content="Hexo 8.1.1"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="Knighthana的鸽子巢" type="application/atom+xml">
+</head><body class="nexmoe mdui-drawer-body-left"><div id="nexmoe-background"><div class="nexmoe-bg" style="background-image: url(/img/background.jpg)"></div><div class="mdui-appbar mdui-shadow-0"><div class="mdui-toolbar"><a class="mdui-btn mdui-btn-icon mdui-ripple" mdui-drawer="{target: &#039;#drawer&#039;, swipe: true}" title="menu"><i class="mdui-icon nexmoefont icon-menu"></i></a><div class="mdui-toolbar-spacer"></div><a class="mdui-btn mdui-btn-icon" href="/" title="Knighthana"><img src="/favicon.png" alt="Knighthana"></a></div></div></div><div id="nexmoe-header"><div class="nexmoe-drawer mdui-drawer" id="drawer">
+    <div class="nexmoe-avatar mdui-ripple">
+        <a href="/" title="Knighthana">
+            <img src="/favicon.png" alt="Knighthana" alt="Knighthana">
+        </a>
+    </div>
+    <div class="nexmoe-count">
+        <div><span>文章</span>109</div>
+        <div><span>标签</span>148</div>
+        <div><span>分类</span>7</div>
+    </div>
+    <div class="nexmoe-list mdui-list" mdui-collapse="{accordion: true}">
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/" title="回到首页">
+            <i class="mdui-list-item-icon nexmoefont icon-home"></i>
+            <div class="mdui-list-item-content">
+                回到首页
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/archives.html" title="文章归档">
+            <i class="mdui-list-item-icon nexmoefont icon-container"></i>
+            <div class="mdui-list-item-content">
+                文章归档
+            </div>
+        </a>
+        
+        <a class="nexmoe-list-item mdui-list-item mdui-ripple false" href="/about.html" title="关于本站">
+            <i class="mdui-list-item-icon nexmoefont icon-info-circle"></i>
+            <div class="mdui-list-item-content">
+                关于本站
+            </div>
+        </a>
+        
+    </div>
+    
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-search">
+        
+            <form id="search_form">
+                <label><input class="st-default-search-input" id="search_value" name="q" type="search" placeholder="搜索" style="
+                    font-size: 15px !important;
+                    height: 56px !important;
+                    background-image: none;
+                "></label>
+            </form>
+         
+    </div>
+</div>
+
+
+	<script async src="/js/search.js?v=1777126991078"></script>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章分类</h3>
+    <div class="nexmoe-widget">
+
+      <ul class="category-list">
+
+        
+
+
+        
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/BlogMaintenance/">BlogMaintenance</a>
+          <span class="category-list-count">6</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/BookMark/">BookMark</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Cooking/">Cooking</a>
+          <span class="category-list-count">1</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Code/">Dev-Code</a>
+          <span class="category-list-count">19</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/Dev-Env/">Dev-Env</a>
+          <span class="category-list-count">43</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+          <span class="category-list-count">28</span>
+        </li>
+
+        
+
+        <li class="category-list-item">
+          <a class="category-list-link" href="/categories/subject-note/">subject-note</a>
+          <span class="category-list-count">11</span>
+        </li>
+
+        
+      </ul>
+
+    </div>
+  </div>
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <div id="randomtagcloud" class="nexmoe-widget tagcloud nexmoe-rainbow">
+      <a href="/tags/cURL/" style="font-size: 10px;">-cURL</a> <a href="/tags/2023/" style="font-size: 13.64px;">2023</a> <a href="/tags/3E/" style="font-size: 10px;">3E</a> <a href="/tags/7z/" style="font-size: 10px;">7z</a> <a href="/tags/APT/" style="font-size: 12.73px;">APT</a> <a href="/tags/AST/" style="font-size: 10px;">AST</a> <a href="/tags/ArchLinux/" style="font-size: 10px;">ArchLinux</a> <a href="/tags/Blog/" style="font-size: 14.55px;">Blog</a> <a href="/tags/BoaWebServer/" style="font-size: 10px;">BoaWebServer</a> <a href="/tags/C/" style="font-size: 19.09px;">C</a> <a href="/tags/CJK/" style="font-size: 10.91px;">CJK</a> <a href="/tags/CUDA/" style="font-size: 10px;">CUDA</a> <a href="/tags/Carmack/" style="font-size: 10px;">Carmack</a> <a href="/tags/Chrome/" style="font-size: 10px;">Chrome</a> <a href="/tags/Computer-System/" style="font-size: 10px;">Computer System</a> <a href="/tags/CurryRice/" style="font-size: 10px;">CurryRice</a> <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/DOM/" style="font-size: 10px;">DOM</a> <a href="/tags/DSP/" style="font-size: 10px;">DSP</a> <a href="/tags/Datetime/" style="font-size: 10px;">Datetime</a> <a href="/tags/Debian/" style="font-size: 10px;">Debian</a> <a href="/tags/Docker/" style="font-size: 10.91px;">Docker</a> <a href="/tags/Fabric/" style="font-size: 10px;">Fabric</a> <a href="/tags/Fedora/" style="font-size: 10px;">Fedora</a> <a href="/tags/Font/" style="font-size: 10.91px;">Font</a> <a href="/tags/FreeBSD/" style="font-size: 10px;">FreeBSD</a> <a href="/tags/GPG/" style="font-size: 10.91px;">GPG</a> <a href="/tags/Git/" style="font-size: 18.18px;">Git</a> <a href="/tags/GoLang/" style="font-size: 10px;">GoLang</a> <a href="/tags/HTML/" style="font-size: 12.73px;">HTML</a> <a href="/tags/Hadoop/" style="font-size: 10px;">Hadoop</a> <a href="/tags/Hardware/" style="font-size: 10px;">Hardware</a> <a href="/tags/Hexo/" style="font-size: 10.91px;">Hexo</a> <a href="/tags/Input-Method/" style="font-size: 10px;">Input-Method</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/JavaScript/" style="font-size: 10px;">JavaScript</a> <a href="/tags/Jekyll/" style="font-size: 10.91px;">Jekyll</a> <a href="/tags/KD%E6%A0%91/" style="font-size: 10px;">KD树</a> <a href="/tags/KVM/" style="font-size: 10px;">KVM</a> <a href="/tags/Kernel/" style="font-size: 10.91px;">Kernel</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Linux-job/" style="font-size: 10px;">Linux-job</a> <a href="/tags/LinuxMint/" style="font-size: 14.55px;">LinuxMint</a> <a href="/tags/Lua/" style="font-size: 10px;">Lua</a> <a href="/tags/MSYS2/" style="font-size: 10px;">MSYS2</a> <a href="/tags/Math/" style="font-size: 11.82px;">Math</a> <a href="/tags/Microsoft/" style="font-size: 10px;">Microsoft</a> <a href="/tags/Minecraft/" style="font-size: 10px;">Minecraft</a> <a href="/tags/NP%E9%9A%BE%E9%97%AE%E9%A2%98/" style="font-size: 10px;">NP难问题</a> <a href="/tags/NVIDIA/" style="font-size: 10.91px;">NVIDIA</a> <a href="/tags/Network/" style="font-size: 11.82px;">Network</a> <a href="/tags/Newton-Raphson/" style="font-size: 10px;">Newton-Raphson</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/OpenSSL/" style="font-size: 10px;">OpenSSL</a> <a href="/tags/Proxy/" style="font-size: 10px;">Proxy</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/RaspberryPi/" style="font-size: 10px;">RaspberryPi</a> <a href="/tags/Registry/" style="font-size: 10.91px;">Registry</a> <a href="/tags/Ruby/" style="font-size: 10px;">Ruby</a> <a href="/tags/SAX/" style="font-size: 10px;">SAX</a> <a href="/tags/SGR/" style="font-size: 10px;">SGR</a> <a href="/tags/SSH/" style="font-size: 10px;">SSH</a> <a href="/tags/Slack/" style="font-size: 10px;">Slack</a> <a href="/tags/Software/" style="font-size: 10px;">Software</a> <a href="/tags/Sound/" style="font-size: 10px;">Sound</a> <a href="/tags/Terminal/" style="font-size: 10px;">Terminal</a> <a href="/tags/Torch/" style="font-size: 10px;">Torch</a> <a href="/tags/Ubuntu/" style="font-size: 13.64px;">Ubuntu</a> <a href="/tags/VSCode/" style="font-size: 10.91px;">VSCode</a> <a href="/tags/VirtualBox/" style="font-size: 10.91px;">VirtualBox</a> <a href="/tags/WSL/" style="font-size: 17.27px;">WSL</a> <a href="/tags/WSL2/" style="font-size: 10.91px;">WSL2</a> <a href="/tags/Web/" style="font-size: 10px;">Web</a> <a href="/tags/Windows/" style="font-size: 16.36px;">Windows</a> <a href="/tags/Wine/" style="font-size: 10px;">Wine</a> <a href="/tags/XML/" style="font-size: 10px;">XML</a> <a href="/tags/advantage-tools/" style="font-size: 10px;">advantage tools</a> <a href="/tags/alien/" style="font-size: 10px;">alien</a> <a href="/tags/be-aware/" style="font-size: 10.91px;">be aware</a> <a href="/tags/cURL/" style="font-size: 10px;">cURL</a> <a href="/tags/career/" style="font-size: 11.82px;">career</a> <a href="/tags/cd/" style="font-size: 10px;">cd</a> <a href="/tags/clangd/" style="font-size: 10.91px;">clangd</a> <a href="/tags/code-edit/" style="font-size: 10px;">code edit</a> <a href="/tags/config/" style="font-size: 10px;">config</a> <a href="/tags/dpkg/" style="font-size: 10px;">dpkg</a> <a href="/tags/fcitx5/" style="font-size: 10px;">fcitx5</a> <a href="/tags/gcc/" style="font-size: 10px;">gcc</a> <a href="/tags/gem/" style="font-size: 10px;">gem</a> <a href="/tags/gems/" style="font-size: 10px;">gems</a> <a href="/tags/gksudo/" style="font-size: 10px;">gksudo</a> <a href="/tags/glut/" style="font-size: 10px;">glut</a> <a href="/tags/home-path/" style="font-size: 10px;">home path</a> <a href="/tags/libc/" style="font-size: 10px;">libc</a> <a href="/tags/libgl/" style="font-size: 10px;">libgl</a> <a href="/tags/lookahead/" style="font-size: 10px;">lookahead</a> <a href="/tags/ls/" style="font-size: 10.91px;">ls</a> <a href="/tags/macOS-sytle/" style="font-size: 10px;">macOS-sytle</a> <a href="/tags/man/" style="font-size: 10px;">man</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/nexmoe-theme/" style="font-size: 10px;">nexmoe theme</a> <a href="/tags/pandoc/" style="font-size: 10px;">pandoc</a> <a href="/tags/pkg/" style="font-size: 10px;">pkg</a> <a href="/tags/popd/" style="font-size: 10px;">popd</a> <a href="/tags/predictive-parsing/" style="font-size: 10px;">predictive parsing</a> <a href="/tags/pushd/" style="font-size: 10px;">pushd</a> <a href="/tags/rsync/" style="font-size: 10px;">rsync</a> <a href="/tags/shell/" style="font-size: 15.45px;">shell</a> <a href="/tags/signal/" style="font-size: 10px;">signal</a> <a href="/tags/sqrt/" style="font-size: 10px;">sqrt()</a> <a href="/tags/stdout/" style="font-size: 10px;">stdout</a> <a href="/tags/syscall/" style="font-size: 10px;">syscall</a> <a href="/tags/top-down/" style="font-size: 10px;">top-down</a> <a href="/tags/tree/" style="font-size: 10px;">tree</a> <a href="/tags/vim/" style="font-size: 10.91px;">vim</a> <a href="/tags/w3m/" style="font-size: 10px;">w3m</a> <a href="/tags/xfce4/" style="font-size: 10px;">xfce4</a> <a href="/tags/xfwm/" style="font-size: 10px;">xfwm</a> <a href="/tags/zip/" style="font-size: 10px;">zip</a> <a href="/tags/%E4%B9%A6%E9%A1%B5%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">书页相关</a> <a href="/tags/%E4%BA%92%E7%9B%B8%E5%85%B3/" style="font-size: 10px;">互相关</a> <a href="/tags/%E5%85%89%E6%B5%81%E6%B3%95/" style="font-size: 10px;">光流法</a> <a href="/tags/%E5%85%B7%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">具象语法树</a> <a href="/tags/%E5%AE%9D%E7%9F%B3/" style="font-size: 10px;">宝石</a> <a href="/tags/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91/" style="font-size: 10px;">抽象语法树</a> <a href="/tags/%E6%8E%92%E9%98%9F%E8%AE%BA/" style="font-size: 10.91px;">排队论</a> <a href="/tags/%E6%97%A5%E8%AF%AD/" style="font-size: 10px;">日语</a> <a href="/tags/%E6%A6%82%E7%8E%87%E8%AE%BA%E4%B8%8E%E6%95%B0%E7%90%86%E7%BB%9F%E8%AE%A1/" style="font-size: 10.91px;">概率论与数理统计</a> <a href="/tags/%E7%94%9F%E7%81%AD%E8%BF%87%E7%A8%8B/" style="font-size: 10px;">生灭过程</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%AD%A6/" style="font-size: 10.91px;">生物学</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E5%AF%B9%E6%95%B0/" style="font-size: 10px;">离散对数</a> <a href="/tags/%E7%A6%BB%E6%95%A3%E6%97%B6%E9%97%B4%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10px;">离散时间马尔可夫链</a> <a href="/tags/%E7%AE%A1%E7%90%86/" style="font-size: 10px;">管理</a> <a href="/tags/%E7%BC%96%E7%A0%81%E6%96%B9%E5%BC%8F/" style="font-size: 10px;">编码方式</a> <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" style="font-size: 12.73px;">编译原理</a> <a href="/tags/%E8%8B%B1%E8%AF%AD/" style="font-size: 10px;">英语</a> <a href="/tags/%E8%8D%89%E5%8F%B0%E6%95%99%E7%A8%8B/" style="font-size: 10.91px;">草台教程</a> <a href="/tags/%E8%A1%A5%E7%A0%81/" style="font-size: 10px;">补码</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%99%BA%E8%83%BD/" style="font-size: 10.91px;">计算智能</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" style="font-size: 10px;">计算机图形学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 10px;">计算机科学</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/" style="font-size: 10px;">计算机程序设计</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 10px;">设计模式</a> <a href="/tags/%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/" style="font-size: 16.36px;">课程笔记</a> <a href="/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/" style="font-size: 10.91px;">遗传算法</a> <a href="/tags/%E9%9A%8F%E6%9C%BA%E8%BF%87%E7%A8%8B/" style="font-size: 11.82px;">随机过程</a> <a href="/tags/%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E9%93%BE/" style="font-size: 10.91px;">马尔可夫链</a> <a href="/tags/%E9%BC%A0%E6%A0%87/" style="font-size: 10px;">鼠标</a>
+    </div>
+    
+      <script>
+        var maxTagcloud = parseInt(36);
+        var tags_length = parseInt(148);
+        var tags_arr = [];
+        for(var i = 0; i < tags_length; i++){
+          tags_arr.push(i);
+        }
+        tags_arr.sort(function (l, r) {
+          return Math.random() > 0.5 ? -1 : 1;
+        });
+        tags_arr = tags_arr.slice(0, maxTagcloud < tags_length ? tags_length - maxTagcloud : 0);
+        for(var tag_i = 0; tag_i < tags_arr.length; tag_i++){
+          document.getElementById("randomtagcloud").children[tags_arr[tag_i]].style.display = 'none';
+        }
+      </script>
+    
+  </div>
+
+    
+        
+        
+        <div class="nexmoe-widget-wrap">
+	<div class="nexmoe-widget nexmoe-social">
+		<a
+			class="mdui-ripple"
+			href="https://github.com/Knighthana/"
+			target="_blank"
+			mdui-tooltip="{content: 'GitHub'}"
+			style="
+				color: rgb(25, 23, 23);
+				background-color: rgba(25, 23, 23, .1);
+			"
+		>
+			<i
+				class="nexmoefont icon-github"
+			></i> </a
+		><a
+			class="mdui-ripple"
+			href="/atom.xml"
+			target="_blank"
+			mdui-tooltip="{content: 'RSS'}"
+			style="
+				color: rgb(235, 152, 0);
+				background-color: rgba(235, 152, 0, .15);
+			"
+		>
+			<i
+				class="nexmoefont icon-rss"
+			></i> </a
+		>
+	</div>
+</div>
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">文章归档</h3>
+    <div class="nexmoe-widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/">2026</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2025/">2025</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/">2024</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/">2023</a><span class="archive-list-count">44</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/">2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/">2021</a><span class="archive-list-count">18</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/">2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/">2018</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+
+    
+        
+        
+  <div class="nexmoe-widget-wrap">
+    <h3 class="nexmoe-widget-title">最新文章</h3>
+    <div class="nexmoe-widget">
+      <ul>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E8%AE%A9shell%E5%83%8F%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%E4%BE%BF%E6%8D%B7.html">(KM)让shell像资源管理器一样便捷</a>
+          </li>
+        
+          <li>
+            <a href="/Dev-Env/%E6%98%AF%E8%B0%81%E5%90%9E%E6%8E%89%E4%BA%86Terminal%E7%9A%84Ctrl-Enter.html">是谁吞掉了Terminal的Ctrl+Enter</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)shell%E4%B8%AD%E7%9A%84%E5%8D%95%E5%8F%8C%E5%BC%95%E5%8F%B7.html">(KM)Shell中的单双引号</a>
+          </li>
+        
+          <li>
+            <a href="/KnowledgeMark/(KM)%E5%BF%AB%E9%80%9F%E8%8E%B7%E5%8F%96%E8%A7%84%E5%AE%9A%E6%A0%BC%E5%BC%8F%E6%97%B6%E9%97%B4%E6%97%A5%E6%9C%9F.html">(KM)快速获取规定格式时间日期</a>
+          </li>
+        
+          <li>
+            <a href="/BlogMaintenance/hexo%E8%BF%99%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99.html">hexo这个模板的大小写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+        
+        <div class="nexmoe-widget-wrap">
+    <div class="nexmoe-widget nexmoe-link">
+		<ul>
+        
+            <li>
+                <a href="https://knighthana.github.io" target="_blank" >
+                    <img src="https://knighthana.github.io/favicon.png" alt="This site"></img>
+                    <p>This site</p>
+                </a>
+            </li>
+        
+		</ul>
+    </div>
+</div>
+<style>
+.nexmoe-widget-wrap .nexmoe-link ul li a {
+    text-align : center;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a img {
+    max-width : 100%;
+}
+.nexmoe-widget-wrap .nexmoe-link ul li a p {
+    margin: 10px 0;
+}
+</style>
+
+    
+   
+    <div class="nexmoe-copyright">
+        &copy; 2026 Knighthana
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+        & <a href="https://github.com/theme-nexmoe/hexo-theme-nexmoe" target="_blank">Nexmoe</a>
+        
+    </div>
+</div><!-- .nexmoe-drawer --></div><div id="nexmoe-content"><div class="nexmoe-primary"><div class="nexmoe-post">
+  <article>
+    
+        <div class="nexmoe-post-cover absolute" style="padding-top: NaN%;"> 
+            <img src="/img/Cover-knowledge-mark.svg" alt="(KM)让shell像资源管理器一样便捷" loading="lazy">
+            <h1>(KM)让shell像资源管理器一样便捷</h1>
+        </div>
+    
+    
+    <div class="nexmoe-post-meta">
+    <div class="nexmoe-rainbow">
+        <a class="nexmoefont icon-calendar-fill">2026年04月25日</a>
+        
+            <a class="nexmoefont icon-appstore-fill -link" href="/categories/KnowledgeMark/">KnowledgeMark</a>
+        
+        
+    </div>
+    
+    
+    
+    
+    
+</div>
+
+    <h1 id="让shell像资源管理器一样便捷">让shell像资源管理器一样便捷</h1>
+<p>在传统入门级的shell操作中，主要靠<code>ls</code>和<code>cd</code>实现展示、转移工作目录的操作；</p>
+<p>如何在shell中，尽可能用“原生”的方式让目录操作方便快捷？</p>
+<h1 id="tree">tree</h1>
+<p><code>tree</code>可以得到目录树，但是不便捷的地方在于<code>tree</code>默认展示全部目录反而会失去重点，</p>
+<p>因此如果获取限制方法，可以让<code>tree</code>更好用；</p>
+<p><code>tree</code>的组合命令顺序是<code>tree [选项] [路径]</code>；</p>
+<h2 id="排除指定名称">排除指定名称</h2>
+<p>通过<code>-I</code>选项，可以让<code>tree</code>排除指定目录；</p>
+<p>用一个例子展示当前对<code>Blog-Active</code>目录的管理方法，排除掉<code>node_modules</code>、<code>public</code>、<code>source</code>三个目录；
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">➜  workspace tree -I "node_modules|public|source" Blog-Active</span><br><span class="line">Blog-Active</span><br><span class="line">├── _config.nexmoe.yml</span><br><span class="line">├── _config.yml</span><br><span class="line">├── applychanges.sh</span><br><span class="line">├── db.json</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">│   ├── blogmaintenance.md</span><br><span class="line">│   ├── dev-code.md</span><br><span class="line">│   ├── dev-env.md</span><br><span class="line">│   ├── draft.md</span><br><span class="line">│   ├── knowledgemark.md</span><br><span class="line">│   ├── page.md</span><br><span class="line">│   └── post.md</span><br><span class="line">└── themes</span><br><span class="line"></span><br><span class="line">3 directories, 13 files</span><br></pre></td></tr></table></figure></p>
+<h2 id="限制目录层级">限制目录层级</h2>
+<p>通过<code>-L</code>选项可以让<code>tree</code>只展示指定层数的目录；</p>
+<p>例如在忽略<code>node_modules</code>的前提下，只展示两层<code>-L 2</code>目录：
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">➜  workspace tree -L 2 -I "node_modules" Blog-Active</span><br><span class="line">Blog-Active</span><br><span class="line">├── _config.nexmoe.yml</span><br><span class="line">├── _config.yml</span><br><span class="line">├── applychanges.sh</span><br><span class="line">├── db.json</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── public</span><br><span class="line">│   ├── 404.html</span><br><span class="line">│   ├── Blog-Maintenance</span><br><span class="line">│   ├── BlogMaintenance</span><br><span class="line">│   ├── Book-Mark</span><br><span class="line">│   ├── BookMark</span><br><span class="line">│   ├── Cooking</span><br><span class="line">│   ├── Dev-Code</span><br><span class="line">│   ├── Dev-Env</span><br><span class="line">│   ├── KnowledgeMark</span><br><span class="line">│   ├── about.html</span><br><span class="line">│   ├── archives</span><br><span class="line">│   ├── archives.html</span><br><span class="line">│   ├── atom.xml</span><br><span class="line">│   ├── categories</span><br><span class="line">│   ├── content.json</span><br><span class="line">│   ├── css</span><br><span class="line">│   ├── favicon.png</span><br><span class="line">│   ├── img</span><br><span class="line">│   ├── index.html</span><br><span class="line">│   ├── js</span><br><span class="line">│   ├── lib</span><br><span class="line">│   ├── page</span><br><span class="line">│   ├── preset</span><br><span class="line">│   ├── subject-note</span><br><span class="line">│   ├── tags</span><br><span class="line">│   └── uncategorized</span><br><span class="line">├── scaffolds</span><br><span class="line">│   ├── blogmaintenance.md</span><br><span class="line">│   ├── dev-code.md</span><br><span class="line">│   ├── dev-env.md</span><br><span class="line">│   ├── draft.md</span><br><span class="line">│   ├── knowledgemark.md</span><br><span class="line">│   ├── page.md</span><br><span class="line">│   └── post.md</span><br><span class="line">├── source</span><br><span class="line">│   ├── 404.md</span><br><span class="line">│   ├── _drafts</span><br><span class="line">│   ├── _posts -&gt; /home/knighthana/workspace/knighthana.github.io/raw</span><br><span class="line">│   ├── about.md</span><br><span class="line">│   ├── archives.md</span><br><span class="line">│   ├── favicon.png</span><br><span class="line">│   └── img</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure></p>
+<h2 id="其他可能要用到的">其他可能要用到的</h2>
+<table>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">参数</th>
+<th style="text-align: left;">作用</th>
+<th style="text-align: left;">特别说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>-I pattern</code></td>
+<td style="text-align: left;">忽略匹配的文件/目录</td>
+<td style="text-align: left;">支持通配符，用竖线 <code>\|</code>
+分隔多个模式，比如 <code>-I "node_modules\|.git"</code>。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-P pattern</code></td>
+<td style="text-align: left;">只显示匹配的文件/目录</td>
+<td style="text-align: left;">同样支持通配符，比如
+<code>-P "*.html"</code> 只显示HTML文件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-d</code></td>
+<td style="text-align: left;">仅显示目录</td>
+<td style="text-align: left;">隐藏普通文件，方便聚焦于文件夹结构。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-a</code></td>
+<td style="text-align: left;">显示所有文件</td>
+<td style="text-align: left;">包括以点开头的隐藏文件。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-h</code></td>
+<td style="text-align: left;">以可读格式显示文件大小</td>
+<td style="text-align: left;">比如显示
+<code>4K</code>、<code>8M</code>，需要结合 <code>-s</code> 或
+<code>--du</code> 一起用。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-o filename</code></td>
+<td style="text-align: left;">输出结果到文件</td>
+<td style="text-align: left;">比如
+<code>tree -o output.txt</code>，将树状图保存下来，而不是打印在屏幕上。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--du</code></td>
+<td style="text-align: left;">显示每个目录的累计大小</td>
+<td style="text-align: left;">递归计算并显示每个目录下所有文件的总大小。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--prune</code></td>
+<td style="text-align: left;">修剪空目录</td>
+<td style="text-align: left;">在输出中不显示那些不包含任何文件的空目录。</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--filelimit #</code></td>
+<td style="text-align: left;">限制目录条目数</td>
+<td style="text-align: left;">当目录下的文件/子目录数量超过
+<code>#</code> 时，<strong>不再展开</strong>该目录。</td>
+</tr>
+</tbody>
+</table>
+<h1 id="目录栈pushdpopd">目录栈<code>pushd/popd</code></h1>
+<p>用<code>cd</code>切换其实很不方便，即便有<code>cd -</code>，在键盘上也挺难摸到；</p>
+<p>明明模模糊糊记得很早之前在目录里面进行过栈操作，</p>
+<p>查证了一些确实有这些操作；</p>
+<p><code>pushd</code>用来把一个路径压进目录栈，之后跳转到这个路径的目录；</p>
+<p><code>popd</code>用来把栈顶路径弹出，也即跳转到栈顶路径的目录，随后删掉栈顶的记录；</p>
+<p><code>dirs</code>用来展示栈中的记录信息情况；</p>
+
+    
+  </article>
+
+  
+      
+
+  
+  
+  <div class="nexmoe-post-meta nexmoe-rainbow">
+   
+    
+        <a class="nexmoefont icon-tag-fill -none-link" href="/tags/cd/" rel="tag">cd</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/ls/" rel="tag">ls</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/popd/" rel="tag">popd</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/pushd/" rel="tag">pushd</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/shell/" rel="tag">shell</a> <a class="nexmoefont icon-tag-fill -none-link" href="/tags/tree/" rel="tag">tree</a>
+    
+</div>
+  
+  
+    <script async src="/js/copy-codeblock.js?v=1777126990900"></script>
+  
+
+  
+      <div class="nexmoe-post-footer">
+          
+      </div>
+  
+</div></div><div class="nexmoe-post-right">    <div class="nexmoe-fixed">
+        <div class="nexmoe-tool">
+
+            
+
+            
+            
+            <button class="mdui-fab catalog" style="overflow:unset;">
+                <i class="nexmoefont icon-i-catalog"></i>
+                <div class="nexmoe-toc">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A9shell%E5%83%8F%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86%E5%99%A8%E4%B8%80%E6%A0%B7%E4%BE%BF%E6%8D%B7"><span class="toc-number">1.</span> <span class="toc-text">让shell像资源管理器一样便捷</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tree"><span class="toc-number">2.</span> <span class="toc-text">tree</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E6%8C%87%E5%AE%9A%E5%90%8D%E7%A7%B0"><span class="toc-number">2.1.</span> <span class="toc-text">排除指定名称</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E7%9B%AE%E5%BD%95%E5%B1%82%E7%BA%A7"><span class="toc-number">2.2.</span> <span class="toc-text">限制目录层级</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E8%A6%81%E7%94%A8%E5%88%B0%E7%9A%84"><span class="toc-number">2.3.</span> <span class="toc-text">其他可能要用到的</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%A0%88pushdpopd"><span class="toc-number">3.</span> <span class="toc-text">目录栈pushd&#x2F;popd</span></a></li></ol>
+                </div>
+            </button>
+            
+
+            
+
+            <a href="#nexmoe-content" class="backtop toc-link" aria-label="Back To Top" title="top"><button class="mdui-fab mdui-ripple"><i class="nexmoefont icon-caret-top"></i></button></a>
+        </div>
+    </div>
+</div></div><div id="nexmoe-footer"><!--!--></div><div id="nexmoe-search-space"><div class="search-container"><div class="search-header"><div class="search-input-container"><input class="search-input" type="text" placeholder="搜索" onInput="sinput();"></div><a class="search-close" onclick="sclose();">×</a></div><div class="search-body"></div></div></div><div></div></body></html>
