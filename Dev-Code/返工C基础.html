@@ -14,7 +14,7 @@
 <meta property="og:description" content="返工C基础 记一场面试的耻辱性大败 起因 起因就是做了一段时间的应用层开发，想转去底层巩固护城河； 结果发现对底层数据的敏感性还不如毕业那会了； 早就知道人会自动忘掉不经常接触的东西，没想到看家本领也有一天会忘掉； 多维数组 别记那些复杂规则了，其实就四个字“结合顺序”； 给一个int matrix[3][4][5]，它代表着，一个叫matrix的含有三个元素的数组，每个数组里面的元素是4个数组，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-05-11T16:02:52.000Z">
-<meta property="article:modified_time" content="2026-05-11T16:02:52.000Z">
+<meta property="article:modified_time" content="2026-05-13T16:04:04.000Z">
 <meta property="article:author" content="Knighthana">
 <meta property="article:tag" content="Blog Linux Student Developer">
 <meta name="twitter:card" content="summary">
@@ -23,9 +23,9 @@
 <link rel="stylesheet" href="/lib/mdui_043tiny/mdui.css">
 
 
-<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1778627911547">
+<link rel="stylesheet" href="/lib/iconfont/iconfont.css?v=1778713617764">
 
-<link rel="stylesheet" href="/css/style.css?v=1778627911547">
+<link rel="stylesheet" href="/css/style.css?v=1778713617764">
 
 
 
@@ -37,7 +37,7 @@
 <script src="/lib/lax.min.js" async></script>
 
 
-<script async src="/js/app.js?v=1778627911547"></script>
+<script async src="/js/app.js?v=1778713617764"></script>
 
  
 
@@ -210,7 +210,7 @@ mjx-container[display="true"] + br {
 </div>
 
 
-	<script async src="/js/search.js?v=1778627911547"></script>
+	<script async src="/js/search.js?v=1778713617764"></script>
 
 
 
@@ -540,6 +540,87 @@ mjx-container[display="true"] + br {
 <p>当前解析出来的是“函数”，那么就是“函数的返回值是一个指针，指向了……”，</p>
 <p>当前解析出来的是“指针”，那么就是“这个指针指向了另一个指针，被指向的指针指向了……”，</p>
 <p>很单纯，很好理解的前缀运算符；</p>
+<h2 id="指针函数和函数指针">“指针函数”和“函数指针”</h2>
+<p>“函数”在C中是一种很特别的东西(见后文)；</p>
+<p>不过，这里提到函数指针和指针函数，当然是因为这个鬼畜的<code>*</code>；</p>
+<p>另外就是被面到写完博客之后，恰好又在朋友那里看到了有意思的东西，让我觉得本篇博客还有需要补充的地方；</p>
+<h3 id="指针函数返回指针的函数">“指针函数”——返回指针的函数</h3>
+<p>从最简单的开始，返回一个指针的函数，或者说“指针函数”，是这样的：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 声明 */</span></span><br><span class="line"><span class="type">void</span> * <span class="title function_">func_ret_ptr</span><span class="params">(<span class="type">para_t</span> para_a, <span class="type">para_t</span> para_b)</span>;</span><br><span class="line"><span class="comment">/** 定义 */</span></span><br><span class="line"><span class="type">void</span> * <span class="title function_">func_ret_ptr</span><span class="params">(<span class="type">para_t</span> para_a, <span class="type">para_t</span> para_b)</span> {</span><br><span class="line">    <span class="keyword">return</span> ptr;</span><br><span class="line">}</span><br></pre></td></tr></table></figure> 它被简称“指针函数”，是因为它返回的值的类型是指针变量；</p>
+<p>然而，一个准确的称呼应该是“返回指针的函数”；</p>
+<p>顺带一提，我喜欢这么写<code>void* func_ret_ptr(para_t para_a, para_t para_b);</code>，它能提醒我，“返回了一个<code>void*</code>”</p>
+<h3 id="函数指针">函数指针</h3>
+<p>C的函数有自己的地址(不理解的话回忆一下汇编)，既然有地址，它就可以通过指针访问；比如回调就经常要用函数指针；</p>
+<p>不过，先想想，拿到一个“地址”就够了吗？</p>
+<p>我们确定一个“函数”是什么，需要什么信息？或者说，自己用汇编来实现，什么东西是“必不可少”的？</p>
+<p>返回值的类型，一般来说返回值是基本类型，那么通过寄存器就能搞定，但如果这个值在寄存器里装不下的话，还需要在调用者的栈里面提前留出位置，这个栈里面的空位肯定在函数的里面，这样的话函数返回之后，返回值还有地方放；这是不可妥协的；</p>
+<p>参数的类型，即便不考虑比起定义所需的参数而少传/多传，值类型对不上引起的各种栈中的混乱，即便函数拿到了传入的参数并且正确理解，当实参对不上形参的时候，函数怎么处理，这是没有定义过的；</p>
+<p>因为C是很简单的高级语言，所以这种信息不能指望它“猜”；</p>
+<p>所以函数指针必然包含这些信息：被指向的函数的返回值的类型，被指向的函数的参数列表(主要是按照顺序写出参数的类型，不然栈里面传进来的一串东西按什么方式理解？)，还有指针自己的名字——符号；</p>
+<p>所以一个函数指针写成 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> (*p)(<span class="type">para_t</span>, <span class="type">para_t</span>);</span><br></pre></td></tr></table></figure> 也是很好理解的事情了吧？</p>
+<p>这个写法表示了这样一件事：
+<code>p</code>是一个指向函数的指针，被指向的函数符合这样的形式，它接受<code>para_t</code>作为第一个参数，接受<code>para_t</code>作为第二个参数，它的返回值是void类型；</p>
+<p>主要是C的函数自己的“类型”不能直接用来声明变量，不然，如果能把“函数类型”定义成
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> func_type {</span><br><span class="line">    <span class="type">void</span> <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">para_t</span> para_a;</span><br><span class="line">    <span class="type">para_t</span> para_b;</span><br><span class="line">}func_a;</span><br></pre></td></tr></table></figure> 的话，那么只要把函数指针写成 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">func_a* p;</span><br></pre></td></tr></table></figure>
+这样的形式就可以了，这样应该就好理解多了；</p>
+<h2 id="鸡汤来咯">鸡汤来咯</h2>
+<p>觉得“函数指针”眉清目秀真好理解？来看看这个： <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> (*(*boardstatemachine_subtrigger_set(<span class="type">subtrigger_t</span> triggers[], <span class="type">size_t</span> number, <span class="type">void</span> (*trigger)(<span class="type">void</span> *))))(<span class="type">void</span>) {</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">}</span><br></pre></td></tr></table></figure>
+里面紧贴着符号有一个函数，外面还有一个代表函数的小括号；</p>
+<p>汗流浃背了吧？</p>
+<p>来；</p>
+<p>静默思考一会；</p>
+<p>我在后面给出答案；</p>
+<p><code>boardstatemachine_subtrigger_set</code>是符号，它的右侧有括号，说明它是一个函数，</p>
+<p>这个函数接受指向<code>subtrigger_t</code>数组的指针
+<code>size_t</code>
+和一个接受<code>void*</code>并且返回为空的函数指针，作为参数列表；</p>
+<p>右侧完毕，转向左侧，有一个<code>*</code>，表示这个符号代表的函数的返回值是某种指针alpha；</p>
+<p>这个alpha指针是什么东西的指针？左侧剩下半个括号了，所以得离开括号看；</p>
+<p>括号外面也空荡荡的，只有左侧又是一个<code>*</code>，这说明，这个指针alpha指向了某种指针beta，</p>
+<p>被指向的beta是什么类型的指针？左侧还是半个括号，离开这一层到外面；</p>
+<p>右侧有括号，因此上一个问题有答案了，beta的类型是函数指针……吗？</p>
+<p>回顾上面的定义，<code>void (*p)(para_t, para_t);</code>是一个函数指针，</p>
+<p>把<code>(*( *boardstatemachine_subtrigger_set(paras) ))</code>看成指针的指针的条件是“<strong>右边没东西</strong>”，</p>
+<p>否则如果右边有个括号，它就会变成<code>( *P )(paras_outer) // P =def= (*boardstatemachine_subtrigger_set(paras_inner))</code>，</p>
+<p>这时候，这个<code>*</code>表示的含义就成了“<code>P</code>的类型是指针”这样单纯的含义，而我们之前已经定义过一次，<code>P</code>的写法本来就是要返回指针，</p>
+<p>我们刚才是在给返回的指针找指向的东西，而不是确定它是什么，它是个指针这件事我们早就知道了，</p>
+<p>所以……beta不是一个指针：并不是有一个<code>*</code>就决定了alpha指向的beta是指针了；</p>
+<p>beta其实是那个函数，beta是那个函数的地址；</p>
+<p>这个函数是什么样的定义？入参为空，返回为空的一个函数；</p>
+<p>至此，左边的<code>void</code>解析完毕，类型分析全部结束；</p>
+<p>串起来讲：</p>
+<p><code>boardstatemachine_subtrigger_set</code>是一个指针函数，入参………，这个指针函数返回的“指针”存储着一类入参为空，返回为空的函数的入口地址；</p>
+<p>更简单来说，<code>boardstatemachine_subtrigger_set</code>是一个指针函数，它所返回的指针是指向函数的指针，被指向的函数无参数且返回
+void。</p>
+<h3 id="易混淆点">易混淆点：</h3>
+<p>因为有两个<code>*</code>在前面，会导致大脑过载；</p>
+<p>这时候，既然内部函数分析完毕，就把写法变成 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> (*(*func()))(<span class="type">void</span>){}</span><br></pre></td></tr></table></figure>
+的形式，马上就清楚多了；</p>
+<p>如果还看不清楚，那么写成 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> (*P)(<span class="type">void</span>){}</span><br></pre></td></tr></table></figure> 的形式，就很明了了；</p>
+<h2 id="最终法则">最终法则</h2>
+<p>上述分析过程中，出现了一个很明显的“找补”行为，那就是，当发现后面是<code>(void)</code>的时候，我们突然意识到，“之前那个<code>*</code>”不是“指向了……”，而是“类型为指针”！</p>
+<p>非要解释，倒是能解释圆，但如我所说，太“找补”，像是给规则上打了个补丁，或者给一条河流打了个洞——“有时候水往这边流”……</p>
+<p>问题就在这个“有时候”上面了，“有时候”是什么时候？很多工程中的“下意识”犯错行为，就是这个“有时候”导致的；</p>
+<p>今天把这个“有时候”记住了，明天呢，三年后呢，五年后呢？</p>
+<p>所以，不是“有时候”，而是一开始的法则就有问题，我们得重新建立这套分析范式，之前是“运算符优先级”和“右左看”，现在我们用一个“吃名字”的说法：
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> (*(*name())())(<span class="type">int</span>)</span><br></pre></td></tr></table></figure></p>
+<p>方案一：</p>
+<p><code>name</code>先被右开口的<code>()</code>吃掉 →
+<code>name</code>是函数</p>
+<p>左边<code>*</code>吃掉<code>name()</code>→ 返回指针，记为 R</p>
+<p>括号后，右边<code>()</code> 吃掉<code>(R)</code> → R 指向函数</p>
+<p>左边<code>*</code>吃掉<code>(R)()</code> → 再返回指针，记为 S</p>
+<p>右边<code>(int)</code> 吃掉 S → S 指向函数</p>
+<p>左边<code>void</code>收尾</p>
+<p>方案二：</p>
+<p><code>*name()</code>里的<code>*</code>：紧邻名字，是声明符，创造指针
+R（函数的返回值是指针）</p>
+<p><code>(*R)()</code>里的<code>*</code>：远离名字，在<code>T (*)(args)</code>结构中，是类型说明符，R
+是函数指针，不创造新指针</p>
+<p><code>*(*R)()</code>里的最外层<code>*</code>：紧邻<code>(*R)()</code>这个整体，是声明符，创造指针
+S（又一层函数的返回值是指针）</p>
+<p><code>S(int)</code>里没有新<code>*</code></p>
+<p>最外层<code>void</code>：最内层函数的返回值</p>
 <h1 id="动态数组-指针-vs-柔性数组">动态数组 指针 vs 柔性数组</h1>
 <p>我的回答是一个不连续另一个连续，看起来对方不太满意；</p>
 <p>那就细分来说：</p>
@@ -781,6 +862,8 @@ linkage。</p>
 <hr>
 <p>Knighthana</p>
 <p>2026/05/12</p>
+<p>update: 2026/05/14
+写完博客后又看到有意思的东西，跟指针函数与函数指针有关，补充一下相关内容</p>
 
     
   </article>
@@ -796,7 +879,7 @@ linkage。</p>
 </div>
   
   
-    <script async src="/js/copy-codeblock.js?v=1778627911303"></script>
+    <script async src="/js/copy-codeblock.js?v=1778713617719"></script>
   
 
   
@@ -814,7 +897,7 @@ linkage。</p>
             <button class="mdui-fab catalog" style="overflow:unset;">
                 <i class="nexmoefont icon-i-catalog"></i>
                 <div class="nexmoe-toc">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%94%E5%B7%A5c%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">返工C基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">2.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">3.</span> <span class="toc-text">多维数组</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AC%BC%E7%95%9C%E7%9A%84%E5%92%8C%E8%AE%BA%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">鬼畜的*和[]，论表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E4%B8%80%E5%98%B4%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8C"><span class="toc-number">4.1.</span> <span class="toc-text">提一嘴“后缀表达式”[]和()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#int-arr5void"><span class="toc-number">4.1.1.</span> <span class="toc-text">int (*arr[5])(void);</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#int-fvoid5"><span class="toc-number">4.1.2.</span> <span class="toc-text">int (*f(void))[5];</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A4%E9%9B%B6%E9%9B%B6%E7%9A%84%E5%89%8D%E7%BC%80%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E4%B8%80%E9%94%A4%E5%AE%9A%E9%9F%B3%E7%9A%84%E5%8F%B6%E5%AD%90%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E7%AC%A6%E5%8F%B7"><span class="toc-number">4.2.</span> <span class="toc-text">孤零零的前缀运算符*和一锤定音的叶子——基本类型符号</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84-%E6%8C%87%E9%92%88-vs-%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84"><span class="toc-number">5.</span> <span class="toc-text">动态数组 指针 vs 柔性数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E9%87%8C%E5%A1%9E%E6%8C%87%E9%92%88"><span class="toc-number">5.1.</span> <span class="toc-text">结构体里塞指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84"><span class="toc-number">5.2.</span> <span class="toc-text">柔性数组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%A0%88%E5%B8%A7%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F-%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC%E5%AD%98%E5%9C%A8%E5%93%AA%E9%87%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%BA%E4%BD%95"><span class="toc-number">6.</span> <span class="toc-text">“函数栈帧”的生命周期
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%94%E5%B7%A5c%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">返工C基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%B7%E5%9B%A0"><span class="toc-number">2.</span> <span class="toc-text">起因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">3.</span> <span class="toc-text">多维数组</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%AC%BC%E7%95%9C%E7%9A%84%E5%92%8C%E8%AE%BA%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">鬼畜的*和[]，论表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E4%B8%80%E5%98%B4%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8C"><span class="toc-number">4.1.</span> <span class="toc-text">提一嘴“后缀表达式”[]和()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#int-arr5void"><span class="toc-number">4.1.1.</span> <span class="toc-text">int (*arr[5])(void);</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#int-fvoid5"><span class="toc-number">4.1.2.</span> <span class="toc-text">int (*f(void))[5];</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A4%E9%9B%B6%E9%9B%B6%E7%9A%84%E5%89%8D%E7%BC%80%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E4%B8%80%E9%94%A4%E5%AE%9A%E9%9F%B3%E7%9A%84%E5%8F%B6%E5%AD%90%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B%E7%AC%A6%E5%8F%B7"><span class="toc-number">4.2.</span> <span class="toc-text">孤零零的前缀运算符*和一锤定音的叶子——基本类型符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%87%BD%E6%95%B0%E5%92%8C%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88"><span class="toc-number">4.3.</span> <span class="toc-text">“指针函数”和“函数指针”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E6%8C%87%E9%92%88%E7%9A%84%E5%87%BD%E6%95%B0"><span class="toc-number">4.3.1.</span> <span class="toc-text">“指针函数”——返回指针的函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88"><span class="toc-number">4.3.2.</span> <span class="toc-text">函数指针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%B8%A1%E6%B1%A4%E6%9D%A5%E5%92%AF"><span class="toc-number">4.4.</span> <span class="toc-text">鸡汤来咯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%93%E6%B7%B7%E6%B7%86%E7%82%B9"><span class="toc-number">4.4.1.</span> <span class="toc-text">易混淆点：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%B3%95%E5%88%99"><span class="toc-number">4.5.</span> <span class="toc-text">最终法则</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84-%E6%8C%87%E9%92%88-vs-%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84"><span class="toc-number">5.</span> <span class="toc-text">动态数组 指针 vs 柔性数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E9%87%8C%E5%A1%9E%E6%8C%87%E9%92%88"><span class="toc-number">5.1.</span> <span class="toc-text">结构体里塞指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%94%E6%80%A7%E6%95%B0%E7%BB%84"><span class="toc-number">5.2.</span> <span class="toc-text">柔性数组</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%A0%88%E5%B8%A7%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F-%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%94%E5%9B%9E%E5%80%BC%E5%AD%98%E5%9C%A8%E5%93%AA%E9%87%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%BA%E4%BD%95"><span class="toc-number">6.</span> <span class="toc-text">“函数栈帧”的生命周期
 + “函数的返回值”存在哪里，生命周期为何？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%97%E7%AE%97%E7%AE%97%E6%80%8E%E4%B9%88%E7%AE%97%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">7.</span> <span class="toc-text">算算算，怎么算结构体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88"><span class="toc-number">7.1.</span> <span class="toc-text">“为什么”？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B"><span class="toc-number">7.2.</span> <span class="toc-text">怎么回事</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9C%A8%E4%B8%8D%E6%8E%92%E9%99%A4%E9%87%8D%E5%8F%A0%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%E6%90%AC%E5%86%85%E5%AD%98"><span class="toc-number">8.</span> <span class="toc-text">在不排除重叠的情况下搬内存</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B7%91%E9%A2%98%E6%B2%A1%E8%A2%AB%E9%97%AE%E5%88%B0%E4%BD%86%E6%98%AF%E5%86%99%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%97%B6%E5%80%99%E7%A2%B0%E5%88%B0%E7%9A%84static"><span class="toc-number">9.</span> <span class="toc-text">跑题：没被问到但是写博客的时候碰到的static</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E9%9D%A2%E7%90%86%E8%A7%A3%E9%9D%99%E6%80%81"><span class="toc-number">9.1.</span> <span class="toc-text">字面理解“静态”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%BE%8E%E5%A6%99%E7%9A%84%E8%AF%AF%E4%BC%9A"><span class="toc-number">9.2.</span> <span class="toc-text">一个美妙的“误会”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0%E9%82%A3%E4%B8%AA%E6%95%99%E6%9D%90%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">9.3.</span> <span class="toc-text">回到那个教材的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98%E5%AE%83%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="toc-number">9.4.</span> <span class="toc-text">最后一个问题，它怎么来的？</span></a></li></ol></li></ol>
                 </div>
             </button>
