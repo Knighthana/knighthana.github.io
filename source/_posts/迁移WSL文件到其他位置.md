@@ -89,9 +89,9 @@ Optimize-VHD -Path C:\Users\Knighthana\AppData\Local\Packages\TheDebianProject.D
 
 在从商店下载了Debian之后，我注意到一个很有趣的现象，那就是，Debian出现在了开始菜单中，却没有出现在WSL管理器中。
 
-![ThereisntDebianinWSLManager](/img/2026-03-10_213711_There_isnt_Debian_in_WSL_Manager.png)
+![ThereisntDebianinWSLManager](/img/20260310-213711_There_isnt_Debian_in_WSL_Manager.png)
 
-![DebianappearsinStartMenu](/img/2026-03-10_213739_Debian_appears_in_StartMenu.png)
+![DebianappearsinStartMenu](/img/20260310-213739_Debian_appears_in_StartMenu.png)
 
 这样[wsl --install --no-launch does not install the distro](https://github.com/microsoft/WSL/issues/10646)的问题也有人遇到过，很巧的是他的想法和我差不多，我们都想搞一个“封包提起来就走”的WSL，我是想在安装前就给它迁移到D盘去，不过WSL的机制似乎并没有被设计为允许这么干。
 
