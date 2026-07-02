@@ -1,0 +1,17 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# Hexo database
+/db.json
+
+# Hexo deploy
+/.deploy*/
+
+# Hexo compiled output
+/public/
+
+# auto-generated
+/bin/apply_changes
+
