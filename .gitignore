@@ -11,3 +11,6 @@ Thumbs.db
 
 # logs
 *.log
+
+# build output (deployed via GitHub Actions artifact, never committed)
+docs/

@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Restore mtime from git
+        run: |
+          git ls-files 'raw/*.md' | while read -r f; do
+            touch -d "$(git log -1 --format=%cI -- "$f")" "$f"
+          done
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: builder/package-lock.json
+
+      - name: Install dependencies
+        working-directory: builder
+        run: npm ci
+
+      - name: Generate site
+        working-directory: builder
+        run: npx hexo generate
+
+      - name: Copy external pages
+        run: cp -a external/. builder/public/external_ref_docs/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: builder/public
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

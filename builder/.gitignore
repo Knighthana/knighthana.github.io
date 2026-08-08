@@ -15,3 +15,8 @@ yarn-debug.log*
 # auto-generated
 /bin/apply_changes
 
+# local-only build config (contains machine-specific paths)
+/multiconfig.yml
+/_multiconfig.yml
+/.npmrc
+

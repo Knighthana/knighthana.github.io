@@ -1,0 +1,554 @@
+#!/usr/bin/env bash
+# =============================================================================
+# manager - Blog-Active 环境管理工具
+# 用法:
+#   ./bin/manager setup [--dry-run]       首次安装配置
+#   ./bin/manager reconfig [--dry-run]    重新配置路径
+# =============================================================================
+
+set -euo pipefail
+
+# ------------------------------ 全局变量 ------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+DRY_RUN=0
+VERBOSE=0
+
+# 默认值（用户可覆盖）
+DEFAULT_FNM_URL="https://fnm.vercel.app/install"
+DEFAULT_NODE_MIRROR="https://mirrors.cernet.edu.cn/nodejs-release/"
+DEFAULT_NPM_MIRROR="https://registry.npmmirror.com"
+DEFAULT_NODE_VERSION="latest"
+DEFAULT_RAW_NAME="raw"
+DEFAULT_EXTERNAL_NAME="external"
+DEFAULT_EXTERNAL_DOCS_NAME="external_ref_docs"
+
+# 配置存储（由交互填充）
+declare PAGES_REPO RAW_NAME EXTERNAL_NAME EXTERNAL_DOCS_NAME \
+       EXTERNAL_SRC_PATH DOCS_PATH EXTERNAL_DST_PATH
+declare SHELL_TYPE PROXY USE_PROXY_FOR_MIRROR
+declare NODE_VERSION UPGRADE_NPM NODE_MIRROR NPM_MIRROR FNM_URL
+
+# ------------------------------ 辅助函数 ------------------------------------
+log_info()  { echo "[INFO]  $*"; }
+log_warn()  { echo "[WARN]  $*" >&2; }
+log_error() { echo "[ERROR] $*" >&2; }
+log_dry()   { [ "$DRY_RUN" -eq 1 ] && echo "[DRY RUN] $*" || true; }
+
+# 执行命令（干跑模式下仅打印）
+execute() {
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "[DRY RUN] $*"
+        return 0
+    else
+        eval "$@"
+    fi
+}
+
+# 检测 Linux 发行版（用于给出安装建议）
+detect_distro() {
+    if command -v apt &>/dev/null; then
+        echo "debian"
+    elif command -v dnf &>/dev/null; then
+        echo "fedora"
+    elif command -v pacman &>/dev/null; then
+        echo "arch"
+    elif command -v choco &>/dev/null; then
+        echo "msys2"
+    else
+        echo "unknown"
+    fi
+}
+
+# 打印软件安装建议
+print_install_help() {
+    local pkg="$1"
+    local distro="$(detect_distro)"
+    echo "请安装 $pkg："
+    case "$distro" in
+        debian) echo "  sudo apt install $pkg" ;;
+        fedora) echo "  sudo dnf install $pkg" ;;
+        arch)   echo "  sudo pacman -S $pkg" ;;
+        msys2)  echo "  pacman -S $pkg" ;;
+        *)      echo "  请使用您系统的包管理器安装 $pkg" ;;
+    esac
+}
+
+# 交互式询问路径（先显示推导值，允许覆盖）
+ask_path() {
+    local var_name="$1"
+    local default="$2"
+    local prompt="$3"
+    local input
+    read -e -p "$prompt (默认: $default): " input
+    if [ -z "$input" ]; then
+        echo "$default"
+    else
+        echo "${input%/}"   # 去除末尾斜杠
+    fi
+}
+
+# 检查目录是否存在（只警告，不退出）
+check_path_warn() {
+    local path="$1"
+    local name="$2"
+    if [ ! -d "$path" ]; then
+        log_warn "$name 目录不存在: $path"
+        return 1
+    fi
+    return 0
+}
+
+# 生成 apply_changes 脚本（填入路径占位符）
+generate_apply_changes() {
+    cat > /tmp/apply_changes.template <<'EOF'
+#!/usr/bin/env bash
+cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+
+# 处理 dry-run 参数
+DRY_RUN=""
+if [[ "$1" == "--dry-run" || "$1" == "-n" ]]; then
+    DRY_RUN="--dry-run"
+    echo "🔍 执行 Dry Run 模式，仅预览变更，不会实际复制文件。"
+fi
+
+SRC="public/"
+DEST="__DOCS_PATH__"
+EXTERNAL_SRC="__EXTERNAL_SRC_PATH__"
+EXTERNAL_DST="__EXTERNAL_DST_PATH__"
+
+# 定义需要保护、不被删除的文件或文件夹
+EXCLUDES=(
+    --exclude=".git/"
+    --exclude="css/"
+    --exclude="__EXTDOCS_DIR__/"
+    --exclude="img/"
+    --exclude="__RAW_DIR__/"
+    --exclude="CNAME"
+    --exclude="README.md"
+)
+
+PROTECTED_ITEMS=""
+for exclude in "${EXCLUDES[@]}"; do
+    item="${exclude#--exclude=}"
+    [[ -z "$PROTECTED_ITEMS" ]] && PROTECTED_ITEMS="$item" || PROTECTED_ITEMS="$PROTECTED_ITEMS, $item"
+done
+
+mkdir -p "$DEST" "$EXTERNAL_DST"
+
+if [ -d "$SRC" ]; then
+    echo "正在增量同步到 GitHub Pages 仓库..."
+    rsync -av --delete "${EXCLUDES[@]}" $DRY_RUN "$SRC" "$DEST"
+else
+    echo "⚠️ 源目录不存在: $SRC，跳过 Hexo 产物同步"
+fi
+
+if [ -d "$EXTERNAL_SRC" ]; then
+    echo "同步外部 HTML 原料..."
+    rsync -avu $DRY_RUN "$EXTERNAL_SRC/" "$EXTERNAL_DST/"
+else
+    echo "⚠️ 外部原料目录不存在: $EXTERNAL_SRC，跳过"
+fi
+
+if [[ -n "$DRY_RUN" ]]; then
+    echo "✅ Dry Run 完成（未实际更改文件）。"
+else
+    echo "✅ 同步完成！已保护以下内容: $PROTECTED_ITEMS"
+fi
+EOF
+
+    template=$(cat /tmp/apply_changes.template)
+    template="${template//__DOCS_PATH__/$DOCS_PATH}"
+    template="${template//__EXTERNAL_SRC_PATH__/$EXTERNAL_SRC_PATH}"
+    template="${template//__EXTERNAL_DST_PATH__/$EXTERNAL_DST_PATH}"
+    template="${template//__RAW_DIR__/$RAW_NAME}"
+    template="${template//__EXTDOCS_DIR__/$EXTERNAL_DOCS_NAME}"
+    printf '%s' "$template" > /tmp/apply_changes.final
+}
+
+# 保存配置到临时文件（供断点续传参考）
+save_config() {
+    cat > /tmp/setup_vars <<EOF
+# 由 manager 于 $(date) 生成
+PAGES_REPO="$PAGES_REPO"
+RAW_NAME="$RAW_NAME"
+EXTERNAL_NAME="$EXTERNAL_NAME"
+EXTERNAL_DOCS_NAME="$EXTERNAL_DOCS_NAME"
+EXTERNAL_SRC_PATH="$EXTERNAL_SRC_PATH"
+DOCS_PATH="$DOCS_PATH"
+EXTERNAL_DST_PATH="$EXTERNAL_DST_PATH"
+SHELL_TYPE="$SHELL_TYPE"
+PROXY="$PROXY"
+USE_PROXY_FOR_MIRROR="$USE_PROXY_FOR_MIRROR"
+NODE_VERSION="$NODE_VERSION"
+UPGRADE_NPM="$UPGRADE_NPM"
+NODE_MIRROR="$NODE_MIRROR"
+NPM_MIRROR="$NPM_MIRROR"
+FNM_URL="$FNM_URL"
+EOF
+    log_info "配置已保存至 /tmp/setup_vars"
+}
+
+# ------------------------------ 子命令：setup ------------------------------------
+do_setup() {
+    log_info "开始首次安装配置..."
+
+    # ---------- 阶段1：依赖检查（快速失败） ----------
+    log_info "检查必要依赖..."
+    if ! command -v pandoc &>/dev/null; then
+        log_error "pandoc 未安装，这是 Hexo 渲染必需组件"
+        print_install_help pandoc
+        exit 1
+    fi
+    log_info "pandoc 已安装 ✓"
+
+    # 仅当 fnm 未安装时检查 curl/unzip
+    if ! command -v fnm &>/dev/null; then
+        log_info "fnm 未安装，检查下载依赖..."
+        if ! command -v curl &>/dev/null; then
+            log_warn "curl 未安装"
+            print_install_help curl
+        fi
+        if ! command -v unzip &>/dev/null; then
+            log_warn "unzip 未安装"
+            print_install_help unzip
+        fi
+    else
+        log_info "fnm 已安装 ✓"
+    fi
+
+    # ---------- 阶段2：收集路径配置 ----------
+    echo ""
+    log_info "=== 请配置路径 ==="
+    read -e -p "请输入 pages 仓库根路径 (绝对路径): " PAGES_REPO
+    PAGES_REPO="${PAGES_REPO%/}"   # 去除末尾斜杠
+
+    # ---------- 收集目录名称 ----------
+    echo ""
+    log_info "=== 请配置目录名称 ==="
+    RAW_NAME=$(ask_path "RAW_NAME" "$DEFAULT_RAW_NAME" "  raw 目录名 (文章原料)")
+    EXTERNAL_NAME=$(ask_path "EXTERNAL_NAME" "$DEFAULT_EXTERNAL_NAME" "  external 目录名 (外部 HTML 原料)")
+    EXTERNAL_DOCS_NAME=$(ask_path "EXTERNAL_DOCS_NAME" "$DEFAULT_EXTERNAL_DOCS_NAME" "  external_ref_docs 子目录名 (搬运目标)")
+
+    # 推导路径
+    local default_external_src="${PAGES_REPO%/}/${EXTERNAL_NAME}"
+    local default_docs="${PAGES_REPO%/}/docs"
+    local default_external_dst="${default_docs%/}/${EXTERNAL_DOCS_NAME}"
+
+    echo ""
+    echo "推导出的路径如下（直接回车接受，或输入新值覆盖）："
+    EXTERNAL_SRC_PATH=$(ask_path "EXTERNAL_SRC_PATH" "$default_external_src" "  external 目录 (原料 HTML)")
+    DOCS_PATH=$(ask_path "DOCS_PATH" "$default_docs" "  docs 目录 (部署根目录)")
+    EXTERNAL_DST_PATH=$(ask_path "EXTERNAL_DST_PATH" "$default_external_dst" "  external_ref_docs 目录 (搬运产物)")
+
+    # 路径存在性检查（仅警告）
+    echo ""
+    log_info "检查路径存在性..."
+    check_path_warn "${PAGES_REPO%/}/${RAW_NAME}" "raw" || true
+    check_path_warn "$EXTERNAL_SRC_PATH" "external" || true
+    check_path_warn "$DOCS_PATH" "docs" || true
+
+    # ---------- 阶段3：收集环境配置 ----------
+    echo ""
+    log_info "=== 请配置环境 ==="
+    read -e -p "Shell 类型 (默认: $SHELL): " SHELL_TYPE
+    SHELL_TYPE="${SHELL_TYPE:-$SHELL}"
+
+    read -e -p "代理设置 (留空无代理，格式 http://proxy:port): " PROXY
+    PROXY="${PROXY:-}"
+
+    if [ -n "$PROXY" ]; then
+        read -e -p "是否对镜像源也使用此代理？(y/N): " USE_PROXY_FOR_MIRROR
+        [[ "$USE_PROXY_FOR_MIRROR" =~ ^[Yy](es)?$ ]] && USE_PROXY_FOR_MIRROR="yes" || USE_PROXY_FOR_MIRROR="no"
+    else
+        USE_PROXY_FOR_MIRROR="no"
+    fi
+
+    read -e -p "Node 版本 (默认: latest): " NODE_VERSION
+    NODE_VERSION="${NODE_VERSION:-$DEFAULT_NODE_VERSION}"
+
+    read -e -p "是否升级 npm 至最新？(y/N): " UPGRADE_NPM
+    [[ "$UPGRADE_NPM" =~ ^[Yy](es)?$ ]] && UPGRADE_NPM="yes" || UPGRADE_NPM="no"
+
+    read -e -p "Node 镜像源 (默认: $DEFAULT_NODE_MIRROR): " NODE_MIRROR
+    NODE_MIRROR="${NODE_MIRROR:-$DEFAULT_NODE_MIRROR}"
+
+    read -e -p "npm 镜像源 (默认: $DEFAULT_NPM_MIRROR): " NPM_MIRROR
+    NPM_MIRROR="${NPM_MIRROR:-$DEFAULT_NPM_MIRROR}"
+
+    read -e -p "fnm 安装脚本 URL (默认: $DEFAULT_FNM_URL): " FNM_URL
+    FNM_URL="${FNM_URL:-$DEFAULT_FNM_URL}"
+
+    # ---------- 阶段4：确认并执行 ----------
+    echo ""
+    echo "============================================================"
+    log_info "配置摘要："
+    echo "  PAGES_REPO          = $PAGES_REPO"
+    echo "  RAW_NAME            = $RAW_NAME"
+    echo "  EXTERNAL_NAME       = $EXTERNAL_NAME"
+    echo "  EXTERNAL_DOCS_NAME  = $EXTERNAL_DOCS_NAME"
+    echo "  EXTERNAL_SRC_PATH   = $EXTERNAL_SRC_PATH"
+    echo "  DOCS_PATH           = $DOCS_PATH"
+    echo "  EXTERNAL_DST_PATH   = $EXTERNAL_DST_PATH"
+    echo "  SHELL_TYPE          = $SHELL_TYPE"
+    echo "  PROXY               = ${PROXY:-<无>}"
+    echo "  USE_PROXY_FOR_MIRROR= $USE_PROXY_FOR_MIRROR"
+    echo "  NODE_VERSION        = $NODE_VERSION"
+    echo "  UPGRADE_NPM         = $UPGRADE_NPM"
+    echo "  NODE_MIRROR         = $NODE_MIRROR"
+    echo "  NPM_MIRROR          = $NPM_MIRROR"
+    echo "  FNM_URL             = $FNM_URL"
+    echo "============================================================"
+
+    read -e -p "是否继续执行？[y/N]: " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy](es)?$ ]]; then
+        log_info "用户取消，退出"
+        exit 0
+    fi
+
+    # 保存配置（供参考）
+    save_config
+
+    # ---------- 执行阶段 ----------
+    echo ""
+    log_info "开始执行安装..."
+
+    # 1. 安装 fnm（如果需要）
+    if ! command -v fnm &>/dev/null; then
+        log_info "安装 fnm..."
+        local proxy_env=""
+        [ -n "$PROXY" ] && proxy_env="ALL_PROXY=$PROXY"
+        execute "env $proxy_env bash -c 'curl -fsSL \"$FNM_URL\" | bash'"
+    else
+        log_info "fnm 已安装，跳过"
+    fi
+
+    # 2. 配置 shell 环境变量（FNM_NODE_DIST_MIRROR）
+    log_info "配置 shell 环境变量..."
+    local profile_file
+    if [[ "$SHELL_TYPE" == *"zsh"* ]]; then
+        profile_file="$HOME/.zprofile"
+    else
+        profile_file="$HOME/.profile"
+    fi
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log_dry "将向 $profile_file 添加以下行："
+        log_dry "  # Added by Blog-Active manager"
+        log_dry "  export FNM_NODE_DIST_MIRROR=\"$NODE_MIRROR\""
+    else
+        # 检查是否已存在相同配置，若存在则替换，否则追加
+        if grep -q "export FNM_NODE_DIST_MIRROR=" "$profile_file" 2>/dev/null; then
+            sed -i.bak "s|^export FNM_NODE_DIST_MIRROR=.*|export FNM_NODE_DIST_MIRROR=\"$NODE_MIRROR\"|" "$profile_file"
+        else
+            echo "" >> "$profile_file"
+            echo "# Added by Blog-Active manager" >> "$profile_file"
+            echo "export FNM_NODE_DIST_MIRROR=\"$NODE_MIRROR\"" >> "$profile_file"
+        fi
+        log_info "已写入 $profile_file"
+    fi
+
+    # 立即加载（当前会话生效）
+    export FNM_NODE_DIST_MIRROR="$NODE_MIRROR"
+
+    # 3. 安装/切换 Node
+    log_info "安装 Node $NODE_VERSION ..."
+    if [ -n "$PROXY" ] && [ "$USE_PROXY_FOR_MIRROR" = "yes" ]; then
+        execute "HTTP_PROXY=$PROXY HTTPS_PROXY=$PROXY fnm install $NODE_VERSION"
+        execute "HTTP_PROXY=$PROXY HTTPS_PROXY=$PROXY fnm use $NODE_VERSION"
+    else
+        execute "fnm install $NODE_VERSION"
+        execute "fnm use $NODE_VERSION"
+    fi
+
+    # 4. 验证 Node/npm
+    log_info "验证 Node/npm..."
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log_dry "将执行: node --version"
+        log_dry "将执行: npm --version"
+    else
+        if ! node --version &>/dev/null || ! npm --version &>/dev/null; then
+            log_error "Node/npm 验证失败"
+            exit 1
+        fi
+        log_info "Node: $(node --version) ✓"
+        log_info "npm:  $(npm --version) ✓"
+    fi
+
+    # 5. 设置项目级 npm registry
+    log_info "设置项目级 npm registry..."
+    if ! grep -q "^registry=" "$PROJECT_ROOT/.npmrc" 2>/dev/null; then
+        echo "registry=$NPM_MIRROR" >> "$PROJECT_ROOT/.npmrc"
+        log_info "已写入 $PROJECT_ROOT/.npmrc"
+    else
+        log_info ".npmrc 已存在 registry 配置，跳过"
+    fi
+    if [ "$DRY_RUN" -eq 0 ]; then
+        local actual_mirror
+        actual_mirror="$(grep "^registry=" "$PROJECT_ROOT/.npmrc" 2>/dev/null | cut -d= -f2-)"
+        if [ "$actual_mirror" != "$NPM_MIRROR" ]; then
+            log_warn ".npmrc registry 设置不一致: 预期 $NPM_MIRROR, 实际 $actual_mirror"
+        else
+            log_info "项目级 npm registry 设置成功 ✓"
+        fi
+    fi
+
+    # 6. 升级 npm（如果需要）
+    if [ "$UPGRADE_NPM" = "yes" ]; then
+        log_info "升级 npm 至最新..."
+        execute "npm install -g npm@latest"
+    fi
+
+    # 7. 安装项目依赖
+    log_info "安装项目依赖 (npm install)..."
+    cd "$PROJECT_ROOT"
+    execute "npm install"
+
+    # 8. 创建 source/_posts 软链至 ../../${RAW_NAME}/
+    log_info "创建 source/_posts 软链接..."
+    execute "ln -sfn ../../${RAW_NAME}/ source/_posts"
+
+    # 9. 生成 apply_changes 脚本
+    log_info "生成 apply_changes 脚本..."
+    generate_apply_changes
+
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "============================================================"
+        log_dry "将生成 apply_changes 脚本，内容如下："
+        cat /tmp/apply_changes.final
+        echo "============================================================"
+    else
+        mv /tmp/apply_changes.final "$PROJECT_ROOT/apply_changes"
+        chmod +x "$PROJECT_ROOT/apply_changes"
+        log_info "apply_changes 脚本已生成并设为可执行"
+    fi
+
+    log_info "✅ 安装完成！"
+    log_info "请执行 'source $profile_file' 使环境变量生效（或重启终端）。"
+    log_info "之后可运行 ./apply_changes 构建并同步到 Pages 仓库。"
+}
+
+# ------------------------------ 子命令：reconfig ------------------------------------
+do_reconfig() {
+    log_info "开始重新配置..."
+
+    # 读取现有配置（如果存在）
+    if [ -f /tmp/setup_vars ]; then
+        source /tmp/setup_vars
+        log_info "已读取上次保存的配置作为默认值"
+    else
+        log_warn "未找到保存的配置，请手动输入"
+    fi
+
+    echo ""
+    log_info "=== 请配置新的路径 ==="
+
+    # 展示当前值并允许覆盖
+    local new_pages
+    read -e -p "pages 仓库根路径 (当前: ${PAGES_REPO:-<未设置>}): " new_pages
+    PAGES_REPO="${new_pages:-$PAGES_REPO}"
+    PAGES_REPO="${PAGES_REPO%/}"   # 规范化
+
+    # 收集目录名称
+    echo ""
+    log_info "=== 请配置目录名称 ==="
+    RAW_NAME=$(ask_path "RAW_NAME" "${RAW_NAME:-$DEFAULT_RAW_NAME}" "  raw 目录名 (文章原料)")
+    EXTERNAL_NAME=$(ask_path "EXTERNAL_NAME" "${EXTERNAL_NAME:-$DEFAULT_EXTERNAL_NAME}" "  external 目录名 (外部 HTML 原料)")
+    EXTERNAL_DOCS_NAME=$(ask_path "EXTERNAL_DOCS_NAME" "${EXTERNAL_DOCS_NAME:-$DEFAULT_EXTERNAL_DOCS_NAME}" "  external_ref_docs 子目录名 (搬运目标)")
+
+    # 重新推导路径
+    local default_external_src="${PAGES_REPO}/${EXTERNAL_NAME}"
+    local default_docs="${PAGES_REPO}/docs"
+    local default_external_dst="${default_docs}/${EXTERNAL_DOCS_NAME}"
+
+    echo ""
+    echo "当前推导值如下（直接回车接受，或输入新值覆盖）："
+    EXTERNAL_SRC_PATH=$(ask_path "EXTERNAL_SRC_PATH" "$default_external_src" "  external 目录 (原料 HTML)")
+    DOCS_PATH=$(ask_path "DOCS_PATH" "$default_docs" "  docs 目录 (部署根目录)")
+    EXTERNAL_DST_PATH=$(ask_path "EXTERNAL_DST_PATH" "$default_external_dst" "  external_ref_docs 目录 (搬运产物)")
+
+    echo ""
+    echo "============================================================"
+    log_info "更新后配置："
+    echo "  RAW_NAME            = $RAW_NAME"
+    echo "  EXTERNAL_NAME       = $EXTERNAL_NAME"
+    echo "  EXTERNAL_DOCS_NAME  = $EXTERNAL_DOCS_NAME"
+    echo "  EXTERNAL_SRC_PATH   = $EXTERNAL_SRC_PATH"
+    echo "  DOCS_PATH           = $DOCS_PATH"
+    echo "  EXTERNAL_DST_PATH   = $EXTERNAL_DST_PATH"
+    echo "============================================================"
+
+    # 路径存在性检查（仅警告）
+    echo ""
+    log_info "检查路径存在性..."
+    check_path_warn "${PAGES_REPO}/${RAW_NAME}" "raw" || true
+    check_path_warn "$EXTERNAL_SRC_PATH" "external" || true
+    check_path_warn "$DOCS_PATH" "docs" || true
+
+    read -e -p "是否继续执行？[y/N]: " CONFIRM
+    if [[ ! "$CONFIRM" =~ ^[Yy](es)?$ ]]; then
+        log_info "用户取消，退出"
+        exit 0
+    fi
+
+    save_config
+
+    # 执行更新
+    cd "$PROJECT_ROOT"
+
+    log_info "更新 source/_posts 软链接..."
+    execute "ln -sfn ../../${RAW_NAME}/ source/_posts"
+
+    log_info "更新 apply_changes 脚本..."
+    if [ "$DRY_RUN" -eq 1 ]; then
+        log_dry "将重新生成 apply_changes 脚本"
+    else
+        generate_apply_changes
+        mv /tmp/apply_changes.final "$PROJECT_ROOT/apply_changes"
+        chmod +x "$PROJECT_ROOT/apply_changes"
+        log_info "apply_changes 已更新"
+    fi
+
+    log_info "✅ 重新配置完成！"
+}
+
+# ------------------------------ 主入口 ------------------------------------
+show_help() {
+    cat <<EOF
+用法: $0 <子命令> [选项]
+
+子命令:
+  setup [--dry-run]   首次安装配置（检查依赖、收集配置、安装环境）
+  reconfig [--dry-run]   重新配置路径（更新路径并重新生成 apply_changes）
+
+选项:
+  --dry-run  仅模拟执行，不实际修改任何文件或系统
+  --help     显示此帮助
+
+示例:
+  $0 setup
+  $0 setup --dry-run
+  $0 reconfig
+EOF
+}
+
+# 解析参数
+SUBCOMMAND="${1:-help}"
+shift || true
+
+# 解析全局选项
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dry-run) DRY_RUN=1; shift ;;
+        --help) show_help; exit 0 ;;
+        *) log_error "未知选项: $1"; show_help; exit 1 ;;
+    esac
+done
+
+# 执行子命令
+case "$SUBCOMMAND" in
+    setup)   do_setup ;;
+    reconfig)  do_reconfig ;;
+    help)    show_help ;;
+    *)       log_error "未知子命令: $SUBCOMMAND"; show_help; exit 1 ;;
+esac
