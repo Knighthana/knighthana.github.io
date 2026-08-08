@@ -6,17 +6,18 @@
     "build": "hexo generate",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
-    "server": "hexo server"
+    "server": "hexo server",
+    "postinstall": "patch-package"
   },
   "hexo": {
     "version": "8.1.2"
   },
   "dependencies": {
     "hexo": "^8.1.1",
-    "hexo-filter-mathjax": "^0.9.1",
+    "hexo-filter-mathjax": "^0.11.1",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-category": "^2.0.0",
-    "hexo-generator-feed": "^3.0.0",
+    "hexo-generator-feed": "^4.0.0",
     "hexo-generator-index": "^4.0.0",
     "hexo-generator-json-content": "^4.2.3",
     "hexo-generator-tag": "^2.0.0",
@@ -28,7 +29,16 @@
     "hexo-wordcount": "^6.0.1"
   },
   "devDependencies": {
-    "gray-matter": "^4.0.3"
+    "gray-matter": "^4.0.3",
+    "patch-package": "^8.0.1"
+  },
+  "overrides": {
+    "hexo-theme-nexmoe": {
+      "hexo": "8.1.2"
+    },
+    "hexo-component-inferno": {
+      "hexo": "8.1.2"
+    }
   },
   "allowScripts": {
     "hexo-util@3.3.0": true,
