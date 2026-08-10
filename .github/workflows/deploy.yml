@@ -37,7 +37,7 @@ jobs:
               done
 
       - name: Setup pandoc (cached)
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: /tmp/pandoc.deb
           key: pandoc-3.10.1
