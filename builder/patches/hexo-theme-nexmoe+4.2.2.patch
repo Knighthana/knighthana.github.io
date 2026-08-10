@@ -1,3 +1,23 @@
+# -----------------------------------------------------------------------------
+# hexo-theme-nexmoe@4.2.2 上游补丁（patch-package 管理，postinstall 自动应用）
+#
+# 为什么改：
+#   主题 package.json 声明 hexo "^6.0.0"，但其代码实际兼容 hexo 8.x。
+#   该声明在 npm overrides 将嵌套 hexo 提升到 8.1.2 后触发主题自带
+#   include/dependency.js 的强制版本检查（semver.satisfies 不满足即
+#   process.exit(-1)），导致构建直接崩溃。
+#
+# 改了什么：
+#   dependencies.hexo: "^6.0.0" -> "^8.1.1"
+#
+# 如何重新生成：
+#   修改 node_modules/hexo-theme-nexmoe/package.json 后执行
+#   npx patch-package hexo-theme-nexmoe
+#
+# 上游状态：theme-nexmoe/hexo-theme-nexmoe 已约 4 年未更新；
+#   若上游发布新版，需先撤销本补丁再验证升级。
+# 详细记录见 builder/patches/README.md
+# -----------------------------------------------------------------------------
 diff --git a/node_modules/hexo-theme-nexmoe/package.json b/node_modules/hexo-theme-nexmoe/package.json
 index 2479b65..26b3a88 100644
 --- a/node_modules/hexo-theme-nexmoe/package.json
