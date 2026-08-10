@@ -18,8 +18,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +30,11 @@ jobs:
           git -c core.quotePath=false log --format='%cI' --name-only -- 'raw/*.md' \
             | awk '/^[0-9]{4}-[0-9]{2}-[0-9]{2}T/ {ts=$0; next} /^$/ {next}
                    {if (!seen[$0]++) print ts "\t" $0}' \
-            | while IFS=$'\t' read -r ts f; do [ -f "$f" ] && touch -d "$ts" "$f"; done
+            | while IFS=$'\t' read -r ts f; do
+                if [ -f "$f" ]; then
+                  touch -d "$ts" "$f"
+                fi
+              done
 
       - name: Setup pandoc (cached)
         uses: actions/cache@v4
