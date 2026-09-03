@@ -11,10 +11,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -74,17 +70,26 @@ jobs:
       - name: Copy external pages
         run: cp -a external/. builder/public/external_ref_docs/
 
-      - name: Configure Pages
-        if: github.event_name == 'push'
-        uses: actions/configure-pages@v6
-
       - name: Upload artifact
         if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v5
         with:
           path: builder/public
 
+  deploy:
+    needs: build
+    if: github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
       - name: Deploy
-        if: github.event_name == 'push'
         id: deployment
         uses: actions/deploy-pages@v5
