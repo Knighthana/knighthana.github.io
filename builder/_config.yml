@@ -111,6 +111,7 @@ deploy:
 pandoc:
   args:
     --mathjax
+    --wrap=none # 单行输出,避免主题 image_filter 的单行正则因换行失效
 ##    --mathml # 有效，但……为什么不一样？
 
 mathjax:
@@ -119,7 +120,7 @@ mathjax:
   cjk_width: 0.9 # relative CJK char width
   normal_width: 0.6 # relative normal (monospace) width
   append_css: true # add CSS to pages rendered by MathJax
-  every_page: true # if true, every page will be rendered by MathJax regardless the `mathjax` setting in Front-matter
+  every_page: false # if true, every page will be rendered by MathJax regardless the `mathjax` setting in Front-matter; see scripts/mathjax-autodetect.js
   packages: # extra packages to load
     - ams # align/aligned/bmatrix/pmatrix 等环境所在扩展，0.11+ 默认不加载
   extension_options: {}

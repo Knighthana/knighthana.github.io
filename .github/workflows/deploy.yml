@@ -32,6 +32,13 @@ jobs:
                 fi
               done
 
+      - name: Cache hexo db
+        uses: actions/cache@v6
+        with:
+          path: builder/db.json
+          key: hexo-db-${{ hashFiles('builder/package-lock.json','builder/_config.yml','builder/_config.nexmoe.yml','builder/patches/**','builder/scripts/**') }}
+          restore-keys: hexo-db-
+
       - name: Setup pandoc (cached)
         uses: actions/cache@v6
         with:
@@ -65,6 +72,8 @@ jobs:
 
       - name: Generate site
         working-directory: builder
+        env:
+          NODE_ENV: production
         run: npx hexo generate
 
       - name: Copy external pages
