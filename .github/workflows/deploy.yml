@@ -52,8 +52,12 @@ jobs:
             curl -fsSL -o /tmp/pandoc.deb \
               https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb
           fi
-          sudo dpkg -i /tmp/pandoc.deb
-          pandoc --version | head -1
+          dpkg-deb -x /tmp/pandoc.deb "$HOME/.cache/pandoc"
+          mkdir -p "$HOME/.local/bin"
+          install -m 755 "$HOME/.cache/pandoc/usr/bin/pandoc" "$HOME/.local/bin/pandoc"
+          rm -rf "$HOME/.cache/pandoc"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/pandoc" --version | head -1
 
       - name: Setup Node
         uses: actions/setup-node@v7
