@@ -64,7 +64,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: builder
-        run: npm ci --registry=https://registry.npmjs.org --loglevel=http
+        run: npm ci --registry=https://registry.npmjs.org
 
       - name: Validate front-matter tags
         working-directory: builder
