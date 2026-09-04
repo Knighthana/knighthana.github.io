@@ -1,7 +1,7 @@
 ---
 title: 使用printf的%s方式打印int数组遇到的问题
 date: 2021-02-19 00:00:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

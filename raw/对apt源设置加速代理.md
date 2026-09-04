@@ -1,7 +1,7 @@
 ---
 title: 对apt源设置加速代理
 date: 2026-03-17 06:14:36
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

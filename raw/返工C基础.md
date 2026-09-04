@@ -1,6 +1,6 @@
 ---
 title: 返工C基础
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 date: 2026-05-12 00:02:52

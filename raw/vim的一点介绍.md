@@ -1,7 +1,7 @@
 ---
 title: vim的一点介绍
 date: 2023-05-02 16:25:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

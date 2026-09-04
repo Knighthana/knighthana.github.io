@@ -2,7 +2,7 @@
 title: 重新配Linux环境痛苦的经历
 date: 2023-04-01 00:00:00
 updated: 2024-11-05 00:00:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

@@ -2,7 +2,7 @@
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

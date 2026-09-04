@@ -1,7 +1,7 @@
 ---
 title: short和unsigned_short类型的补码
 date: 2019-06-10 00:00:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

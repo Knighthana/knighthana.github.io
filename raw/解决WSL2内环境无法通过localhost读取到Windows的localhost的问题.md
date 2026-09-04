@@ -2,7 +2,7 @@
 title: 解决WSL2内环境无法通过localhost读取到Windows的localhost的问题
 date: 2026-03-09 01:54:00
 updated: 2026-03-09 01:55:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

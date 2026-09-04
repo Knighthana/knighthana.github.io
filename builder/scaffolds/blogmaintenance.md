@@ -2,7 +2,7 @@
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-cover: /img/Cover-Blog-Maintenance.jpg
+cover: /img/cover-blog-maintenance.webp
 categories:
   - BlogMaintenance
 tags:

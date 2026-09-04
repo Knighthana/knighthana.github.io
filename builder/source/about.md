@@ -2,7 +2,7 @@
 title: 关于这这个站点
 layout: about
 date: 2023-04-19 20:15:09
-cover: /img/Cover-About.jpg
+cover: /img/cover-about.webp
 ---
 
 # 咕咕咕咕咕咕咕

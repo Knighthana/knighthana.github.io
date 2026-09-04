@@ -2,7 +2,7 @@
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

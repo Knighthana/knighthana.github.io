@@ -1,7 +1,7 @@
 ---
 title: Take Space Key In Scanf
 date: 2019-06-06 00:00:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

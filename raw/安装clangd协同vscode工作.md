@@ -2,7 +2,7 @@
 title: 安装clangd协同vscode工作
 date: 2023-11-16 22:19:40
 update: 2023-11-16 22:57:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Env
 tags:

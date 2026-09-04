@@ -2,7 +2,7 @@
 title: 2023年4月在LinuxMint上安装Docker
 date: 2023-04-11 00:00:00
 updated: 2023-05-18 00:00:00
-cover: /img/Cover-Docker.png
+cover: /img/cover-docker.png
 categories:
   - Dev-Env
 tags: 

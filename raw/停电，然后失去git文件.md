@@ -1,7 +1,7 @@
 ---
 title: 停电，然后失去git文件
 date: 2022-12-06 00:00:00
-cover: /img/Cover-Blog-Maintenance.jpg
+cover: /img/cover-blog-maintenance.webp
 categories:
   - BlogMaintenance
 tags:

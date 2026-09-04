@@ -1,7 +1,7 @@
 ---
 title: 2023年4月在LinuxMint上安装CUDA
 date: 2023-04-18 00:00:00
-cover: /img/Cover-CUDA.jpeg
+cover: /img/cover-cuda.webp
 categories:
   - Dev-Env
 tags: 

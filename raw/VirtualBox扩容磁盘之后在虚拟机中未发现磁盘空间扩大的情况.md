@@ -1,7 +1,7 @@
 ---
 title: 关于VirtualBox在虚拟机操作系统中共享文件夹的一个猜想
 date: 2021-08-11 00:00:00
-cover: /img/VirtualBox-IMG.jpg
+cover: /img/virtualbox-screenshot.jpg
 categories:
   - Dev-Env
 tags:

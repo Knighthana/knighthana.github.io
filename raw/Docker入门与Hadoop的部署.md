@@ -2,7 +2,7 @@
 title: Docker入门与Hadoop的部署
 date: 2023-05-17 00:00:00
 updated: 2023-05-18 00:00:00
-cover: /img/Cover-Docker.png
+cover: /img/cover-docker.png
 categories:
   - Dev-Env
 tags: 

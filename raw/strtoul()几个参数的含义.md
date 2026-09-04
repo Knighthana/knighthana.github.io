@@ -1,7 +1,7 @@
 ---
 title: strtoul()几个参数的含义
 date: 2024-04-10 22:45:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

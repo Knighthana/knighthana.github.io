@@ -1,6 +1,6 @@
 ---
 title: hexo这个模板的大小写
-cover: /img/Cover-Blog-Maintenance.jpg
+cover: /img/cover-blog-maintenance.webp
 categories:
   - BlogMaintenance
 tags:
@@ -22,7 +22,7 @@ HEXO这个模板的大小写
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:
@@ -93,7 +93,7 @@ hexo new Dev-Env "排列去重问题"
 title: 排列去重问题
 date: 当时的时间
 updated: 当时的时间
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:
@@ -210,7 +210,7 @@ scaffolds
 title: {{ title }}
 date: {{ date }}
 updated: {{ date }}
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

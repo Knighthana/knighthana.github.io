@@ -1,7 +1,7 @@
 ---
 title: 关掉WSL里面的铃声
 date: 2019-06-07 00:00:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

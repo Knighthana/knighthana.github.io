@@ -2,7 +2,7 @@
 title: 设置令牌通过HTTPs访问Git
 date: 2026-03-09 05:31:00
 updated: 2026-03-09 06:00:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

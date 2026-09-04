@@ -1,7 +1,7 @@
 avatar: /favicon.png # 网站 Logo
 
 background: # 既是博客的背景，又是文章默认头图
-    path: /img/background.jpg
+    path: /img/site-background.webp
     width: 3031
     height: 2006
 

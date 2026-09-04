@@ -1,7 +1,7 @@
 ---
 title: 安装GoLang环境
 date: 2025-01-17 00:00:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

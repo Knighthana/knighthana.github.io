@@ -1,6 +1,6 @@
 ---
 title: clangd到底要咋配.md
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 date: 2026-04-19 06:39:56

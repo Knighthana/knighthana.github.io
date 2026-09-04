@@ -2,7 +2,7 @@
 title: 解决WSL2内部网络访问问题_续
 date: 2026-06-10 23:52:00
 updated: 2026-06-10 23:59:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

@@ -1,7 +1,7 @@
 ---
 title: 关于WSL1中libgc的某些故障导致Wrong __data_start_end_pair问题的描述和后续解决方案
 date: 2021-08-29 00:00:00
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 tags:

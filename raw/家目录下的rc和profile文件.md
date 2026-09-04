@@ -2,7 +2,7 @@
 title: 家目录下的rc和profile文件
 date: 2023-01-14 00:00:01
 updated: 2023-04-19 00:00:00
-cover: /img/Cover-Shell-Image.png
+cover: /img/cover-shell-image.webp
 categories:
   - Dev-Env
 tags: 

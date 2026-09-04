@@ -1,7 +1,7 @@
 ---
 title: strcmp()函数无法接受空值
 date: 2019-06-08 00:00:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

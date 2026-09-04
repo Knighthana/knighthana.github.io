@@ -1,7 +1,7 @@
 ---
 title: 没有glut.h的问题
 date: 2019-10-17 00:00:00
-cover: /img/Cover-CPLang.jpg
+cover: /img/cover-cplang.webp
 categories:
   - Dev-Code
 tags:

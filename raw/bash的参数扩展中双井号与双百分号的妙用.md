@@ -1,7 +1,7 @@
 ---
 title: bash脚本的“参数扩展”中双井号与双百分号的妙用
 date: 2024-04-17 22:43:00
-cover: /img/Cover-elsecode.jpg
+cover: /img/cover-elsecode.webp
 categories:
   - Dev-Code
 tags:

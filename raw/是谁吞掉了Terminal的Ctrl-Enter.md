@@ -1,6 +1,6 @@
 ---
 title: 是谁吞掉了Terminal的Ctrl+Enter
-cover: /img/Cover-Dev-Env.jpg
+cover: /img/cover-dev-env.webp
 categories:
   - Dev-Env
 date: 2026-04-19 16:11:05

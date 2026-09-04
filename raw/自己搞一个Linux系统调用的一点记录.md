@@ -2,7 +2,7 @@
 title: 自己搞一个Linux系统调用的一点记录
 date: 2022-06-10 00:00:00
 updated: 2023-04-20 15:25:00
-cover: /img/Cover-Linux_Kernel.png
+cover: /img/cover-linux-kernel.png
 categories:
   - Dev-Code
 tags: 
