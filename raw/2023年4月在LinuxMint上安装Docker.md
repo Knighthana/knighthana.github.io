@@ -1,7 +1,7 @@
 ---
 title: 2023年4月在LinuxMint上安装Docker
 date: 2023-04-11 00:00:00
-updated: 2023-05-18 00:00:00
+updated: 2026-09-06 13:55:00
 cover: /img/cover-docker.png
 categories:
   - Dev-Env
@@ -163,6 +163,10 @@ echo \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
+注意，如果你所用的发行版的`lsb_release`打印的不是标准的Ubuntu版本代码，例如`zena`，那么，执行完这条命令之后，需要手动修改`/etc/apt/source.list.d/docker.list`中版本代码的值，`zena`对应的是24.04的`noble`；
+
+否则`apt`会找不到对应的docker-ce；
+
 #### 手动创建方式
 
 目前阶段我不是很喜欢上一种方式，作为一个希望尽可能多了解这个系统的人，我需要尽可能搞清楚这条命令中每个部分的含义，然后手动完成
@@ -313,11 +317,19 @@ sudo systemctl restart docker
 
 默认存储目录的所有者都是`root`，需要将我们自己加入用户组`docker`之后，才可以不借超级用户身份就执行操作
 
+更新：首先通过命令确认一下docker给自己创建了个什么组名：
+```bash
+ls -l /var/run/docker.sock
+```
+查看这个文件的组名是什么；
+
 ```bash
 sudo usermod -aG docker $USER
 ```
 
 之后[需要登出登入一遍](https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket?comment=168605)，让针对用户组文件的修改生效
+
+更新：不需要登出登入，只需要`newgrp docker`即可；
 
 然后，以本用户的身份使用docker应该就畅行无阻了
 
@@ -330,3 +342,5 @@ Knighthana
 2023/05/15 第一次更新
 
 2023/05/18 第二次更新
+
+2026/09/06 第三次更新
